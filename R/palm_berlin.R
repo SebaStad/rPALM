@@ -85,7 +85,7 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
 
                                       #####
                                       # Terrain height
-                                      ncfile       <- nc_open(files[grep("terrain_height", files)])
+                                      ncfile       <- ncdf4::nc_open(files[grep("terrain_height", files)])
 
                                       xvec         <-tryCatch({ seq(dx*0.5, lengthx*dx, by = dx)},
                                                               warning = function(w){
@@ -100,7 +100,7 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                                                  print("Error in seq line 131")
                                                                } )
 
-                                      orogr        <- ncvar_get(ncfile, "Band1", start = c(self$header$head$origin_x,self$header$head$origin_y),
+                                      orogr        <- ncdf4::ncvar_get(ncfile, "Band1", start = c(self$header$head$origin_x,self$header$head$origin_y),
                                                                 c(lengthx, lengthy))
                                       self$header$head$origin_z         <- min(orogr)
                                       orogr                             <- orogr - min(orogr)
@@ -139,12 +139,12 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                         dat$zt  <- adata
                                       }
 
-                                      nc_close(ncfile)
+                                      ncdf4::nc_close(ncfile)
                                       ######
                                       # Buildings
                                       # 2D
-                                      ncfile <- nc_open(files[grep("building_height", files)])
-                                      build  <- ncvar_get(ncfile, "Band1", start = c(self$header$head$origin_x,self$header$head$origin_y),
+                                      ncfile <- ncdf4::nc_open(files[grep("building_height", files)])
+                                      build  <- ncdf4::ncvar_get(ncfile, "Band1", start = c(self$header$head$origin_x,self$header$head$origin_y),
                                                           c(lengthx, lengthy))
                                       build  <- floor(build/dx)*dx
                                       build[which(is.na(build),arr.ind = T)]  <- -9999
@@ -214,11 +214,11 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                       } else {
                                         dat$buildings_3d  <- adata
                                       }
-                                      nc_close(ncfile)
+                                      ncdf4::nc_close(ncfile)
 
                                       # ID's
-                                      ncfile <- nc_open(files[grep("building_id", files)])
-                                      buildid  <- ncvar_get(ncfile, "Band1", start = c(self$header$head$origin_x,self$header$head$origin_y),
+                                      ncfile   <- ncdf4::nc_open(files[grep("building_id", files)])
+                                      buildid  <- ncdf4::ncvar_get(ncfile, "Band1", start = c(self$header$head$origin_x,self$header$head$origin_y),
                                                             c(lengthx, lengthy))
                                       adata     <- list("_FillValue" = -9999.9,
                                                         "units" = "",
@@ -230,11 +230,11 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                                         "type" = "integer")
 
                                       dat$building_id  <- adata
-                                      nc_close(ncfile)
+                                      ncdf4::nc_close(ncfile)
 
                                       # Type's
-                                      ncfile     <- nc_open(files[grep("building_type", files)])
-                                      buildtype  <- ncvar_get(ncfile, "Band1", start = c(self$header$head$origin_x,self$header$head$origin_y),
+                                      ncfile     <- ncdf4::nc_open(files[grep("building_type", files)])
+                                      buildtype  <- ncdf4::ncvar_get(ncfile, "Band1", start = c(self$header$head$origin_x,self$header$head$origin_y),
                                                               c(lengthx, lengthy))
                                       adata      <- list("_FillValue" = -127,
                                                          "units" = "",
@@ -246,13 +246,13 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                                          "type" = "integer")
 
                                       dat$building_type  <- adata
-                                      nc_close(ncfile)
+                                      ncdf4::nc_close(ncfile)
 
                                       #####
                                       # Vegetation
                                       # Type
-                                      ncfile     <- nc_open(files[grep("vegetation_type", files)])
-                                      vegtype    <- ncvar_get(ncfile, "Band1", start = c(self$header$head$origin_x,self$header$head$origin_y),
+                                      ncfile     <- ncdf4::nc_open(files[grep("vegetation_type", files)])
+                                      vegtype    <- ncdf4::ncvar_get(ncfile, "Band1", start = c(self$header$head$origin_x,self$header$head$origin_y),
                                                               c(lengthx, lengthy))
 
                                       vegtype[which(is.na(vegtype),arr.ind = T)]  <- 3
@@ -265,13 +265,13 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                                          "type" = "byte")
 
                                       dat$vegetation_type  <- adata
-                                      nc_close(ncfile)
+                                      ncdf4::nc_close(ncfile)
 
                                       #####
                                       # Street
                                       # Type
-                                      ncfile     <- nc_open(files[grep("street_type", files)])
-                                      streettype    <- ncvar_get(ncfile, "Band1", start = c(self$header$head$origin_x,self$header$head$origin_y),
+                                      ncfile     <- ncdf4::nc_open(files[grep("street_type", files)])
+                                      streettype    <- ncdf4::ncvar_get(ncfile, "Band1", start = c(self$header$head$origin_x,self$header$head$origin_y),
                                                                  c(lengthx, lengthy))
 
 
@@ -284,11 +284,11 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                                          "type" = "byte")
 
                                       dat$street_type  <- adata
-                                      nc_close(ncfile)
+                                      ncdf4::nc_close(ncfile)
 
                                       # Crossing
-                                      #ncfile        <- nc_open(files[grep("street_crossing", files)])
-                                      #streetcross   <- ncvar_get(ncfile, "Band1", start = c(self$header$head$origin_x,self$header$head$origin_y),
+                                      #ncfile        <- ncdf4::nc_open(files[grep("street_crossing", files)])
+                                      #streetcross   <- ncdf4::ncvar_get(ncfile, "Band1", start = c(self$header$head$origin_x,self$header$head$origin_y),
                                       #                           c(lengthx, lengthy))
 
                                       #adata      <- list("_FillValue" = -127,
@@ -300,13 +300,13 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                       #                   "type" = "byte")
 
                                       #dat$street_crossing  <- adata
-                                      #nc_close(ncfile)
+                                      #ncdf4::nc_close(ncfile)
 
                                       #####
                                       # Water
                                       # Type
-                                      ncfile        <- nc_open(files[grep("water_type", files)])
-                                      watertype     <- ncvar_get(ncfile, "Band1", start = c(self$header$head$origin_x,self$header$head$origin_y),
+                                      ncfile        <- ncdf4::nc_open(files[grep("water_type", files)])
+                                      watertype     <- ncdf4::ncvar_get(ncfile, "Band1", start = c(self$header$head$origin_x,self$header$head$origin_y),
                                                                  c(lengthx, lengthy))
 
                                       adata      <- list("_FillValue" = -127,
@@ -317,13 +317,13 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                                          "type" = "byte")
 
                                       dat$water_type  <- adata
-                                      nc_close(ncfile)
+                                      ncdf4::nc_close(ncfile)
 
                                       #####
                                       # Pavement
                                       # Type
-                                      ncfile        <- nc_open(files[grep("pavement_type", files)])
-                                      pavementtype     <- ncvar_get(ncfile, "Band1", start = c(self$header$head$origin_x,self$header$head$origin_y),
+                                      ncfile        <- ncdf4::nc_open(files[grep("pavement_type", files)])
+                                      pavementtype     <- ncdf4::ncvar_get(ncfile, "Band1", start = c(self$header$head$origin_x,self$header$head$origin_y),
                                                                     c(lengthx, lengthy))
 
                                       adata      <- list("_FillValue" = -127,
@@ -334,7 +334,7 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                                          "type" = "byte")
 
                                       dat$pavement_type  <- adata
-                                      nc_close(ncfile)
+                                      ncdf4::nc_close(ncfile)
 
                                       #######
                                       # CHECK FOR OVERLAPPING DATA
@@ -375,25 +375,6 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                                          "type" = "byte")
                                       dat$soil_type  <- adata
 
-
-
-                                      # Trees not yet supported!
-
-                                      #####
-                                      # Green Roofs
-                                      #ncfile        <- nc_open(files[grep("vegetation_on_roofs", files)])
-                                      #greenroof     <- ncvar_get(ncfile, "Band1", start = c(self$header$head$origin_x,self$header$head$origin_x),
-                                      #                              c(lengthx, lengthy))
-                                      #greenroof[greenroof>0]   <- 1
-
-                                      #adata      <- list("_FillValue" = -9999.9,
-                                      #                   "units" = "",
-                                      #                   "long_name" = "pavement_type",
-                                      #                   "source" = "OpenStreetMap",
-                                      #                   "vals" = pavementtype)
-
-                                      #dat$pavement_type  <- adata
-                                      #nc_close(ncfile)
 
                                       self$data <- dat
 
@@ -485,8 +466,8 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
 
                                       df <- as.data.frame(expand.grid(e_utm,n_utm))
 
-                                      sputm <- SpatialPoints(df, proj4string=CRS("+proj=utm +zone=33 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"))# Defining Gauss Krüger)
-                                      spgeo <- spTransform(sputm, CRS("+proj=longlat +datum=WGS84 +no_defs") )
+                                      sputm <- sp::SpatialPoints(df, proj4string=CRS("+proj=utm +zone=33 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"))# Defining Gauss Krüger)
+                                      spgeo <- sp::spTransform(sputm, CRS("+proj=longlat +datum=WGS84 +no_defs") )
 
                                       thedata <- round(as.data.frame(spgeo),6)
 
@@ -530,7 +511,7 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                           self$dims[[zz]]$units <- " "
                                         }
                                         ####
-                                        nc_dim_list[[names(self$dims)[zz]]] <- ncdim_def(self$dims[[zz]]$long_name, self$dims[[zz]]$units, vals = self$dims[[zz]]$vals,
+                                        nc_dim_list[[names(self$dims)[zz]]] <- ncdf4::ncdim_def(self$dims[[zz]]$long_name, self$dims[[zz]]$units, vals = self$dims[[zz]]$vals,
                                                                                          longname = self$dims[[zz]]$long_name)
 
                                       }
@@ -586,7 +567,7 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                           dimlist  <- list(xvar,yvar)
                                         }
 
-                                        tmp     <-  ncvar_def(name    = names(self$data)[t],
+                                        tmp     <-  ncdf4::ncvar_def(name    = names(self$data)[t],
                                                               units   = self$data[[t]]$units,
                                                               dim     = dimlist,
                                                               missval = self$data[[t]]$'_FillValue',
@@ -605,11 +586,11 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                       ex_atts  <- c("_FillValue", "units", "long_name", "vals", "type")
 
                                       # Erstellen der eigentlichen nc_file!
-                                      ncfile  <- nc_create(self$exportname,vars = ncvariables ,force_v4=TRUE)
+                                      ncfile  <- ncdf4::nc_create(self$exportname,vars = ncvariables ,force_v4=TRUE)
 
                                       # EinfÃ¼gen aller Attribute aus der Headerdatei palm_global als globale Attribute
                                       for(j in seq(self$header$head)){
-                                        ncatt_put(ncfile, 0, names(self$header$head)[j], self$header$head[[j]])
+                                        ncdf4::ncatt_put(ncfile, 0, names(self$header$head)[j], self$header$head[[j]])
                                       }
 
 
@@ -624,15 +605,15 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                         for(ch in loopnum){
                                           loopvar   <- names(self$data[[t]])[ch]
                                           typething <- typeof(unlist(self$data[[t]][ch]))
-                                          ncatt_put(nc= ncfile, varid = names(self$data)[t],attname =  loopvar,
+                                          ncdf4::ncatt_put(nc= ncfile, varid = names(self$data)[t],attname =  loopvar,
                                                     attval = unlist(self$data[[t]][ch]))
                                         }
-                                        ncvar_put(ncfile,
+                                        ncdf4::ncvar_put(ncfile,
                                                   varid   = ncfile$var[[t]]$name,
                                                   vals    = self$data[[t]]$vals)
                                       }
                                       # SchlieÃen und speichern der Datei
-                                      nc_close(ncfile)
+                                      ncdf4::nc_close(ncfile)
 
                                     },
                                     # Plot des ausgewÃ¤hlten Areas
@@ -724,7 +705,7 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                         plot_surf[which(self$data$water_type$vals[xleft:(xleft+xl-1), yleft : (yleft+yl-1)]>0, arr.ind = T)]       <- 4
 
                                       }
-                                      plot_data         <- melt(plot_surf)
+                                      plot_data         <- reshape2::melt(plot_surf)
 
                                       plot_data$colour  <- as.factor(plot_data$value)
                                       loopvar           <- levels(plot_data$colour)
@@ -759,7 +740,7 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
 
                                       #levels(plot_data$colour) <- c("nothing", "building", "vegetation", "street", "water")
 
-                                      self$savedplots[[self$plotcntr]] <-ggplot(plot_data, aes(x = Var1, y = Var2, fill=colour)) +
+                                      self$savedplots[[self$plotcntr]] <- ggplot2::ggplot(plot_data, aes(x = Var1, y = Var2, fill=colour)) +
                                         geom_tile() +
                                         scale_fill_manual(values=colorvec) +
                                         theme_bw() + theme(axis.text.x=element_text(size=9, angle=0, vjust=0.3),
@@ -1365,12 +1346,12 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                         plotmatrix <- self$data[[variable]]$vals
                                       }
 
-                                      plt.data <- melt(plotmatrix)
+                                      plt.data <- reshape2::melt(plotmatrix)
                                       if(variable=="zt"){
-                                        ggplot(plt.data, aes(x=Var1, y=Var2, fill=value))+
+                                        ggplot2::ggplot(plt.data, aes(x=Var1, y=Var2, fill=value))+
                                           geom_raster()
                                       } else {
-                                        ggplot(plt.data, aes(x=Var1, y=Var2, fill=value))+
+                                        ggplot2::ggplot(plt.data, aes(x=Var1, y=Var2, fill=value))+
                                           geom_raster() +
                                           scale_x_continuous(expand = c(0,0), limits = c(0,max(plt.data[,1]))) +
                                           scale_y_continuous(expand = c(0,0), limits = c(0,max(plt.data[,2])))
@@ -1544,12 +1525,12 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
 
                                       # hardcoded so far
                                       if(!is.null(additional_array)){
-                                        ncfile <- nc_open(additional_array)
+                                        ncfile <- ncdf4::nc_open(additional_array)
 
                                         data_height <- arcgischeck(
-                                          ncvar_get(ncfile, "Band1"),
+                                          ncdf4::ncvar_get(ncfile, "Band1"),
                                           self$arcgis)
-                                        nc_close(ncfile)
+                                        ncdf4::nc_close(ncfile)
                                         data_height <- round(data_height/dz)*dz
                                         data_height[data_height<=0] <- NA
 
@@ -1734,12 +1715,12 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
 
 
 
-                                      ncfile <- nc_open(v.file)
+                                      ncfile <- ncdf4::nc_open(v.file)
                                       dimen <- list()
 
                                       for(zz in seq(ncfile$ndims)){
-                                        vec         <- ncvar_get(ncfile, names(ncfile$dim)[zz])
-                                        attr        <- ncatt_get(ncfile, names(ncfile$dim)[zz])
+                                        vec         <- ncdf4::ncvar_get(ncfile, names(ncfile$dim)[zz])
+                                        attr        <- ncdf4::ncatt_get(ncfile, names(ncfile$dim)[zz])
                                         adata <- list()
                                         for(ii in seq(attr)){
                                           adata[[names(attr)[ii]]]   <-attr[[ii]]
@@ -1765,10 +1746,10 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
 
 
                                       vec         <- arcgischeck(
-                                        ncvar_get(ncfile, "Band1"),
+                                        ncdf4::ncvar_get(ncfile, "Band1"),
                                         self$arcgis)
                                       vec[is.na(vec)]  <- fillvalue
-                                      attr        <- ncatt_get(ncfile, "Band1")
+                                      attr        <- ncdf4::ncatt_get(ncfile, "Band1")
                                       if(max(vec, na.rm = T)==1){
                                         vec[vec>0]  <- typeid
                                       }
@@ -1894,10 +1875,10 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                       NAarray[self$data$vegetation_type$vals>0] <- self$data$vegetation_type$vals[self$data$vegetation_type$vals>0]
                                       print(table(NAarray)[1])
                                     },
-                                    addsoilandsurfacefraction = function(){
+                                    addsoilandsurfacefraction = function(type_soil = 1){
                                       soiltype   <- self$data$vegetation_type$vals
                                       soiltype[which(self$data$pavement_type$vals>0, arr.ind = T)]   <- 1
-                                      soiltype[soiltype>0]  <- 1
+                                      soiltype[soiltype>0]  <- type_soil
                                       adata      <- list("_FillValue" = -127,
                                                          "units" = "",
                                                          "long_name" = "soil type classification",
@@ -2069,7 +2050,7 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
 
                                       nelist <- list()
                                       for(j in newvec){
-                                        resized <- resize(as.cimg(self$data[[j]]$vals),
+                                        resized <- imager::resize(as.cimg(self$data[[j]]$vals),
                                                           dimx*1/(factor),dimy*1/(factor))[,,1,1]
                                         self$data[[j]]$vals <- resized
                                       }

@@ -4,6 +4,7 @@ library(shinyTree)
 library(DT)
 
 #Libraries for static-driver
+library(imager)
 library(R6)
 library(ncdf4)
 library(sp)

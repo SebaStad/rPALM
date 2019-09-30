@@ -17,12 +17,12 @@ palm_ncdf_import   <- R6::R6Class("palm_ncdf_import",
                                     },
                                     read_static = function(...){
                                       setwd(self$path)
-                                      ncfile  <- nc_open(self$source)
+                                      ncfile  <- ncdf4::nc_open(self$source)
 
 
                                       #####
                                       # Recreate Header Class for Global Attributes
-                                      globattr <- ncatt_get(ncfile,0)
+                                      globattr <- ncdf4::ncatt_get(ncfile,0)
                                       dummy_obj <- palm_global$new(title     = globattr$title,
                                                                    author    = globattr$author,
                                                                    institute = globattr$institution,
@@ -34,7 +34,7 @@ palm_ncdf_import   <- R6::R6Class("palm_ncdf_import",
                                                                    lat       = globattr$origin_lat,
                                                                    lon       = globattr$origin_lon)
                                       for(tt in names(dummy_obj$head)){
-                                        dummy_obj$head[[which(names(dummy_obj$head)==tt)]]  <- ncatt_get(ncfile,0,tt)$value
+                                        dummy_obj$head[[which(names(dummy_obj$head)==tt)]]  <- ncdf4::ncatt_get(ncfile,0,tt)$value
                                       }
                                       self$header  <- dummy_obj
 
@@ -44,8 +44,8 @@ palm_ncdf_import   <- R6::R6Class("palm_ncdf_import",
                                       dimen        <- list()
 
                                       for(zz in seq(ncfile$ndims)){
-                                        vec         <- ncvar_get(ncfile, names(ncfile$dim)[zz])
-                                        attr        <- ncatt_get(ncfile, names(ncfile$dim)[zz])
+                                        vec         <- ncdf4::ncvar_get(ncfile, names(ncfile$dim)[zz])
+                                        attr        <- ncdf4::ncatt_get(ncfile, names(ncfile$dim)[zz])
                                         adata <- list()
                                         for(ii in seq(attr)){
                                           adata[[names(attr)[ii]]]   <-attr[[ii]]
@@ -61,8 +61,8 @@ palm_ncdf_import   <- R6::R6Class("palm_ncdf_import",
                                       whichdimensions <- list()
 
                                       for(zz in seq(ncfile$nvars)){
-                                        vec         <- ncvar_get(ncfile, names(ncfile$var)[zz])
-                                        attr        <- ncatt_get(ncfile, names(ncfile$var)[zz])
+                                        vec         <- ncdf4::ncvar_get(ncfile, names(ncfile$var)[zz])
+                                        attr        <- ncdf4::ncatt_get(ncfile, names(ncfile$var)[zz])
                                         vec[is.na(vec)]  <- attr$`_FillValue`
                                         adata        <- list("_FillValue" = attr$`_FillValue`,
                                                              "units" = attr$units,
@@ -80,6 +80,7 @@ palm_ncdf_import   <- R6::R6Class("palm_ncdf_import",
                                       self$data  <- dat
                                       self$vardimensions  <- whichdimensions
                                       self$header$head$rotation_angle <- as.numeric(self$header$head$rotation_angle)
+                                      ncdf4::nc_close(ncfile)
                                     }
 
                                   )
