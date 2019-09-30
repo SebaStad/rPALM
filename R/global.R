@@ -3,20 +3,9 @@ library(shiny)
 library(shinyTree)
 library(DT)
 
-#Libraries for static-driver
-library(imager)
-library(R6)
-library(ncdf4)
-library(sp)
-library(rgdal)
-library(ggplot2)
-library(reshape2)
-
-
 #source("base_functions.R")
 
-
-Building   <- "Building"
+Building <- "Building"
 Pavement   <- "Pavement"
 Vegetation <- "Vegetation"
 Water      <- "Water"
@@ -36,7 +25,11 @@ Vegtypes   <- c("Nutzerdefiniert", "Erdboden", "Feld (Getreide)", "Kurzes Gras",
 Wattypes  <-  c("Nutzerdefiniert", "See", "Fluss", "Ozean", "Teich", "Brunnen")
 
 
+
+.onLoad <- function(libname, pkgname){
 PIDS <- list()
+Building   <- "Building"
+assign("Building ", Building , envir = parent.env(environment()))
 
 PIDS$pavement <- list()
 PIDS$pavement$predefined_type <- data.frame("ID" = 0:16,
@@ -213,3 +206,5 @@ PIDS$albedo$predefined_type <- data.frame("ID" = 0:33,
                                                                 0.17, 0.17, 0.17, 0.17, 0.17,
                                                                 0.17, 0.17, 0.17, 0.17)
                                           )
+assign("PIDS", PIDS, envir = parent.env(environment()))
+}
