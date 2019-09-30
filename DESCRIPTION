@@ -25,3 +25,7 @@ Imports:
     DT,
     sp,
     imager
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
