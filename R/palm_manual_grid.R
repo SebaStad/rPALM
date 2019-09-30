@@ -171,9 +171,9 @@ palm_ncdf_manual   <- R6::R6Class("palm_ncdf_manual",
                                       print("This is not a supported function in this class.")
                                     },
                                     importbuildings_DUMMY = function(filepath){
-                                      ncfile <- nc_open(filepath)
+                                      ncfile <- ncdf4::nc_open(filepath)
                                       build  <- arcgischeck(
-                                        ncvar_get(ncfile, "Band1"),
+                                        ncdf4::ncvar_get(ncfile, "Band1"),
                                         self$arcgis)
                                       dx <- self$header$head$resolution
                                       #### Fix für Gebäude < Raster!
@@ -218,11 +218,12 @@ palm_ncdf_manual   <- R6::R6Class("palm_ncdf_manual",
                                       self$data$building_type  <- adata
                                       whichdimension[["building_type"]]  <- c(1,2)
                                       self$vardimensions  <- whichdimension
+                                      ncdf4::nc_close(ncfile)
 
                                     },
                                     getBuildingID = function(filepath, trustfile = FALSE){
                                       if(trustfile){
-                                        ncfile <- nc_open(filepath)
+                                        ncfile <- ncdf4::nc_open(filepath)
                                         buildid  <- arcgischeck(
                                           ncvar_get(ncfile, "Band1"),
                                           self$arcgis)
@@ -230,7 +231,7 @@ palm_ncdf_manual   <- R6::R6Class("palm_ncdf_manual",
                                       } else if(!trustfile) {
                                         # buildid   <- array(-9999.9,dim(self$data$buildings_2d$vals))
                                         # countr <- 1
-                                        ncfile <- nc_open(filepath)
+                                        ncfile <- ncdf4::nc_open(filepath)
                                         buildid  <- arcgischeck(
                                           ncvar_get(ncfile, "Band1"),
                                           self$arcgis)
@@ -259,6 +260,7 @@ palm_ncdf_manual   <- R6::R6Class("palm_ncdf_manual",
                                       whichdimension <- list()
                                       whichdimension[["building_id"]]  <- c(1,2)
                                       # self$vardimensions  <- whichdimension
+                                      ncdf4::nc_close(ncfile)
 
                                     }
                                   )
