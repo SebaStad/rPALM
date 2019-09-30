@@ -379,7 +379,9 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                       self$data <- dat
 
                                     },
-                                    # Export der netCDF Datei
+                                    #' Export der netCDF Datei
+                                    #' Title
+                                    #'
                                     #' Exports a static driver with the data present in the class
                                     #'
                                     #' @param Path Path where the driver is to be saved

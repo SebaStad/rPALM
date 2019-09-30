@@ -1,12 +1,12 @@
 # source("base_functions.R")
-# 
-# 
+#
+#
 # Building   <- "Building"
 # Pavement   <- "Pavement"
 # Vegetation <- "Vegetation"
 # Water      <- "Water"
-# 
-# 
+#
+#
 # Buildtypes <- c("Wohn bis 1950", "Wohn 1950 bis 2000", "Wohn seit 2000",
 #                 "Buero bis 1950", "Buero 1950 bis 2000", "Buero seit 2000")
 # Pavetypes  <- c("Nutzerdefiniert", "Unbekannter Asphalt", "Asphalt",
@@ -19,8 +19,8 @@
 #                 "Suempfe und Marsche", "Immergrüne Straeucher", "Laubabwerfende Straeucher", "Mischwald",
 #                 "Unterbrochener Wald")
 # Wattypes  <-  c("Nutzerdefiniert", "See", "Fluss", "Ozean", "Teich", "Brunnen")
-# 
-# 
+#
+#
 # library(shiny)
 # library(shinyTree)
 # library(DT)
@@ -30,16 +30,16 @@ options(shiny.maxRequestSize=1000*1024^2) #Increase limit for file-upload to 1 G
 
 # https://stackoverflow.com/questions/39209411/shinytree-set-variable-to-value-if-checkbox-is-checked
 # !!! Hilfreiche SO !!!
-server <- shinyServer(function(input, output, session) {
-  
+server <- shiny::shinyServer(function(input, output, session) {
+
   session$onSessionEnded(function() {
     stopApp()
   })
-  
-  output$tree <- renderTree({
+
+  output$tree <- shinyTree::renderTree({
     treelist <- list(
-      "Global attributes" = structure("",                #Name   
-                                      sticon = "globe",   #Icon 
+      "Global attributes" = structure("",                #Name
+                                      sticon = "globe",   #Icon
                                       stselected=TRUE),  #Vorausgewaehlte Node
       "Topography" = structure("",stopened = TRUE, sticon = "image"),
       "Buildings" = structure(
@@ -64,21 +64,21 @@ server <- shinyServer(function(input, output, session) {
       #  SubListA = list(leaf1 = "", leaf2 = "", leaf3=""),
       #  SubListB = structure(list(leafA = "", leafB = ""), stdisabled=TRUE)
       #),
-      #stopened=TRUE, #open tree at start 
+      #stopened=TRUE, #open tree at start
       #sticon = "tint"
       #)
     )
     treelist
   })
-  
+
   output$treeselect <-reactive({
     tree <- input$tree
     unlist(get_selected(tree,format = "names"))
   })
   outputOptions(output, "treeselect", suspendWhenHidden = FALSE)
 
-  
-  
+
+
   #### PALM Globale ####
   PALMGlobale <- eventReactive(input$palmglobal,{
     if(!all(
@@ -90,32 +90,32 @@ server <- shinyServer(function(input, output, session) {
       nchar(input$palmursprungy) > 0 ,
       nchar(input$palmuHeightAMSL) > 0 ,
       nchar(input$palmlatitude) > 0 ,
-      nchar(input$palmlongitude) > 0 
+      nchar(input$palmlongitude) > 0
     )){
       showNotification("Bitte füllen Sie die Globalen Attribute aus!", duration = 3, closeButton = TRUE, type = "error")
     }
-    
+
     palmglob  <- palm_global$new(title = input$palmtitle, author = input$palmcreator,
-                                 institute = input$palminstitute, location = input$palmlocation, 
-                                 x0 = as.numeric(input$palmursprungx), 
-                                 y0 = as.numeric(input$palmursprungy), 
-                                 z0 = as.numeric(input$palmuHeightAMSL), 
-                                 t0 = input$palmTime, #"2018-06-21 21:00:00 +00", 
-                                 lat = as.numeric(input$palmlatitude), 
+                                 institute = input$palminstitute, location = input$palmlocation,
+                                 x0 = as.numeric(input$palmursprungx),
+                                 y0 = as.numeric(input$palmursprungy),
+                                 z0 = as.numeric(input$palmuHeightAMSL),
+                                 t0 = input$palmTime, #"2018-06-21 21:00:00 +00",
+                                 lat = as.numeric(input$palmlatitude),
                                  lon = as.numeric(input$palmlongitude))
-    palmglob$changeVar(variable = "resolution", 
+    palmglob$changeVar(variable = "resolution",
                        input = as.numeric(input$palmgrid))
-    
-    
+
+
     if(is.null(input$palmursprungx) | is.null(input$palmursprungy)){
       lat_grid <- as.data.frame(expand.grid( palmglob$head$origin_lon,
                                              palmglob$head$origin_lat))
       sputm2 <- SpatialPoints(lat_grid, proj4string=CRS("+proj=longlat +datum=WGS84 +no_defs") )# Defining Gauss Krüger)
       #spgeo2 <- spTransform(sputm2, CRS("+proj=utm +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"))
       spgeo2 <- spTransform(sputm2, CRS("+proj=utm +zone=31 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"))
-      palmglob$changeVar(variable = "origin_x", 
+      palmglob$changeVar(variable = "origin_x",
                          input = as.numeric(as.data.frame(spgeo2)[1]))
-      palmglob$changeVar(variable = "origin_y", 
+      palmglob$changeVar(variable = "origin_y",
                          input = as.numeric(as.data.frame(spgeo2)[2]))
     }
     palmglob
@@ -130,9 +130,9 @@ server <- shinyServer(function(input, output, session) {
                                          resolution = "Eingabe fehlt")
    PALMDATA <- reactiveValues(class = NULL)
    Bckup    <- reactiveValues(palmdata_1 = NULL)
-   
+
    SortedFunction <- reactiveValues(HasBeen = FALSE)
-   
+
 
    observeEvent(PALMGlobale(), {
      PALMGlobale_Summary$title      <- PALMGlobale()$head$title
@@ -142,7 +142,7 @@ server <- shinyServer(function(input, output, session) {
      PALMGlobale_Summary$latitude   <- PALMGlobale()$head$origin_lat
      PALMGlobale_Summary$longitude  <- PALMGlobale()$head$origin_lon
      PALMGlobale_Summary$resolution <- PALMGlobale()$head$resolution
-     
+
      # output$palmglSummary     <- renderText({paste("<b>Titel:</b>", PALMGlobale_Summary$title, "<br>",
      #  "<b>Author:</b>",   PALMGlobale_Summary$author,"<br>",
      #  "<b>Institut:</b>", PALMGlobale_Summary$institute,"<br>",
@@ -152,9 +152,9 @@ server <- shinyServer(function(input, output, session) {
      #  "<b>Auflösung:</b>",PALMGlobale_Summary$resolution)})
    })
 
-   
+
    #### Summary ####
-   
+
    PALM_Summary <- reactiveValues(topography ="Eingabe fehlt",
                                   building2d ="Eingabe fehlt",
                                   buildingid ="Eingabe fehlt",
@@ -166,8 +166,8 @@ server <- shinyServer(function(input, output, session) {
                                   pavement="Eingabe fehlt",
                                   filling="kein Filling angewandt"
    )
-   
-   
+
+
    # output$palmSummary <- renderText({paste("<b>Titel:</b>", PALMGlobale_Summary$title, "<br>",
    #                                         "<b>Author:</b>",   PALMGlobale_Summary$author,"<br>",
    #                                         "<b>Institut:</b>", PALMGlobale_Summary$institute,"<br>",
@@ -186,7 +186,7 @@ server <- shinyServer(function(input, output, session) {
    #                                         "<b>Strasse:</b>",  PALM_Summary$pavement, "<br>",
    #                                         "<b>Filling:</b>",  PALM_Summary$filling, "<br>"
    # )})
-   
+
    output$palmSummary <- renderDT({
      datatable(data.frame(
        Parameter = c("Titel:", "Autor:", "Institut:", "Ort:", "Breite:", "Länge:", "Auflösung:",
@@ -199,12 +199,12 @@ server <- shinyServer(function(input, output, session) {
                   PALM_Summary$vegetationheight,PALM_Summary$water,PALM_Summary$pavement,
                   PALM_Summary$filling
                   )),
-       rownames=F, selection = c("none"), 
+       rownames=F, selection = c("none"),
        options = list(dom="t",
                       pageLength=20))%>%formatStyle("Eingabe",target="row",backgroundColor=styleEqual("Eingabe fehlt", "red"))
    }
    )
-   
+
 
   #### Topografie ####
   output$palmplot_topo <- renderPlot({
@@ -214,7 +214,7 @@ server <- shinyServer(function(input, output, session) {
       NULL
     }
   })
-  
+
    observeEvent(input$palmtopo_upload,{
      if(input$palmGIS=="ArcGIS"){
        arcgis <- TRUE
@@ -235,15 +235,15 @@ server <- shinyServer(function(input, output, session) {
       PALM_Summary$topography <- input$palmtopography$name
      }
    })
-   
- 
+
+
   # PALMCLASS <- eventReactive(input$palmtopo_upload,{
   #   palm_ncdf_shiny$new(topofile = input$palmtopography,
   #                      headclass = PALMGlobale())
   #})
 
-   
-   
+
+
   #### Gebäude ####
    observeEvent(input$palmbuilding_upload,{
      if(is.null(PALMDATA$class)){
@@ -259,11 +259,11 @@ server <- shinyServer(function(input, output, session) {
      if("buildings_2d" %in% names(PALMDATA$class$data)){
        PALM_Summary$building2d <- input$palmbuildings2d$name
      }
-     
+
      #print(names(PALMDATA$data))
      #print(PALMDATA$data)
-     
-   }) 
+
+   })
 
   output$palmplot_buildings2d <- renderPlot({
     if("buildings_2d" %in% names(PALMDATA$class$data)){
@@ -272,7 +272,7 @@ server <- shinyServer(function(input, output, session) {
       NULL
     }
   })
-  
+
   observeEvent(input$palmbuildingID_upload,{
     if(is.null(PALMDATA$class)){
       showNotification("Bitte füllen Sie die Globalen Attribute aus und laden die Topografie als erstes hoch!.", duration = 3, closeButton = TRUE, type = "error")
@@ -303,7 +303,7 @@ server <- shinyServer(function(input, output, session) {
         warning = function(w){
           1
           showNotification("Keine Datei ausgewählt!", duration = 3, closeButton = TRUE, type = "error")
-         
+
         })
       if(is.character(ncfile)){
        # print(ncfile)
@@ -318,19 +318,19 @@ server <- shinyServer(function(input, output, session) {
           PALM_Summary$buildingtype <- input$palmbuildingtype$name
         } else{
           showNotification("Laden Sie zuerst eine Buildings_2d Datei hoch!", duration = 3, closeButton = TRUE, type = "error")
-          
+
         }
 
         nc_close(ncfile)
-      
+
 
       }
 
-    } 
+    }
     else{
       showNotification("Standardwert angesetzt.", duration = 3, closeButton = TRUE, type = "message")
-      
-      PALM_Summary$buildingtype <- paste0("Standardwert ", 
+
+      PALM_Summary$buildingtype <- paste0("Standardwert ",
                                           switch(as.numeric(input$buildingtype_select),
                                                  "Wohngebäude, bis 1950",
                                                  "Wohngebäude, 1950 - 2000",
@@ -342,8 +342,8 @@ server <- shinyServer(function(input, output, session) {
       PALMDATA$class$data$building_id$vals[PALMDATA$class$data$building_id$vals>0] <- as.numeric(input$buildingtype_select)
     }
   })
-  
-  
+
+
   #### Vegetation ####
   observeEvent(input$palmvegetationtype_upload,{
     if(is.null(PALMDATA$class)){
@@ -359,7 +359,7 @@ server <- shinyServer(function(input, output, session) {
       PALM_Summary$vegetationtype <- input$palmvegetation$name
     }
   })
-  
+
   observeEvent(input$leafareaindex_upload,{
     if(input$leafareaindex_select==1){ ## Dateiupload
       PALM_Summary$leafareaindex <- input$leafareaindex$name
@@ -371,8 +371,8 @@ server <- shinyServer(function(input, output, session) {
       PALM_Summary$leafareaindex <- "Standardwerte gemäß Vegetation Typ vorbelegt"
     }
   })
- 
-  
+
+
   observeEvent(input$palmvegetationheight_upload,{
     tempcheck <- input$palmvegetationheight$name
     if(is.null(PALMDATA$class)){
@@ -389,11 +389,11 @@ server <- shinyServer(function(input, output, session) {
     }
     else{               ##Standardwert
       showNotification("Standardwert angesetzt.", duration = 3, closeButton = TRUE, type = "message")
-      
+
       PALM_Summary$vegetationheight <- "Standardwerte gemäß Vegetation Typ vorbelegt"
     }
   })
-   
+
   #### Wasser ####
   observeEvent(input$palmwater_upload,{
     if(is.null(PALMDATA$class)){
@@ -409,8 +409,8 @@ server <- shinyServer(function(input, output, session) {
       PALM_Summary$water <- input$palmwater$name
     }
   })
-  
-  
+
+
   #### Straßen ####
   observeEvent(input$palmpavement_upload,{
     if(is.null(PALMDATA$class)){
@@ -426,17 +426,17 @@ server <- shinyServer(function(input, output, session) {
       PALM_Summary$pavement <- input$palmpavement$name
     }
   })
-  
+
   #### Einstellungen ####
   observeEvent(input$palm_sort,{
     # print(paste(input$sort_select, collapse=""))
     if(length(input$sort_select)==4){
       tryCatch({
-      PALMDATA$class$SortOverlayingdata(paste(input$sort_select, collapse="")) 
+      PALMDATA$class$SortOverlayingdata(paste(input$sort_select, collapse=""))
         },
       error = function(e){
         showNotification("Nocht nicht alle Daten hochgeladen!", duration = 3, closeButton = TRUE, type = "error")
-      }, 
+      },
       warning = function(w){
         showNotification("Nocht nicht alle Daten hochgeladen!", duration = 3, closeButton = TRUE, type = "error")
       })
@@ -450,8 +450,8 @@ server <- shinyServer(function(input, output, session) {
     }
 
    })
-  
-  
+
+
   output$selTxt <- renderText({
     tree <- input$tree
     if (is.null(tree)){
@@ -460,7 +460,7 @@ server <- shinyServer(function(input, output, session) {
       unlist(get_selected(tree, format = "names"))
     }
   })
-  
+
   outVar =  reactive({
     mydata = get(input$palmtype)
 
@@ -476,10 +476,10 @@ server <- shinyServer(function(input, output, session) {
 
     output
   })
-  
+
   preSelected =  reactive({
     mydata = get(input$palmtype)
-    
+
     if(mydata=="Building"){
       output = Buildtypes[2]
     } else if(mydata=="Pavement"){
@@ -489,41 +489,41 @@ server <- shinyServer(function(input, output, session) {
     } else if(mydata=="Water"){
       output   = Wattypes[3]
     }
-    
+
     output
   })
-  
+
 
   observe({
     updateSelectInput(session, "palmid",
                       choices = outVar(),
                       selected = preSelected()
     )})
-  
-  
+
+
   #### Filling ####
-  
+
   observeEvent(input$palmtype_fill,{
     if(input$palmtype=="Vegetation"){
-      whichnumber <- which(outVar()==input$palmid)-1 
+      whichnumber <- which(outVar()==input$palmid)-1
       PALMDATA$class$data$vegetation_type$vals[PALMDATA$class$data$vegetation_type$vals<0] <- whichnumber
       if(SortedFunction$HasBeen){
         PALMDATA$class$SortOverlayingdata("BWPV")
       }
     } else if(input$palmtype=="Pavement"){
-      whichnumber <- which(outVar()==input$palmid)-1 
+      whichnumber <- which(outVar()==input$palmid)-1
       PALMDATA$class$data$pavement_type$vals[PALMDATA$class$data$pavement_type$vals<0] <- whichnumber
       if(SortedFunction$HasBeen){
         PALMDATA$class$SortOverlayingdata("BWVP")
       }
     }
      PALM_Summary$filling <- paste0("Lücken wurden mit Standardwert ",
-                                     input$palmtype, 
-                                    " vorbelegt") 
+                                     input$palmtype,
+                                    " vorbelegt")
   })
-  
-  
-  
+
+
+
   # #### Plot ####
   # pp <- eventReactive(
   #   c(input$redraw,
@@ -536,9 +536,9 @@ server <- shinyServer(function(input, output, session) {
   #                                      dim(PALMDATA$class$data$zt$vals)[1]-1,
   #                                      dim(PALMDATA$class$data$zt$vals)[2]-1)
   # })
-  
+
   #Neuer Ansatz matw: Plot nur nachdem die Daten hochgeladen wurden:
-  
+
   pp <- reactive(
 {
   input$redraw
@@ -547,17 +547,17 @@ server <- shinyServer(function(input, output, session) {
   req(isolate(PALMDATA$class$data$water_type$vals))
   req(isolate(PALMDATA$class$data$buildings_2d$vals))
   input$palmtype_fill
-  
+
         PALMDATA$class$plot_area(1,1,
                                  dim(PALMDATA$class$data$zt$vals)[1]-1,
                                  dim(PALMDATA$class$data$zt$vals)[2]-1)
       })
-  
-  
-  
-  
+
+
+
+
   output$plot1 <- renderPlot({
-      pp()      
+      pp()
   })
 
   output$brush_info <- renderPrint({
@@ -566,20 +566,20 @@ server <- shinyServer(function(input, output, session) {
    ymin <- round(input$plot1_brush$ymin)
    ymax <- round(input$plot1_brush$ymax)
   })
-  
+
   output$hover_info <- renderPrint({
     if(is.null(input$plot1_hover)) {
       cat("Keine Auswahl")
     } else {
-    
+
     xp <- round(input$plot1_hover$x)
     yp <- round(input$plot1_hover$y)
-    
+
     cat(paste("X:", xp, "\n", sep = " "))
     cat(paste("Y:", yp, "\n", sep = " "))
     #print(xp)
     #print(yp)
-    
+
     if(PALMDATA$class$data$buildings_2d$vals[xp,yp]>0){
       cat("Gebaeudehoehe:\n")
       str(PALMDATA$class$data$buildings_2d$vals[xp,yp])
@@ -598,26 +598,26 @@ server <- shinyServer(function(input, output, session) {
       cat("Strassentyp:\n")
       str(Pavetypes[PALMDATA$class$data$pavement_type$vals[xp,yp]+1])
     }
-    
+
     }
-    
-    
-    
+
+
+
   })
-  
-  
+
+
   #### Download ####
-  
-  
-  
+
+
+
 #  observeEvent(input$file_download,{
 #    PALMDATA$class$exportname <- input$exportfile
 #    PALMDATA$class$createbuilding3D(TRUE, TRUE)
 #    PALMDATA$class$addsoilandsurfacefraction()
 #    PALMDATA$class$exportncdf()
-#    
+#
 #  })
-  
+
   output$file_download <- downloadHandler(
     filename <- function(){
       input$exportfile
@@ -640,18 +640,18 @@ server <- shinyServer(function(input, output, session) {
       }
       PALMDATA$class$createbuilding3D(TRUE, TRUE)
       PALMDATA$class$addsoilandsurfacefraction()
-      
+
       # Fix for rausgefilterte Buildings
       # Fix: na.rm =TRUE für max Befehl
       # PALMDATA$class$data$building_id$vals[PALMDATA$class$data$buildings_2d$vals<=0] <- -9999.9
       # PALMDATA$class$data$building_id$vals[PALMDATA$class$data$buildings_2d$vals>0 & PALMDATA$class$data$building_id$vals<=0] <- max(PALMDATA$class$data$building_id$vals, na.rm = T) + 1
       #
-      
+
       PALMDATA$class$exportncdf(EPSGCode = input$palmuEPSG)
       file.copy(paste0(getwd(),"/",input$exportfile), file)
     }
   )
-  
+
   observeEvent(input$palmglobal, {
     if(all(
       nchar(input$palmtitle) > 0 ,
@@ -662,44 +662,44 @@ server <- shinyServer(function(input, output, session) {
       nchar(input$palmursprungy) > 0 ,
       nchar(input$palmuHeightAMSL) > 0 ,
       nchar(input$palmlatitude) > 0 ,
-      nchar(input$palmlongitude) > 0 
+      nchar(input$palmlongitude) > 0
     )){
     showNotification("Eingaben gespeichert", duration = 3, closeButton = TRUE, type = "message")
     }
   })
-  
+
   observeEvent(input$palmtopo_upload, {
     if(length(PALMDATA$class)>1){
     showNotification("Eingaben gespeichert", duration = 3, closeButton = TRUE, type = "message")
     }
   })
-  
+
   observeEvent(input$palmbuilding_upload, {
     if("buildings_2d" %in% names(PALMDATA$class$data)){
       showNotification("Eingaben gespeichert", duration = 3, closeButton = TRUE, type = "message")
     }
-  })  
-  
+  })
+
   observeEvent(input$palmbuildingID_upload, {
     if("building_id" %in% names(PALMDATA$class$data)){
       showNotification("Eingaben gespeichert", duration = 3, closeButton = TRUE, type = "message")
     }
-  })  
-  
+  })
+
   observeEvent(input$palmbuildingtype_upload, {
     tempcheck <- input$palmbuildingtype$name
     if(!is.null(tempcheck) & "buildings_2d" %in% names(PALMDATA$class$data)){
       showNotification("Eingaben gespeichert", duration = 3, closeButton = TRUE, type = "message")
     }
 
-  })  
-  
+  })
+
   observeEvent(input$palmvegetationtype_upload, {
     if("vegetation_type" %in% names(PALMDATA$class$data)){
       showNotification("Eingaben gespeichert", duration = 3, closeButton = TRUE, type = "message")
     }
-  })  
-  
+  })
+
   observeEvent(input$palmvegetationheight_upload, {
     tempcheck <- input$palmvegetationheight$name
     if(!is.null(tempcheck) & "zt" %in% names(PALMDATA$class$data)){
@@ -708,37 +708,37 @@ server <- shinyServer(function(input, output, session) {
     } else {
        # showNotification("Keine Datei ausgewählt!", duration = 3, closeButton = TRUE, type = "error")
     }
-    
-  })  
-  
+
+  })
+
   observeEvent(input$palmwater_upload, {
     if("water_type" %in% names(PALMDATA$class$data)){
       showNotification("Eingaben gespeichert", duration = 3, closeButton = TRUE, type = "message")
     }
-  })  
-  
+  })
+
   observeEvent(input$palmpavement_upload, {
     if("pavement_type" %in% names(PALMDATA$class$data)){
       showNotification("Eingaben gespeichert", duration = 3, closeButton = TRUE, type = "message")
     }
-  })  
-  
+  })
+
   observeEvent(input$palm_sort, {
     req(isolate(PALMDATA$class$data$vegetation_type$vals))
     req(isolate(PALMDATA$class$data$pavement_type$vals))
     req(isolate(PALMDATA$class$data$water_type$vals))
     req(isolate(PALMDATA$class$data$buildings_2d$vals))
     showNotification("Eingaben gespeichert", duration = 2, closeButton = TRUE, type = "message")
-  }) 
-  
+  })
+
   observeEvent(input$palmtype_fill, {
     showNotification("Filling mit Standardwert erfolgreich.", duration = 2, closeButton = TRUE, type = "message")
-  })  
-  
+  })
+
   observeEvent(input$redraw, {
     showNotification("Grafik aktualisiert", duration = 2, closeButton = TRUE, type = "message")
-  })  
-  
-      
+  })
+
+
 
 })
