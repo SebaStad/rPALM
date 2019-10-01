@@ -30,3 +30,14 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
+Collate: 
+    'zzz.R'
+    'aaa-.R'
+    'palm_berlin.R'
+    'palm_global.R'
+    'palm_import_static.R'
+    'palm_manual_grid.R'
+    'palm_munich.R'
+    'palm_shiny.R'
+    'shiny_static.R'
+    'supplementary_functions.R'
