@@ -9,12 +9,7 @@ urban climate model PALM-4U.
 Installation
 ------------
 
-You can install the released version of rPALM from
-[CRAN](https://CRAN.R-project.org) with:
-
-    install.packages("rPALM")
-
-And the development version from [GitHub](https://github.com/) with:
+Right now, rPAALM is only available via [GitHub](https://github.com/):
 
     # install.packages("devtools")
     devtools::install_github("SebaStad/rPALM")
@@ -22,30 +17,112 @@ And the development version from [GitHub](https://github.com/) with:
 Example
 -------
 
-This is a basic example which shows you how to solve a common problem:
+A simple example to create a static driver from scratch. Lots of
+information about what and why is yet missing!
 
     library(rPALM)
-    ## basic example code
+    # First:
+    # Define a headclass
+    manual_headclass <- palm_global$new(title = "GIT Example",
+                                        author = "sest",
+                                        institute = "IBP",
+                                        location = "Hoki",
+                                        x0 = 0,   # only important for visualization on a map later on
+                                        y0 = 0,   # only important for visualization on a map later on
+                                        z0 = 0,
+                                        t0 = "2018-06-21 12:00:00 +00", # Character with Date in this format, 
+                                        # might be important to have correct in later releases of PALM!
+                                        lat = 52.502302,   # important for solar radiation
+                                        lon = 13.364862,   # important for solar radiation
+                                        dx = 5)
 
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
 
-    summary(cars)
+    manual_class <- palm_ncdf_manual$new(nx = 20, ny = 20, dx = 5,
+                                         headclass = manual_headclass)
 
-    ##      speed           dist       
-    ##  Min.   : 4.0   Min.   :  2.00  
-    ##  1st Qu.:12.0   1st Qu.: 26.00  
-    ##  Median :15.0   Median : 36.00  
-    ##  Mean   :15.4   Mean   : 42.98  
-    ##  3rd Qu.:19.0   3rd Qu.: 56.00  
-    ##  Max.   :25.0   Max.   :120.00
+    # Manually set vegetation to short grass
+    manual_class$data$vegetation_type$vals <- array(3,dim = c(20,20))
+    # Set one Tree
+    manual_class$data$vegetation_type$vals[9:11,2:3] <- 6
 
-You'll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date.
+    # Pavement
+    manual_class$data$pavement_type$vals[,9:11] <- 2
 
-You can also embed plots, for example:
+    # water 
+    manual_class$data$water_type$vals[,13:14] <- 2
 
-![](README_files/figure-markdown_strict/pressure-1.png)
+    # buildings
+    manual_class$data$buildings_2d$vals[5:15, 6:8] <- 20
+    manual_class$data$building_id$vals[5:15, 6:8]  <- 1
+    manual_class$data$building_type$vals[5:15, 6:8] <- 3
 
-In that case, don't forget to commit and push the resulting figure
-files, so they display on GitHub!
+
+    #Sort Data
+    manual_class$SortOverlayingdata("BPWV")
+
+    # plot
+    manual_class$plot_area(1,1,20,20)
+
+![](README_files/figure-markdown_strict/example-1.png)
+
+While basically all data is now available, some cleanup functions have
+to be called to create the static driver:
+
+    # First, create the 3D Buidlings data. It does not do anything different from buildings_2d BUT:
+    #       1. enables 3D visualization in ParaView (so it is mandatory)
+    #       2. enables the creation of bridges and gates (has to be done manually, time expensive)
+    manual_class$createbuilding3D(TRUE, FALSE)
+
+    # Second, create soil and surface fraction
+    # Both are mandatory for the simulation
+    manual_class$addsoilandsurfacefraction(type_soil = 2)
+
+
+    # Third generate LAD
+    manual_class$generate_lai_array(dz = 5, fixed_tree_height = 15)
+    # That function has a lot of variables, but these are enough. dz is mandatory
+
+    # Fourth, set water temperature to 288K
+    # Create "water_pars" data 
+    manual_class$add_lod2_variable("water")
+    manual_class$data$water_pars$vals[,,1][manual_class$data$water_type$vals>=0] <- 288
+
+    # Further functions, that can be useful, but are not needed in this example:
+
+    # manual_class$downscale_resolution(factor = 2)
+    # downscales the resolution by a factor of 2, i.e. from 5 to 10 m
+
+    # manual_class$quickplot("vegetation_type")
+    # allows a quick look at 2D data in the class
+
+    # manual_class$savedplots[[1]]
+    # All plot calls with $plot_area are saved in the list $savedplots
+
+    # Count of plots can be called via 
+    # manual_class$plotcntr
+
+
+    # Finally: set an eportname of the file
+    manual_class$exportname <- "quicktest.nc"
+
+    # manual_class$exportncdf()
+    # Exports the static driver in the current work directory
+
+Further instructions/examples incoming...
+
+PIDS
+----
+
+PIDS should be callable via
+
+    # rPALM:::PIDS
+    rPALM:::PIDS$soil$predefined_type
+
+    ##   ID         Name
+    ## 1  0 user defined
+    ## 2  1       coarse
+    ## 3  2       medium
+    ## 4  3  medium-fine
+    ## 5  4         fine
+    ## 6  5    very fine
+    ## 7  6      organic
