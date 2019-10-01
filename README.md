@@ -105,6 +105,26 @@ to be called to create the static driver:
     # Finally: set an eportname of the file
     manual_class$exportname <- "quicktest.nc"
 
+    manual_class
+
+    ## PALM Class 
+    ## Gridpoints in x:20
+    ## Gridpoints in y:20
+    ## Resolution:5
+    ## Available data: 
+    ## zt
+    ## buildings_2d
+    ## building_id
+    ## building_type
+    ## vegetation_type
+    ## water_type
+    ## pavement_type
+    ## buildings_3d
+    ## soil_type
+    ## surface_fraction
+    ## lad
+    ## water_pars
+
     # manual_class$exportncdf()
     # Exports the static driver in the current work directory
 

@@ -7,7 +7,7 @@ rPALM provides R6 classes to create and edit static drivers for the urban climat
 
 ## Installation
 
-Right now, rPAALM is only available via [GitHub](https://github.com/):
+Right now, rPALM is only available via [GitHub](https://github.com/):
 
 ``` r
 # install.packages("devtools")
@@ -102,6 +102,9 @@ manual_class$data$water_pars$vals[,,1][manual_class$data$water_type$vals>=0] <- 
 
 # Finally: set an eportname of the file
 manual_class$exportname <- "quicktest.nc"
+
+manual_class
+
 
 # manual_class$exportncdf()
 # Exports the static driver in the current work directory
