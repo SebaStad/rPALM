@@ -9,7 +9,7 @@ urban climate model PALM-4U.
 Installation
 ------------
 
-Right now, rPAALM is only available via [GitHub](https://github.com/):
+Right now, rPALM is only available via [GitHub](https://github.com/):
 
     # install.packages("devtools")
     devtools::install_github("SebaStad/rPALM")
