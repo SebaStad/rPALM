@@ -396,7 +396,7 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                     #'                           EPSGCode = "EPSG:25833")
                                     exportncdf = function(Path = self$path, EPSGCode = "EPSG:25833"){
                                       ###########
-                                      # GUI ANPASSUNG FÜR EPSG
+                                      # GUI ANPASSUNG FueR EPSG
                                       ###########
                                       # HARDCODED!
                                       #
@@ -468,7 +468,7 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
 
                                       df <- as.data.frame(expand.grid(e_utm,n_utm))
 
-                                      sputm <- sp::SpatialPoints(df, proj4string=CRS("+proj=utm +zone=33 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"))# Defining Gauss Krüger)
+                                      sputm <- sp::SpatialPoints(df, proj4string=CRS("+proj=utm +zone=33 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"))# Defining Gauss Krueger)
                                       spgeo <- sp::spTransform(sputm, CRS("+proj=longlat +datum=WGS84 +no_defs") )
 
                                       thedata <- round(as.data.frame(spgeo),6)
@@ -1454,17 +1454,17 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                                                   startx = NULL, starty =NULL, lengthx = NULL,
                                                                   lengthy = NULL, additional_array = NULL){
 
-                                      # Erstellung eines 3D-arrays der leaf area density für 'Baumgruppen'.
+                                      # Erstellung eines 3D-arrays der leaf area density fuer 'Baumgruppen'.
                                       #
                                       # lai           - Leaf Area Index (Matrix)
-                                      # canopy_height - Vegetationshöhe (Matrix)
-                                      # dz 			- räumliche Auflösung in der Höhe
+                                      # canopy_height - Vegetationshoehe (Matrix)
+                                      # dz 			- raeumliche Aufloesung in der Hoehe
                                       # alpha, beta   - empirische Parameter nach
                                       #                 Markkanen et al. (2003): Footprints and Fetches for Fluxes
                                       #				  over Forest Canopies with varying Structure and Density.
                                       #				  Boundary-Layer Meteorology 106: 437-459
                                       #
-                                      # Rückgabewert: lad_array[x,y,z]
+                                      # Rueckgabewert: lad_array[x,y,z]
                                       if(is.null(fixed_tree_height)){
                                         canopy_height1 <- array(NA,c(dim(self$data$vegetation_type$vals)[1],dim(self$data$vegetation_type$vals)[2]))
                                         canopy_height1[self$data$vegetation_type$vals==4] <- 20
@@ -1771,7 +1771,7 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                       if(street==TRUE & any(names(self$data)==checkvar) ){
                                         ###########
                                         # THRESHOLD FOR BUILDINGS
-                                        th <- 4    # 4x5 = 20m Abstand von Straßenachse zu gebäude
+                                        th <- 4    # 4x5 = 20m Abstand von Straßenachse zu gebaeude
                                         newvec   <- array(0,dim=dim(vec))
                                         #loop through all dimensions
                                         for(i in seq(dim(vec)[1])){
