@@ -13,18 +13,19 @@ License: CC0
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
-Imports: 
+Depends: 
     R6,
     ncdf4,
     sp,
     rgdal,
     ggplot2,
     reshape2,
-    shiny,
-    shinyTree,
-    DT,
     sp,
     imager
+Imports: 
+	shiny,
+    shinyTree,
+    DT,
 Suggests: 
     knitr,
     rmarkdown

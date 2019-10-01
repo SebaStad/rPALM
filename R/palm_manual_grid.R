@@ -5,6 +5,22 @@ palm_ncdf_manual   <- R6::R6Class("palm_ncdf_manual",
                                     vardimensions = NULL,
                                     oldversion = NULL,
                                     plotcntr = 0,
+#' R6-Class to create a new static driver from scratch. Creates the most important data arrays depending on the
+#' grid definitions, given by the initialize/new function
+#'
+#' @param nx Numerical. Grid points in x direction
+#' @param ny Numerical. Grid points in y direction
+#' @param dx Numerical. Grid spacing
+#' @param headclass R6-Class.
+#' @param oldversion Logical. Only use TRUE for PALM versions <2900
+#' @param gui.arcgis Logical. Set to TRUE, when you want to import rastered files created by ARCGIS.
+#'
+#' @return The initialize/new functions creates a R6 class, where most important arrays (vegetation_type, buildings_2d, etc)
+#' are initialized with fill values.
+#' @export
+#'
+#' @examples
+#' manual_static <- palm_ncdf_manual$new(200,200,10, palm_headclass, FALSE, FALSE)
                                     initialize = function(nx, ny, dx, headclass, oldversion = FALSE, gui.arcgis = FALSE){
                                       if(oldversion){
                                         self$oldversion <- TRUE

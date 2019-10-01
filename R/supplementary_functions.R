@@ -101,11 +101,21 @@ fillfunc_sett <- function(startx,starty, array2d){
 }
 
 
+#' Title
+#'
+#' @param matrix A 2D Matrix
+#'
+#' @return Returns a ggplot
+#' @export
+#'
+#' @examples
+#' x <- matrix(runif(100), ncol = 10, nrow =10 )
+#' plot_2d_data(x)
 plot_2d_data <- function(matrix){
-  meltvec  <- melt(matrix)
+  meltvec  <- reshape2::melt(matrix)
 
 
-  ggplot(meltvec, aes(x = Var1, y = Var2, fill = value)) +
+  ggplot2::ggplot(meltvec, ggplot2::aes(x = Var1, y = Var2, fill = value)) +
     geom_tile() +
     theme_bw() + theme(axis.text.x=element_text(size=9, angle=0, vjust=0.3),
                        axis.text.y=element_text(size=9),

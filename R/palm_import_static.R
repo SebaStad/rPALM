@@ -2,6 +2,21 @@ palm_ncdf_import   <- R6::R6Class("palm_ncdf_import",
                                   inherit = palm_ncdf_berlin,
                                   public = list(
                                     source = NULL,
+#' R6-Class to import data from an already existing static driver
+#'
+#' @param newfilename Character. Filename for the future static driver
+#' @param pathtofiles Character. Path where the old static driver lies
+#' @param oldfilename Character. Name of the old static driver
+#' @param oldversion Logical. Only use TRUE for PALM versions <2900
+#'
+#' @return The initialize/new function creates a barebones class with references to the static driver.
+#' To import the data of the static file, read_static() has to be called afterwards
+#' @export
+#'
+#' @examples
+#' import_static <- palm_ncdf_import$new("new_static_driver.nc",
+#'                                       "Path/to/files", "old_static_driver.nc", F)
+#' import_static$read_static()
                                     initialize = function(newfilename, pathtofiles, oldfilename, oldversion = TRUE){
                                       if(substrRight(newfilename,3)!=".nc"){
                                         newfilename <- paste(newfilename,".nc",sep="")

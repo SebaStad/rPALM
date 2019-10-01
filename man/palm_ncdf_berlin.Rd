@@ -58,6 +58,9 @@ Title
 berlin_example$importfiles(lengthx = 100,
                            lengthy = 100,
                            dx = 10)
+Export der netCDF Datei
+Title
+
 Exports a static driver with the data present in the class
 
 berlin_example$exportncdf(Path = "Path/to/be/saved"
