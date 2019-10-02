@@ -14,7 +14,7 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                     vardimensions  = NULL,
                                     oldversion = NULL,
 
-                                    # Funktion die mit $new aufgerufen wird!
+                                    #' Funktion die mit $new aufgerufen wird!
                                     #' Title
                                     #'
                                     #' @param filename Filename
@@ -26,8 +26,21 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                     #' @export
                                     #'
                                     #' @examples
-                                    #' berlin_example$new(filename = "berlin_static.nc",
-                                    #'                    headclass = berlin_head,
+                                    #' #berlin_headm <- palm_global$new(title = "GIT Example",
+                                    #' #author = "sest",
+                                    #' #institute = "IBP",
+                                    #' #location = "Hoki",
+                                    #' #x0 = 0,   # only important for visualization on a map later on
+                                    #' #y0 = 0,   # only important for visualization on a map later on
+                                    #' #z0 = 0,
+                                    #' #t0 = "2018-06-21 12:00:00 +00", # Character with Date in this format,
+                                    #' # might be important to have correct in later releases of PALM!
+                                    #' #lat = 52.502302,   # important for solar radiation
+                                    #' #lon = 13.364862,   # important for solar radiation
+                                    #' #dx = 5)
+                                    #'
+                                    #' berlin_example <- palm_ncdf_berlin$new(filename = "berlin_static.nc",
+                                    #'                    headclass = "berlin_head",
                                     #'                    pathtofiles = "Path/to/Berlin/data",
                                     #'                    oldversion = FALSE)
                                     initialize = function(filename, headclass, pathtofiles,oldversion = FALSE){
@@ -379,7 +392,7 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                       self$data <- dat
 
                                     },
-                                    #' Export der netCDF Datei
+                                    # Export der netCDF Datei
                                     #' Title
                                     #'
                                     #' Exports a static driver with the data present in the class
@@ -2091,12 +2104,12 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
 
                                       self$dims$y$vals <- newy
                                     },
-                                    cutout_static <- function(startp, endp, sure = FALSE){
+                                    cutout_static = function(startp, endp, sure = FALSE){
                                       if(!sure){
                                         cat("This may loose some data!\n")
                                         cat("You should be sure, you want to do this!\n")
                                         cat("Maybe save your current static driver via $clone(deep=TRUE)!\n")
-                                      } else{
+                                      } else {
 
                                         self$dims$x$vals <- self$dims$x$vals[startp[1]:endp[1]]
                                         self$dims$y$vals <- self$dims$y$vals[startp[2]:endp[2]]

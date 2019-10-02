@@ -3,7 +3,8 @@
 \docType{data}
 \name{palm_ncdf_berlin}
 \alias{palm_ncdf_berlin}
-\title{Title}
+\title{Funktion die mit $new aufgerufen wird!
+Title}
 \format{An object of class \code{R6ClassGenerator} of length 24.}
 \usage{
 palm_ncdf_berlin
@@ -46,11 +47,25 @@ Exports a static driver
 Simple visualization of the simulation domain
 }
 \description{
+Funktion die mit $new aufgerufen wird!
 Title
 }
 \examples{
-berlin_example$new(filename = "berlin_static.nc",
-                   headclass = berlin_head,
+#berlin_headm <- palm_global$new(title = "GIT Example",
+#author = "sest",
+#institute = "IBP",
+#location = "Hoki",
+#x0 = 0,   # only important for visualization on a map later on
+#y0 = 0,   # only important for visualization on a map later on
+#z0 = 0,
+#t0 = "2018-06-21 12:00:00 +00", # Character with Date in this format,
+# might be important to have correct in later releases of PALM!
+#lat = 52.502302,   # important for solar radiation
+#lon = 13.364862,   # important for solar radiation
+#dx = 5)
+
+berlin_example <- palm_ncdf_berlin$new(filename = "berlin_static.nc",
+                   headclass = "berlin_head",
                    pathtofiles = "Path/to/Berlin/data",
                    oldversion = FALSE)
 Title
@@ -58,6 +73,8 @@ Title
 berlin_example$importfiles(lengthx = 100,
                            lengthy = 100,
                            dx = 10)
+Title
+
 Exports a static driver with the data present in the class
 
 berlin_example$exportncdf(Path = "Path/to/be/saved"

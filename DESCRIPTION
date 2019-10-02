@@ -13,19 +13,31 @@ License: CC0
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
-Imports: 
+Depends: 
     R6,
     ncdf4,
     sp,
     rgdal,
     ggplot2,
     reshape2,
-    shiny,
-    shinyTree,
-    DT,
     sp,
     imager
+Imports: 
+	shiny,
+    shinyTree,
+    DT,
 Suggests: 
     knitr,
     rmarkdown
 VignetteBuilder: knitr
+Collate: 
+    'zzz.R'
+    'aaa-.R'
+    'palm_berlin.R'
+    'palm_global.R'
+    'palm_import_static.R'
+    'palm_manual_grid.R'
+    'palm_munich.R'
+    'palm_shiny.R'
+    'shiny_static.R'
+    'supplementary_functions.R'
