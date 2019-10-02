@@ -1863,6 +1863,15 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                       self$data$water_type$vals      <- multidimarray[,,3]
                                       self$data$vegetation_type$vals <- multidimarray[,,4]
 
+                                      if(unlist(strsplit(inorderof,""))[1]!="B"){
+                                        dx <- self$header$head$resolution
+
+                                        self$data$building_id$vals[self$data[[checkvar]]$vals<=dx/2]   <- -9999.9
+                                        self$data$building_type$vals[self$data[[checkvar]]$vals<=dx/2] <- -127
+                                        self$data[[checkvar]]$vals[self$data[[checkvar]]$vals<=dx/2]   <- -9999.9
+                                      }
+
+
                                     },
                                     countemptyfields = function(){
                                       if(self$oldversion){
@@ -2081,6 +2090,29 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                                   by= new.dx)
 
                                       self$dims$y$vals <- newy
+                                    },
+                                    cutout_static <- function(startp, endp, sure = FALSE){
+                                      if(!sure){
+                                        cat("This may loose some data!\n")
+                                        cat("You should be sure, you want to do this!\n")
+                                        cat("Maybe save your current static driver via $clone(deep=TRUE)!\n")
+                                      } else{
+
+                                        self$dims$x$vals <- self$dims$x$vals[startp[1]:endp[1]]
+                                        self$dims$y$vals <- self$dims$y$vals[startp[2]:endp[2]]
+
+                                        for(i in names(self$data)){
+                                          if(length(dim(self$data[[i]]$vals))==2){
+                                            self$data[[i]]$vals  <- self$data[[i]]$vals[startp[1]:endp[1],
+                                                                                        startp[2]:endp[2]]
+                                          } else if(length(dim(self$data[[i]]$vals))==3){
+                                            self$data[[i]]$vals  <- self$data[[i]]$vals[startp[1]:endp[1],
+                                                                                        startp[2]:endp[2],]
+                                          }
+
+                                        }
+
+                                      }
                                     }
                                   ),
 
