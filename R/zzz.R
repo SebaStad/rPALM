@@ -11,10 +11,10 @@
                   "Beton", "Pflaster", "Pflastersteine (Paving)", "Pflastersteine (Cobble)",
                   "Metal", "Holz", "Kies", "Feiner Kies", "Kieselstein", "Hackschnitzel",
                   "Tartan", "Kunstrasen", "Lehm", "Gebaeude (Dummy)")
-  Vegtypes   <- c("Nutzerdefiniert", "Erdboden", "Feld (Getreide)", "Kurzes Gras", "Immergrüne Nadelbäume",
-                  "Laubabwerfender Nadelbaum", "Immergrüner Laubbaum", "Laubbaum", "Hohes Gras",
-                  "Wüste", "Tundra", "Bewässertes Feld", "Halbwüste", "Gletscher (funktioniert nicht)",
-                  "Suempfe und Marsche", "Immergrüne Straeucher", "Laubabwerfende Straeucher", "Mischwald",
+  Vegtypes   <- c("Nutzerdefiniert", "Erdboden", "Feld (Getreide)", "Kurzes Gras", "Immergruene Nadelbaeume",
+                  "Laubabwerfender Nadelbaum", "Immergruener Laubbaum", "Laubbaum", "Hohes Gras",
+                  "Wueste", "Tundra", "Bewaessertes Feld", "Halbwueste", "Gletscher (funktioniert nicht)",
+                  "Suempfe und Marsche", "Immergruene Straeucher", "Laubabwerfende Straeucher", "Mischwald",
                   "Unterbrochener Wald")
   Wattypes  <-  c("Nutzerdefiniert", "See", "Fluss", "Ozean", "Teich", "Brunnen")
 

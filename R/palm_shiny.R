@@ -5,6 +5,20 @@ palm_ncdf_shiny   <- R6::R6Class("palm_ncdf_shiny",
                                    vardimensions = NULL,
                                    oldversion = NULL,
                                    plotcntr = 0,
+#' R6 Class to create a static driver for the shiny app. The domain is defined via the topography file, other
+#' data arrays have to be defined later.
+#'
+#' @param topofile Link to a rastered ncfile with topography. May not conatin fill values!
+#' @param headclass R6-Class.
+#' @param oldversion Logical. Only use TRUE for PALM versions <2900
+#' @param gui.arcgis Logical. Set to TRUE, when you want to import rastered files created by ARCGIS.
+#'
+#' @return The initialize/new functions creates a R6 class that only contains the array "zt". Other information has to be
+#' loaded via import_files()
+#' @export
+#'
+#' @examples
+#' shiny_static <- palm_ncdf_shiny$new("Path/to/topfile.nc", palm_headclass, FALSE, FALSE)
                                    initialize = function(topofile, headclass, oldversion = FALSE, gui.arcgis = FALSE){
                                      if(oldversion){
                                        self$oldversion <- TRUE
