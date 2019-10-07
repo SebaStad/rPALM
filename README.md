@@ -89,6 +89,7 @@ to be called to create the static driver:
 
     # Further functions, that can be useful, but are not needed in this example:
 
+
     # manual_class$downscale_resolution(factor = 2)
     # downscales the resolution by a factor of 2, i.e. from 5 to 10 m
 
@@ -144,6 +145,49 @@ One solution is to make a copy via clone(deep = TRUE)
     cutout_static$plot_area(1,1,15,15)
 
 ![](README_files/figure-markdown_strict/cutout-1.png)
+
+
+    # manual_class$downscale_resolution(factor = 2)
+    # downscales the resolution by a factor of 2, i.e. from 5 to 10 m
+
+    # manual_class$quickplot("vegetation_type")
+    # allows a quick look at 2D data in the class
+
+    # manual_class$savedplots[[1]]
+    # All plot calls with $plot_area are saved in the list $savedplots
+
+    # Count of plots can be called via 
+    # manual_class$plotcntr
+
+
+    # Finally: set an eportname of the file
+    manual_class$exportname <- "quicktest.nc"
+
+    manual_class
+
+    ## PALM Class 
+    ## Gridpoints in x:20
+    ## Gridpoints in y:20
+    ## Resolution:5
+    ## Available data: 
+    ## zt
+    ## buildings_2d
+    ## building_id
+    ## building_type
+    ## vegetation_type
+    ## water_type
+    ## pavement_type
+    ## buildings_3d
+    ## soil_type
+    ## surface_fraction
+    ## lad
+    ## water_pars
+
+    # manual_class$exportncdf()
+    # Exports the static driver in the current work directory
+
+Further instructions/examples incoming...
+
 
 PIDS
 ----

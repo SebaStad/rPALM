@@ -43,6 +43,7 @@ manual_class$data$vegetation_type$vals <- array(3,dim = c(20,20))
 # Set one Tree
 manual_class$data$vegetation_type$vals[9:11,2:3] <- 6
 
+
 # Pavement
 manual_class$data$pavement_type$vals[,9:11] <- 2
 
@@ -125,6 +126,77 @@ cutout_static$cutout_static(startp = c(3,3), endp = c(18,18), sure = T)
 
 cutout_static$plot_area(1,1,15,15)
 ```
+
+
+
+# Pavement
+manual_class$data$pavement_type$vals[,9:11] <- 2
+
+# water 
+manual_class$data$water_type$vals[,13:14] <- 2
+
+# buildings
+manual_class$data$buildings_2d$vals[5:15, 6:8] <- 20
+manual_class$data$building_id$vals[5:15, 6:8]  <- 1
+manual_class$data$building_type$vals[5:15, 6:8] <- 3
+
+
+#Sort Data
+manual_class$SortOverlayingdata("BPWV")
+
+# plot
+manual_class$plot_area(1,1,20,20)
+
+```
+
+While basically all data is now available, some cleanup functions have to be called to create the static driver:
+
+```{r cleanup}
+# First, create the 3D Buidlings data. It does not do anything different from buildings_2d BUT:
+#       1. enables 3D visualization in ParaView (so it is mandatory)
+#       2. enables the creation of bridges and gates (has to be done manually, time expensive)
+manual_class$createbuilding3D(TRUE, FALSE)
+
+# Second, create soil and surface fraction
+# Both are mandatory for the simulation
+manual_class$addsoilandsurfacefraction(type_soil = 2)
+
+
+# Third generate LAD
+manual_class$generate_lai_array(dz = 5, fixed_tree_height = 15)
+# That function has a lot of variables, but these are enough. dz is mandatory
+
+# Fourth, set water temperature to 288K
+# Create "water_pars" data 
+manual_class$add_lod2_variable("water")
+manual_class$data$water_pars$vals[,,1][manual_class$data$water_type$vals>=0] <- 288
+
+# Further functions, that can be useful, but are not needed in this example:
+
+# manual_class$downscale_resolution(factor = 2)
+# downscales the resolution by a factor of 2, i.e. from 5 to 10 m
+
+# manual_class$quickplot("vegetation_type")
+# allows a quick look at 2D data in the class
+
+# manual_class$savedplots[[1]]
+# All plot calls with $plot_area are saved in the list $savedplots
+
+# Count of plots can be called via 
+# manual_class$plotcntr
+
+
+# Finally: set an eportname of the file
+manual_class$exportname <- "quicktest.nc"
+
+manual_class
+
+
+# manual_class$exportncdf()
+# Exports the static driver in the current work directory
+```
+
+Further instructions/examples incoming...
 
 
 ## PIDS
