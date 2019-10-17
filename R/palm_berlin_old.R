@@ -1,4 +1,4 @@
-palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
+palm_ncdf_berlin_old   <- R6::R6Class("palm_ncdf_berlin_old",
                                   public = list(
                                     dims           = NULL,
                                     data           = NULL,
@@ -114,7 +114,7 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                                                } )
 
                                       orogr        <- ncdf4::ncvar_get(ncfile, "Band1", start = c(self$header$head$origin_x,self$header$head$origin_y),
-                                                                c(lengthx, lengthy))
+                                                                       c(lengthx, lengthy))
                                       self$header$head$origin_z         <- min(orogr)
                                       orogr                             <- orogr - min(orogr)
 
@@ -158,7 +158,7 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                       # 2D
                                       ncfile <- ncdf4::nc_open(files[grep("building_height", files)])
                                       build  <- ncdf4::ncvar_get(ncfile, "Band1", start = c(self$header$head$origin_x,self$header$head$origin_y),
-                                                          c(lengthx, lengthy))
+                                                                 c(lengthx, lengthy))
                                       build  <- floor(build/dx)*dx
                                       build[which(is.na(build),arr.ind = T)]  <- -9999
 
@@ -232,7 +232,7 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                       # ID's
                                       ncfile   <- ncdf4::nc_open(files[grep("building_id", files)])
                                       buildid  <- ncdf4::ncvar_get(ncfile, "Band1", start = c(self$header$head$origin_x,self$header$head$origin_y),
-                                                            c(lengthx, lengthy))
+                                                                   c(lengthx, lengthy))
                                       adata     <- list("_FillValue" = -9999.9,
                                                         "units" = "",
                                                         # "long_name" = "building id",
@@ -248,7 +248,7 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                       # Type's
                                       ncfile     <- ncdf4::nc_open(files[grep("building_type", files)])
                                       buildtype  <- ncdf4::ncvar_get(ncfile, "Band1", start = c(self$header$head$origin_x,self$header$head$origin_y),
-                                                              c(lengthx, lengthy))
+                                                                     c(lengthx, lengthy))
                                       adata      <- list("_FillValue" = -127,
                                                          "units" = "",
                                                          "long_name" = "building type classification",
@@ -266,7 +266,7 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                       # Type
                                       ncfile     <- ncdf4::nc_open(files[grep("vegetation_type", files)])
                                       vegtype    <- ncdf4::ncvar_get(ncfile, "Band1", start = c(self$header$head$origin_x,self$header$head$origin_y),
-                                                              c(lengthx, lengthy))
+                                                                     c(lengthx, lengthy))
 
                                       vegtype[which(is.na(vegtype),arr.ind = T)]  <- 3
                                       adata      <- list("_FillValue" = -127,
@@ -285,7 +285,7 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                       # Type
                                       ncfile     <- ncdf4::nc_open(files[grep("street_type", files)])
                                       streettype    <- ncdf4::ncvar_get(ncfile, "Band1", start = c(self$header$head$origin_x,self$header$head$origin_y),
-                                                                 c(lengthx, lengthy))
+                                                                        c(lengthx, lengthy))
 
 
                                       adata      <- list("_FillValue" = -127,
@@ -320,7 +320,7 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                       # Type
                                       ncfile        <- ncdf4::nc_open(files[grep("water_type", files)])
                                       watertype     <- ncdf4::ncvar_get(ncfile, "Band1", start = c(self$header$head$origin_x,self$header$head$origin_y),
-                                                                 c(lengthx, lengthy))
+                                                                        c(lengthx, lengthy))
 
                                       adata      <- list("_FillValue" = -127,
                                                          "units" = "",
@@ -337,7 +337,7 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                       # Type
                                       ncfile        <- ncdf4::nc_open(files[grep("pavement_type", files)])
                                       pavementtype     <- ncdf4::ncvar_get(ncfile, "Band1", start = c(self$header$head$origin_x,self$header$head$origin_y),
-                                                                    c(lengthx, lengthy))
+                                                                           c(lengthx, lengthy))
 
                                       adata      <- list("_FillValue" = -127,
                                                          "units" = "",
@@ -527,7 +527,7 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                         }
                                         ####
                                         nc_dim_list[[names(self$dims)[zz]]] <- ncdf4::ncdim_def(self$dims[[zz]]$long_name, self$dims[[zz]]$units, vals = self$dims[[zz]]$vals,
-                                                                                         longname = self$dims[[zz]]$long_name)
+                                                                                                longname = self$dims[[zz]]$long_name)
 
                                       }
 
@@ -583,14 +583,14 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                         }
 
                                         tmp     <-  ncdf4::ncvar_def(name    = names(self$data)[t],
-                                                              units   = self$data[[t]]$units,
-                                                              dim     = dimlist,
-                                                              missval = self$data[[t]]$'_FillValue',
-                                                              ########## Falls probleme auftreten:
-                                                              longname = self$data[[t]]$long_name,
-                                                              ########## Zeile wieder einkommentieren
-                                                              ########## (dann funktioniet der export von importierten ncdf nicht.)
-                                                              prec = self$data[[t]]$type)
+                                                                     units   = self$data[[t]]$units,
+                                                                     dim     = dimlist,
+                                                                     missval = self$data[[t]]$'_FillValue',
+                                                                     ########## Falls probleme auftreten:
+                                                                     longname = self$data[[t]]$long_name,
+                                                                     ########## Zeile wieder einkommentieren
+                                                                     ########## (dann funktioniet der export von importierten ncdf nicht.)
+                                                                     prec = self$data[[t]]$type)
 
                                         ncvariables[[names(self$data)[t]]] <- tmp
                                         ncvarvector <- c(ncvarvector, tmp)
@@ -621,11 +621,11 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                           loopvar   <- names(self$data[[t]])[ch]
                                           typething <- typeof(unlist(self$data[[t]][ch]))
                                           ncdf4::ncatt_put(nc= ncfile, varid = names(self$data)[t],attname =  loopvar,
-                                                    attval = unlist(self$data[[t]][ch]))
+                                                           attval = unlist(self$data[[t]][ch]))
                                         }
                                         ncdf4::ncvar_put(ncfile,
-                                                  varid   = ncfile$var[[t]]$name,
-                                                  vals    = self$data[[t]]$vals)
+                                                         varid   = ncfile$var[[t]]$name,
+                                                         vals    = self$data[[t]]$vals)
                                       }
                                       # SchlieÃen und speichern der Datei
                                       ncdf4::nc_close(ncfile)
@@ -766,6 +766,478 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                       self$savedplots[[self$plotcntr]]
 
                                     },
+                                    createofficebuilding = function(start, size, height,ignorestreets = TRUE, notnew = c()){
+                                      if(length(notnew) > 0){
+                                        buildtype <- notnew # muss 4 oder 5 sein. Bezieht sich auf Baujahr!
+                                        # quelle: https://palm.muk.uni-hannover.de/trac/attachment/wiki/doc/palmcc/Surface_model.pdf
+                                      } else {
+                                        buildtype <- 6
+                                      }
+                                      dx   <- self$header$head$resolution
+
+
+                                      height <- floor(height/dx)*dx
+
+                                      ### Free Space in not Building_Vars
+                                      self$data$vegetation_type$vals[start[1]:(start[1]+size[1]-1),
+                                                                     start[2]:(start[2]+size[2]-1)] <- self$data$vegetation_type$`_FillValue`
+                                      self$data$street_type$vals[start[1]:(start[1]+size[1]-1),
+                                                                 start[2]:(start[2]+size[2]-1)] <- self$data$street_type$`_FillValue`
+                                      self$data$street_crossing$vals[start[1]:(start[1]+size[1]-1),
+                                                                     start[2]:(start[2]+size[2]-1)] <- self$data$street_crossing$`_FillValue`
+                                      # Theoretisch richtig! Aber Halt NA
+                                      #self$data$water_type$vals[start[1]:(start[1]+size[1]-1),
+                                      #                          start[2]:(start[2]+size[2]-1)] <- self$data$water_type$`_FillValue`
+                                      self$data$water_type$vals[start[1]:(start[1]+size[1]-1),
+                                                                start[2]:(start[2]+size[2]-1)] <- NA
+                                      if(ignorestreets){
+                                        # self$data$pavement_type$vals[start[1]:(start[1]+size[1]-1),
+                                        #                             start[2]:(start[2]+size[2]-1)] <- self$data$pavement_type$`_FillValue`
+
+                                        self$data$pavement_type$vals[start[1]:(start[1]+size[1]-1),
+                                                                     start[2]:(start[2]+size[2]-1)] <- NA
+                                      }
+                                      self$data$soil_type$vals[start[1]:(start[1]+size[1]-1),
+                                                               start[2]:(start[2]+size[2]-1)] <- self$data$soil_type$`_FillValue`
+                                      #### Create Building in Building Vars
+                                      self$data$buildings_2D$vals[start[1]:(start[1]+size[1]-1),
+                                                                  start[2]:(start[2]+size[2]-1)] <- height
+
+                                      self$data$building_id$vals[start[1]:(start[1]+size[1]-1),
+                                                                 start[2]:(start[2]+size[2]-1)] <-max(self$data$building_id$vals, na.rm = TRUE)+1
+
+                                      self$data$building_type$vals[start[1]:(start[1]+size[1]-1),
+                                                                   start[2]:(start[2]+size[2]-1)] <- buildtype
+
+                                      # create new frame for 3d_building data, if new height is bigger than old!
+                                      if(exists("self$data$buildings_3D")){
+                                        if(dim(self$data$buildings_3D$vals)[3]<=height/dx){
+                                          newarray    <- array(0,dim=c(dim(self$data$buildings_3D$vals)[1],dim(self$data$buildings_3D$vals)[2],1+ height/dx))
+                                          newarray[,,1:dim(self$data$buildings_3D$vals)[3]] <- self$data$buildings_3D$vals
+                                          self$data$buildings_3D$vals  <- newarray
+                                          zmax <- max(height,na.rm = T)
+                                          if(zmax<=0){
+                                            z <- 0
+                                            zmax <- 0
+                                          } else {
+                                            z   <- tryCatch({seq(0,zmax, by= dx)},
+                                                            warning = function(w){
+                                                              print("Warning in seq line 828")
+                                                            }, error = function(e){
+                                                              print("Error in seq line 828")
+                                                            } )
+                                            z    <- z - 0.5*dx
+                                            z[1] <- 0
+                                          }
+                                          adata      <- list("long_name" = "z",
+                                                             "standard_name" = "z",
+                                                             "units" = "m",
+                                                             "vals" = z)
+                                          #"type" = "float")
+                                          self$dims$z  <- adata
+                                        }
+                                      }
+                                      for(ii in seq(size[1])){
+                                        for(jj in seq(size[2])){
+                                          if(!ignorestreets){
+                                            if(!is.na(self$data$pavement_type$vals[start[1]+ ii -1 ,start[2]+jj -1]) ){
+                                              #| self$data$pavement_type$vals[start[1]+ ii -1 ,start[2]+jj -1]==-127
+                                              self$data$buildings_2D$vals[start[1]+ ii -1 ,start[2]+jj -1]  <- self$data$buildings_2D$`_FillValue`
+                                              self$data$building_id$vals[start[1]+ ii -1 ,start[2]+jj -1]  <- NA
+                                              self$data$building_type$vals[start[1]+ ii -1 ,start[2]+jj -1]     <- NA
+                                            } else{
+                                              if(exists("self$data$buildings_3D")){
+                                                logheight  <- height/dx
+                                                self$data$buildings_3D$vals[start[1]+ ii -1 ,start[2]+jj -1,1:logheight] <- 1
+                                              }
+                                            }
+                                          } else{
+                                            if(exists("self$data$buildings_3D")){
+                                              logheight  <- height/dx
+                                              self$data$buildings_3D$vals[start[1]+ ii -1 ,start[2]+jj -1,1:logheight] <- 1
+                                            }
+                                          }
+                                        }
+                                      }
+
+
+
+                                    },
+                                    createresidentialbuilding =  function(start, size, height,ignorestreets = TRUE, notnew = c()){
+                                      if(length(notnew) > 0){
+                                        buildtype <- notnew # muss 1 oder 2 sein. Bezieht sich auf Baujahr!
+                                        # quelle: https://palm.muk.uni-hannover.de/trac/attachment/wiki/doc/palmcc/Surface_model.pdf
+                                      } else {
+                                        buildtype <- 3
+                                      }
+                                      dx   <- self$header$head$resolution
+
+
+                                      height <- floor(height/dx)*dx
+
+                                      ### Free Space in not Building_Vars
+                                      self$data$vegetation_type$vals[start[1]:(start[1]+size[1]-1),
+                                                                     start[2]:(start[2]+size[2]-1)] <- self$data$vegetation_type$`_FillValue`
+                                      self$data$street_type$vals[start[1]:(start[1]+size[1]-1),
+                                                                 start[2]:(start[2]+size[2]-1)] <- self$data$street_type$`_FillValue`
+                                      self$data$street_crossing$vals[start[1]:(start[1]+size[1]-1),
+                                                                     start[2]:(start[2]+size[2]-1)] <- self$data$street_crossing$`_FillValue`
+                                      # Theoretisch richtig! Aber Halt NA
+                                      #self$data$water_type$vals[start[1]:(start[1]+size[1]-1),
+                                      #                          start[2]:(start[2]+size[2]-1)] <- self$data$water_type$`_FillValue`
+                                      if(ignorestreets){
+                                        # self$data$pavement_type$vals[start[1]:(start[1]+size[1]-1),
+                                        #                             start[2]:(start[2]+size[2]-1)] <- self$data$pavement_type$`_FillValue`
+
+                                        self$data$pavement_type$vals[start[1]:(start[1]+size[1]-1),
+                                                                     start[2]:(start[2]+size[2]-1)] <- NA
+                                      }
+                                      self$data$soil_type$vals[start[1]:(start[1]+size[1]-1),
+                                                               start[2]:(start[2]+size[2]-1)] <- self$data$soil_type$`_FillValue`
+                                      #### Create Building in Building Vars
+                                      self$data$buildings_2D$vals[start[1]:(start[1]+size[1]-1),
+                                                                  start[2]:(start[2]+size[2]-1)] <- height
+
+                                      self$data$building_id$vals[start[1]:(start[1]+size[1]-1),
+                                                                 start[2]:(start[2]+size[2]-1)] <- max(self$data$building_id$vals, na.rm = TRUE)+1
+
+                                      self$data$building_type$vals[start[1]:(start[1]+size[1]-1),
+                                                                   start[2]:(start[2]+size[2]-1)] <- buildtype
+
+                                      # create new frame for 3d_building data, if new height is bigger than old!
+                                      if(exists("self$data$buildings_3D")){
+                                        if(dim(self$data$buildings_3D$vals)[3]<=height/dx){
+                                          newarray    <- array(0,dim=c(dim(self$data$buildings_3D$vals)[1],dim(self$data$buildings_3D$vals)[2],1+ height/dx))
+                                          newarray[,,1:dim(self$data$buildings_3D$vals)[3]] <- self$data$buildings_3D$vals
+                                          self$data$buildings_3D$vals  <- newarray
+
+                                          zmax <- max(height,na.rm = T)
+                                          if(zmax<=0){
+                                            z <- 0
+                                            zmax <- 0
+                                          } else {
+                                            z   <- tryCatch({seq(0,zmax, by= dx)},
+                                                            warning = function(w){
+                                                              print("Warning in seq line 922")
+                                                            }, error = function(e){
+                                                              print("Error in seq line 922")
+                                                            } )
+                                            z    <- z - 0.5*dx
+                                            z[1] <- 0
+                                          }
+
+                                          adata      <- list("long_name" = "z",
+                                                             "standard_name" = "z",
+                                                             "units" = "m",
+                                                             "vals" = z)
+                                          #"type" = "float")
+                                          self$dims$z  <- adata
+                                        }
+                                      }
+                                      for(ii in seq(size[1])){
+                                        for(jj in seq(size[2])){
+                                          if(!ignorestreets){
+                                            if(!is.na(self$data$pavement_type$vals[start[1]+ ii -1 ,start[2]+jj -1]) ){
+                                              #| self$data$pavement_type$vals[start[1]+ ii -1 ,start[2]+jj -1]==-127
+                                              self$data$buildings_2D$vals[start[1]+ ii -1 ,start[2]+jj -1]  <- self$data$buildings_2D$`_FillValue`
+                                              self$data$building_id$vals[start[1]+ ii -1 ,start[2]+jj -1]  <- NA
+                                              self$data$building_type$vals[start[1]+ ii -1 ,start[2]+jj -1]     <- NA
+                                            } else{
+                                              if(any(names(self$data)=="buildings_3D")){
+                                                logheight  <- height/dx
+                                                self$data$buildings_3D$vals[start[1]+ ii -1 ,start[2]+jj -1,1:logheight] <- 1
+                                              }
+                                            }
+                                          } else{
+                                            if(any(names(self$data)=="buildings_3D")){
+                                              logheight  <- height/dx
+                                              self$data$buildings_3D$vals[start[1]+ ii -1 ,start[2]+jj -1,1:logheight] <- 1
+                                            }
+                                          }
+                                        }
+                                      }
+                                    },
+                                    createlod1area  = function(start, array2d){
+                                      size <- dim(array2d)
+
+                                      # initialize single matrices
+                                      #veg_mat            <- array(self$data$vegetation_type$`_FillValue`, size)
+                                      #streettyp_mat      <- array(self$data$street_type$`_FillValue`,size)
+                                      #streetcr_mat       <- array(self$data$street_crossing$`_FillValue`, size)
+                                      #pave_mat           <- array(self$data$pavement_type$`_FillValue`, size)
+
+                                      veg_mat            <- matrix(self$data$vegetation_type$`_FillValue`, size[1], size[2])
+                                      # veg_par_mat       <- array(NA, size)
+                                      soil_mat           <- matrix(self$data$soil_type$`_FillValue`, size[1], size[2])
+                                      streettyp_mat      <- matrix(NA, size[1], size[2])
+                                      streetcr_mat       <- matrix(NA, size[1], size[2])
+                                      pave_mat           <- matrix(self$data$pavement_type$`_FillValue`, size[1], size[2])
+                                      water_mat          <- matrix(self$data$water_type$`_FillValue`, size[1], size[2])
+                                      #build2d_mat        <- array(self$data$buildings_2D$`_FillValue`, size)
+                                      build2D_mat        <- matrix(self$data$buildings_2d$`_FillValue`, size[1], size[2])
+                                      #buildid_mat        <- array(self$data$building_id$`_FillValue`, size)
+                                      buildid_mat        <- matrix(self$data$building_id$`_FillValue`, size[1], size[2])
+                                      # buildtyp_mat       <- array(self$data$building_type$`_FillValue`, size)
+                                      buildtyp_mat       <- matrix(self$data$building_type$`_FillValue`, size[1], size[2])
+                                      soiltyp_mat        <- matrix(self$data$soil_type$`_FillValue`, size[1], size[2])
+
+
+                                      # Fill respective positions
+                                      veg_mat[which(substr(array2d,1,1)=="V", arr.ind = T)]       <- as.integer(substr(array2d[which(substr(array2d,1,1)=="V", arr.ind = T)],2,3))
+                                      # veg_par_mat[which(substr(array2d,1,1)=="V", arr.ind = T)]  <- substr(array2d[which(substr(array2d,1,1)=="V", arr.ind = T)],2,3)
+                                      pave_mat[which(substr(array2d,1,1)=="P", arr.ind = T)]      <- as.integer(substr(array2d[which(substr(array2d,1,1)=="P", arr.ind = T)],2,3))
+                                      water_mat[which(substr(array2d,1,1)=="W", arr.ind = T)]     <- as.integer(substr(array2d[which(substr(array2d,1,1)=="W", arr.ind = T)],2,3))
+                                      build2D_mat[which(substr(array2d,1,1)=="B", arr.ind = T)]   <- as.numeric(substr(array2d[which(substr(array2d,1,1)=="B", arr.ind = T)],4,5))
+                                      buildid_mat[which(substr(array2d,1,1)=="B", arr.ind = T)]   <- as.integer(max(self$data$building_id$vals, na.rm = TRUE))+1
+                                      # buildtyp_mat[which(substr(array2d,1,1)=="B", arr.ind = T)]  <- substr(array2d[which(substr(array2d,1,1)=="B", arr.ind = T)],3,4)
+                                      buildtyp_mat[which(substr(array2d,1,1)=="B", arr.ind = T)]  <- as.integer(substr(array2d[which(substr(array2d,1,1)=="B", arr.ind = T)],2,2))
+                                      # streettyp_mat[which(substr(array2d,1,1)=="P", arr.ind = T)]  <- substr(array2d[which(substr(array2d,1,1)=="V", arr.ind = T)],2,3)
+                                      streettyp_mat[which(substr(array2d,1,1)=="P", arr.ind = T)]  <- as.integer(8)
+                                      # streetcr_mat[which(substr(array2d,1,1)=="V", arr.ind = T)]  <- substr(array2d[which(substr(array2d,1,1)=="V", arr.ind = T)],2,3)
+
+                                      dx   <- self$header$head$resolution
+
+                                      height <- 0
+                                      tryCatch(height <- floor(max(build2D_mat,na.rm = T)/dx)*dx , warning = function(w){print("Reminder: No Building was imported by the lod1_array!")})
+
+
+                                      array_layers         <- array(0,c(size,10))
+                                      array_layers[,,1]    <- self$data$vegetation_type$vals[start[1]:(start[1]+size[1]-1),
+                                                                                             start[2]:(start[2]+size[2]-1)]
+                                      tryCatch(array_layers[,,2]    <- self$data$street_type$vals[start[1]:(start[1]+size[1]-1),
+                                                                                                  start[2]:(start[2]+size[2]-1)], error = function(e){print("No street_type read")})
+                                      tryCatch(array_layers[,,3]    <- self$data$street_crossing$vals[start[1]:(start[1]+size[1]-1),
+                                                                                                      start[2]:(start[2]+size[2]-1)], error = function(e){print("No street_crossing read")})
+                                      array_layers[,,4]    <- self$data$water_type$vals[start[1]:(start[1]+size[1]-1),
+                                                                                        start[2]:(start[2]+size[2]-1)]
+                                      array_layers[,,5]    <- self$data$pavement_type$vals[start[1]:(start[1]+size[1]-1),
+                                                                                           start[2]:(start[2]+size[2]-1)]
+                                      array_layers[,,6]    <- self$data$soil_type$vals[start[1]:(start[1]+size[1]-1),
+                                                                                       start[2]:(start[2]+size[2]-1)]
+                                      if(self$oldversion){
+                                        array_layers[,,7]    <- self$data$buildings_2D$vals[start[1]:(start[1]+size[1]-1),
+                                                                                            start[2]:(start[2]+size[2]-1)]
+                                      } else if(!self$oldversion){
+                                        array_layers[,,7]    <- self$data$buildings_2d$vals[start[1]:(start[1]+size[1]-1),
+                                                                                            start[2]:(start[2]+size[2]-1)]
+                                      }
+
+                                      array_layers[,,8]     <- self$data$building_id$vals[start[1]:(start[1]+size[1]-1),
+                                                                                          start[2]:(start[2]+size[2]-1)]
+                                      array_layers[,,9]     <-  self$data$building_type$vals[start[1]:(start[1]+size[1]-1),
+                                                                                             start[2]:(start[2]+size[2]-1)]
+                                      tryCatch(array_layers[,,10]    <-  self$data$vegetation_pars$vals[start[1]:(start[1]+size[1]-1),
+                                                                                                        start[2]:(start[2]+size[2]-1), 2], error = function(e){print("No vegetation pars read!")})
+                                      surface_frictions    <-  self$data$surface_fraction$vals[start[1]:(start[1]+size[1]-1),
+                                                                                               start[2]:(start[2]+size[2]-1), ]
+
+                                      if(dim(self$data$surface_fraction$vals)[3]==3){
+                                        fvec    <- 1
+                                        pvec <- 2
+                                        wvec <- 3
+                                      } else if(dim(self$data$surface_fraction$vals)[3]==4){
+                                        fvec    <- c(1,4)
+                                        pvec    <- c(2,4)
+                                        wvec    <- c(3,4)
+
+                                      }
+                                      # newarray <- array(NA, size)
+                                      # newarray[which(!is.na(array_layers[,,1]),arr.ind = T)] <- array_layers[,,1][which(!is.na(array_layers[,,1]),arr.ind = T)]
+                                      restvec <- seq(9)
+                                      for(i in seq(size[1])){
+                                        for(j in seq(size[2])){
+                                          if(array2d[i,j]==0){
+
+                                          } else {
+                                            array_layers[i,j,]  <- c(self$data$vegetation_type$`_FillValue`, NA, NA,
+                                                                     self$data$water_type$`_FillValue`,
+                                                                     self$data$pavement_type$`_FillValue`,
+                                                                     self$data$soil_type$`_FillValue`,
+                                                                     self$data$buildings_2d$`_FillValue`,
+                                                                     self$data$building_id$`_FillValue`,
+                                                                     self$data$building_type$`_FillValue`,
+                                                                     NA)
+                                            if(veg_mat[i,j]>0){
+                                              array_layers[i,j,1]   <- veg_mat[i,j]
+                                              ######################################
+                                              if(veg_mat[i,j]%in%c(4:7)){
+                                                array_layers[i,j,10]  <- 6
+                                              } else {
+                                                array_layers[i,j,10]  <- 1
+                                              }
+                                              ######################################
+                                              surface_frictions[i,j,fvec]  <- 1
+                                              surface_frictions[i,j,2:3]  <- 0
+                                              array_layers[i,j,6]   <-  1
+                                            }
+                                            if(is.na(streettyp_mat[i,j])){
+                                              array_layers[i,j,2]   <- streettyp_mat[i,j]
+                                              surface_frictions[i,j,]  <- NA
+                                            }
+                                            if(pave_mat[i,j]>0){
+                                              array_layers[i,j,5]   <-pave_mat[i,j]
+                                              array_layers[i,j,6]   <-  1
+                                              surface_frictions[i,j,pvec]  <- 1
+                                              surface_frictions[i,j,c(1,3)]  <- 0
+                                            }
+                                            if(build2D_mat[i,j]>0){
+                                              array_layers[i,j,7]   <- build2D_mat[i,j]
+                                              surface_frictions[i,j,]  <- NA
+                                            }
+                                            if(buildid_mat[i,j]>0){
+                                              array_layers[i,j,8]   <- buildid_mat[i,j]
+                                              surface_frictions[i,j,]  <- NA
+                                            }
+                                            if(buildtyp_mat[i,j]>0){
+                                              array_layers[i,j,9]   <-buildtyp_mat[i,j]
+                                              surface_frictions[i,j,]  <- NA
+                                            }
+                                            if(water_mat[i,j]>0){
+                                              array_layers[i,j,4]   <- water_mat[i,j]
+                                              array_layers[i,j,6]   <-  self$data$soil_type$`_FillValue`
+                                              surface_frictions[i,j,wvec]  <- 1
+                                              surface_frictions[i,j,c(1,2)]  <- 0
+                                            }
+                                          }
+                                        }
+                                      }
+                                      if(dim(self$data$surface_fraction$vals)[3]==3){
+                                        self$data$surface_fraction$vals[start[1]:(start[1]+size[1]-1),
+                                                                        start[2]:(start[2]+size[2]-1),]  <- surface_frictions
+
+                                      } else if(dim(self$data$surface_fraction$vals)[3]==4){
+
+                                        self$data$surface_fraction$vals[start[1]:(start[1]+size[1]-1),
+                                                                        start[2]:(start[2]+size[2]-1),]  <- surface_frictions
+                                      }
+                                      self$data$vegetation_type$vals[start[1]:(start[1]+size[1]-1),
+                                                                     start[2]:(start[2]+size[2]-1)]   <- as.integer(array_layers[,,1])
+                                      tryCatch(self$data$street_type$vals[start[1]:(start[1]+size[1]-1),
+                                                                          start[2]:(start[2]+size[2]-1)]       <- as.integer(array_layers[,,2]), error = function(e){print("No street_type")})
+                                      tryCatch(self$data$street_crossing$vals[start[1]:(start[1]+size[1]-1),
+                                                                              start[2]:(start[2]+size[2]-1)]   <-  as.integer(array_layers[,,3]), error = function(e){print("No street_crossing")})
+                                      self$data$water_type$vals[start[1]:(start[1]+size[1]-1),
+                                                                start[2]:(start[2]+size[2]-1)]        <- as.integer(array_layers[,,4])
+                                      self$data$pavement_type$vals[start[1]:(start[1]+size[1]-1),
+                                                                   start[2]:(start[2]+size[2]-1)]    <- as.integer(array_layers[,,5])
+                                      self$data$soil_type$vals[start[1]:(start[1]+size[1]-1),
+                                                               start[2]:(start[2]+size[2]-1)]         <- as.integer(array_layers[,,6])
+
+                                      if(self$oldversion){
+                                        self$data$buildings_2D$vals[start[1]:(start[1]+size[1]-1),
+                                                                    start[2]:(start[2]+size[2]-1)]      <- array_layers[,,7]
+                                      } else if(!self$oldversion){
+                                        self$data$buildings_2d$vals[start[1]:(start[1]+size[1]-1),
+                                                                    start[2]:(start[2]+size[2]-1)]      <- array_layers[,,7]
+
+                                      }
+
+                                      self$data$building_id$vals[start[1]:(start[1]+size[1]-1),
+                                                                 start[2]:(start[2]+size[2]-1)]       <- as.integer(array_layers[,,8])
+
+                                      self$data$building_type$vals[start[1]:(start[1]+size[1]-1),
+                                                                   start[2]:(start[2]+size[2]-1)]     <- as.integer(array_layers[,,9])
+
+                                      tryCatch(self$data$vegetation_pars$vals[start[1]:(start[1]+size[1]-1),
+                                                                              start[2]:(start[2]+size[2]-1), 2] <- array_layers[,,10], error = function(e){print("No vegetation_pars")})
+                                      tryCatch(self$data$basal_area_density$vals[start[1]:(start[1]+size[1]-1),
+                                                                                 start[2]:(start[2]+size[2]-1), ] <- as.numeric(NA), error = function(e){print("No basal area")})
+                                      tryCatch(self$data$building_pars$vals[start[1]:(start[1]+size[1]-1),
+                                                                            start[2]:(start[2]+size[2]-1), ] <- as.numeric(NA), error = function(e){print("No building_pars")})
+                                      tryCatch(self$data$tree_id$vals[start[1]:(start[1]+size[1]-1),
+                                                                      start[2]:(start[2]+size[2]-1), ] <- as.integer(NA), error = function(e){print("No tree_ids")})
+                                      tryCatch(self$data$leaf_area_density$vals[start[1]:(start[1]+size[1]-1),
+                                                                                start[2]:(start[2]+size[2]-1), ] <- as.numeric(NA), error = function(e){print("No leaf area density")})
+
+
+
+
+                                      if(any(names(self$data)=="buildings_3D")){
+                                        if(dim(self$data$buildings_3D$vals)[3]<=height/dx){
+                                          newarray    <- array(0,dim=c(dim(self$data$buildings_3D$vals)[1],dim(self$data$buildings_3D$vals)[2],1+ height/dx))
+                                          newarray[,,1:dim(self$data$buildings_3D$vals)[3]] <- self$data$buildings_3D$vals
+                                          self$data$buildings_3D$vals  <- newarray
+
+                                          zmax <- max(height,na.rm = T)
+                                          if(zmax<=0){
+                                            z <- 0
+                                            zmax <- 0
+                                          } else {
+                                            z   <- tryCatch({seq(0,zmax, by= dx)},
+                                                            warning = function(w){
+                                                              print("Warning in seq line 1167")
+                                                            } , error = function(e){
+                                                              print("Error in seq line 1167")
+                                                            })
+                                            z    <- z - 0.5*dx
+                                            z[1] <- 0
+                                          }
+
+                                          adata      <- list("long_name" = "z",
+                                                             "standard_name" = "z",
+                                                             "units" = "m",
+                                                             "vals" = z)
+                                          #"type" = "float")
+                                          self$dims$z  <- adata
+                                        }
+                                      }
+                                      if(any(names(self$data)=="buildings_3d")){
+                                        if(dim(self$data$buildings_3d$vals)[3]<=height/dx){
+                                          newarray    <- array(0,dim=c(dim(self$data$buildings_3d$vals)[1],dim(self$data$buildings_3d$vals)[2],1+ height/dx))
+                                          newarray[,,1:dim(self$data$buildings_3d$vals)[3]] <- self$data$buildings_3d$vals
+                                          self$data$buildings_3d$vals  <- newarray
+
+                                          zmax <- max(height,na.rm = T)
+                                          if(zmax<=0){
+                                            z <- 0
+                                            zmax <- 0
+                                          } else {
+                                            z   <- tryCatch({seq(0,zmax, by= dx)},
+                                                            warning = function(w){
+                                                              print("Warning in seq line 1194")
+                                                            }, error = function(e){
+                                                              print("Error in seq line 1194")
+                                                            } )
+                                            z    <- z - 0.5*dx
+                                            z[1] <- 0
+                                          }
+
+                                          adata      <- list("long_name" = "z",
+                                                             "standard_name" = "z",
+                                                             "units" = "m",
+                                                             "vals" = z)
+                                          #"type" = "float")
+                                          self$dims$z  <- adata
+                                        }
+                                      }
+                                      for(ii in seq(size[1])){
+                                        for(jj in seq(size[2])){
+                                          if(self$oldversion){
+                                            if(!is.na(self$data$buildings_2D$vals[start[1]+ ii -1,
+                                                                                  start[2]+ jj -1]) &&
+                                               self$data$buildings_2D$vals[start[1]+ ii -1,
+                                                                           start[2]+ jj -1]>0){
+                                              if(any(names(self$data)=="buildings_3D")){
+                                                logheight  <- self$data$buildings_2D$vals[start[1]+ ii -1,
+                                                                                          start[2]+ jj -1]/dx
+                                                self$data$buildings_3D$vals[start[1]+ ii -1 ,start[2]+jj -1,1:(logheight+1)] <- 1
+                                              }
+                                            }
+                                          } else if(!self$oldversion){
+                                            if(!is.na(self$data$buildings_2d$vals[start[1]+ ii -1,
+                                                                                  start[2]+ jj -1]) &&
+                                               self$data$buildings_2d$vals[start[1]+ ii -1,
+                                                                           start[2]+ jj -1]>0){
+                                              if(any(names(self$data)=="buildings_3d")){
+                                                logheight  <- self$data$buildings_2d$vals[start[1]+ ii -1,
+                                                                                          start[2]+ jj -1]/dx
+                                                self$data$buildings_3d$vals[start[1]+ ii -1 ,start[2]+jj -1,1:(logheight+1)] <- 1
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    },
                                     createbuilding3D = function(force = FALSE, orogrphy3d = FALSE){
                                       if(self$oldversion){
                                         checkvar <- "buildings_3D"
@@ -881,6 +1353,7 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
 
                                     },
                                     quickplot = function(variable){
+
                                       if(any(self$data[[variable]]$vals<0)){
                                         plotmatrix <- self$data[[variable]]$vals
                                         plotmatrix[plotmatrix<0] <- 0
@@ -1374,10 +1847,10 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                       multidimarray[,,3]  <- self$data$water_type$vals
                                       multidimarray[,,4]  <- self$data$vegetation_type$vals
 
-                                     # multidimarray[,,1][is.na(multidimarray[,,1])] <- -9999.9
-                                     # multidimarray[,,2][is.na(multidimarray[,,2])] <- -127
-                                     # multidimarray[,,3][is.na(multidimarray[,,3])] <- -127
-                                     # multidimarray[,,4][is.na(multidimarray[,,4])] <- -127
+                                      # multidimarray[,,1][is.na(multidimarray[,,1])] <- -9999.9
+                                      # multidimarray[,,2][is.na(multidimarray[,,2])] <- -127
+                                      # multidimarray[,,3][is.na(multidimarray[,,3])] <- -127
+                                      # multidimarray[,,4][is.na(multidimarray[,,4])] <- -127
 
                                       arrayorder          <- c("B","P","W","V")
                                       throwout            <- c(1,2,3,4)
@@ -1572,11 +2045,11 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                     print = function(...){
                                       catch <- character()
                                       tryCatch(catch <- length(self$dims$x$vals),
-                                      error= function(e){
-                                        cat("PALM Class \n")
-                                        cat("No data has been input \n")
-                                        invisible(self)
-                                      })
+                                               error= function(e){
+                                                 cat("PALM Class \n")
+                                                 cat("No data has been input \n")
+                                                 invisible(self)
+                                               })
                                       if(is.numeric(catch)){
                                         cat("PALM Class \n")
                                         cat("Gridpoints in x:", length(self$dims$x$vals), "\n", sep="")
@@ -1602,7 +2075,7 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                       nelist <- list()
                                       for(j in newvec){
                                         resized <- imager::resize(as.cimg(self$data[[j]]$vals),
-                                                          dimx*1/(factor),dimy*1/(factor))[,,1,1]
+                                                                  dimx*1/(factor),dimy*1/(factor))[,,1,1]
                                         self$data[[j]]$vals <- resized
                                       }
 
@@ -1655,7 +2128,7 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                       }
                                     },
                                     add_any2D_variable = function(variablename, variable_list,
-                                                                print_template = FALSE){
+                                                                  print_template = FALSE){
                                       if(print_template){
                                         cat("Template for variable_list:\n")
                                         cat("list(\"_FillValue\" = either -127 oder -9999.9,\n")
@@ -1673,7 +2146,7 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                         # cat("\t \"vals\" = data)\n")
                                       } else {
                                         if(!all(names(variable_list)%in%c("_FillValue", "units","long_name","source" ,"lod",
-                                                                     "vals", "type" ))){
+                                                                          "vals", "type" ))){
                                           cat("Not all necessary data in variable_list!\n")
                                           stop()
                                         }
