@@ -34,6 +34,7 @@ Collate:
     'zzz.R'
     'aaa-.R'
     'palm_berlin.R'
+    'palm_berlin_old.R'
     'palm_global.R'
     'palm_import_static.R'
     'palm_manual_grid.R'

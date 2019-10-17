@@ -3,6 +3,7 @@
 export(arcgischeck)
 export(palm_global)
 export(palm_ncdf_berlin)
+export(palm_ncdf_berlin_old)
 export(palm_ncdf_import)
 export(palm_ncdf_manual)
 export(palm_ncdf_shiny)
