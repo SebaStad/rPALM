@@ -648,14 +648,21 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                     #'
                                     #' @examples
                                     #' berlin_example$plot_area(1,1,200,200)
-                                    plot_area = function(xleft, yleft, xl=40, yl= 40){
+                                    plot_area = function(xleft = NULL, yleft = NULL,
+                                                         xl= NULL, yl= NULL){
 
                                       # xleft:  untere linke ecke in x-Koordinaten (1 = Quelle links unten)
                                       # yleft:  untere linke ecke in y-Koordinaten (1 = Quelle links unten)
                                       # erlaubt theoretisch Zoom in area of interest
 
-                                      # xl:     Anzahl der Punkte in x-Richtung (max nx_max - 1!)
-                                      # yl:     Anzahl der Punkte in y-Richtung (max ny_max - 1!)
+                                      # xl:     Anzahl der Punkte in x-Richtung (max nx_max !)
+                                      # yl:     Anzahl der Punkte in y-Richtung (max ny_max !)
+                                      if(is.null(xleft)) xleft <- 1
+                                      if(is.null(yleft)) yleft <- 1
+                                      if(is.null(xl)) xl <- dim(self$data$zt$vals)[1]
+                                      if(is.null(yl)) yl <- dim(self$data$zt$vals)[2]
+
+
                                       if(self$oldversion){
                                         checkvar <- "buildings_2D"
                                       } else {

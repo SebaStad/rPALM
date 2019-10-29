@@ -112,6 +112,8 @@ fillfunc_sett <- function(startx,starty, array2d){
 #' x <- matrix(runif(100), ncol = 10, nrow =10 )
 #' plot_2d_data(x)
 plot_2d_data <- function(matrix){
+  require(reshape2)
+  require(ggplot2)
   meltvec  <- reshape2::melt(matrix)
 
 

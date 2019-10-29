@@ -1,3 +1,5 @@
+require(ncdf4)
+require(R6)
 palm_ncdf_import   <- R6::R6Class("palm_ncdf_import",
                                   inherit = palm_ncdf_berlin,
                                   public = list(
