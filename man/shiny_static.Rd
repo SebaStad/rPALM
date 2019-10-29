@@ -4,7 +4,7 @@
 \alias{shiny_static}
 \title{Title}
 \usage{
-shiny_static()
+shiny_static(provideDir = NULL)
 }
 \value{
 Opens the static driver creation shiny App

@@ -40,5 +40,7 @@ Collate:
     'palm_manual_grid.R'
     'palm_munich.R'
     'palm_shiny.R'
+    'pint_palm_ncdf_berlin.R'
+    'plot_palm_ncdf_berlin.R'
     'shiny_static.R'
     'supplementary_functions.R'
