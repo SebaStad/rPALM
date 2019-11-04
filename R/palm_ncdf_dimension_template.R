@@ -1,6 +1,6 @@
-palm_ncdf_dimension_template.R <- R6::R6Class("palm_ncdf_dimension_template",
+palm_ncdf_dimension_template <- R6::R6Class("palm_ncdf_dimension_template",
                                               public = list(
-                                              dimlist = list(),
+                                              dim_list = list(),
 #' Title
 #'
 #' @param longname      Longname of the Dimension
@@ -21,7 +21,17 @@ palm_ncdf_dimension_template.R <- R6::R6Class("palm_ncdf_dimension_template",
                                                                        "standard_name" = standardname,
                                                                        "units" = units,
                                                                        "vals" = vals)
-                                                  self$dimlist[[standardname]] <- dim
+                                                  self$dim_list[[standardname]] <- dim
+                                                },
+                                                add_another_dim = function(longname,
+                                                                           standardname,
+                                                                           units,
+                                                                           vals){
+                                                  dim       <- list("long_name" = longname,
+                                                                    "standard_name" = standardname,
+                                                                    "units" = units,
+                                                                    "vals" = vals)
+                                                  self$dim_list[[standardname]] <- dim
                                                 },
                                                 print = function(){
                                                   cat("yadayada")

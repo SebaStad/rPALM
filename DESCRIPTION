@@ -39,6 +39,8 @@ Collate:
     'palm_import_static.R'
     'palm_manual_grid.R'
     'palm_munich.R'
+    'palm_ncdf_data_template.R'
+    'palm_ncdf_dimension_template.R'
     'palm_shiny.R'
     'pint_palm_ncdf_berlin.R'
     'plot_palm_ncdf_berlin.R'
