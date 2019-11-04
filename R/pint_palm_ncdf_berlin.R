@@ -7,5 +7,5 @@
 #'
 #' @examples
 print.palm_ncdf_berlin <- function(obj){
-  obj$plot()
+  obj$print()
 }
