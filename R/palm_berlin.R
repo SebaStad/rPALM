@@ -1688,7 +1688,89 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                         self$vardimensions[[variablename]] <- c("x", "y")
 
                                       }
+                                    },
+                                    add_R6_data = function(data_class){
+                                      if(!any(class(data_class)=="palm_ncdf_data_template")) {
+                                        stop("Please provide the correct class")
+                                      }
+
+                                      for(i in names(data_class$datalist)){
+                                        self$data[[i]] <- data_class$data_list[[i]]
+                                        self$vardimensions[[i]] <- data_class$data_dims[[i]]
+                                      }
+
+                                    },
+                                    add_R6_dim = function(dim_class){
+                                      if(!any(class(data_class)=="palm_ncdf_dimension_template")) {
+                                        stop("Please provide the correct class")
+                                      }
+
+                                      for(i in names(dim_class$datalist)){
+                                        self$dim[[i]] <- dim_class$dim_list[[i]]
+                                      }
+
+                                    },
+                                    add_soil = function(type_soil = 1){
+                                      soiltype              <- self$data$vegetation_type$vals
+                                      soiltype[which(self$data$pavement_type$vals>0, arr.ind = T)]   <- 1
+                                      soiltype[soiltype>0]  <- type_soil
+                                      adata      <- list("_FillValue" = -127,
+                                                         "units" = "",
+                                                         "long_name" = "soil type classification",
+                                                         "source" = "First Guess",
+                                                         "vals" = soiltype,
+                                                         "type" = "byte")
+                                      self$data$soil_type          <- adata
+                                      self$vardimensions$soil_type <-  c(1,2)
+                                    },
+                                    add_simple_surfacefraction = function(){
+                                      xvec         <- c(0,1,2)
+                                      adata        <- list("vals" = xvec)
+                                      self$dims$nsurface_fraction      <- adata
+
+
+                                      surfacefraction   <- array(NA, c(dim(self$data$vegetation_type$vals),3))
+                                      temp_array        <- array(-9999.9, dim(self$data$vegetation_type$vals))
+                                      temp_array[which(self$data$vegetation_type$vals>0, arr.ind = T)]   <- 1
+                                      surfacefraction[,,1]  <- temp_array
+                                      #surfacefraction[,,4]  <- temp_array
+
+                                      temp_array        <- array(-9999.9, dim(self$data$vegetation_type$vals))
+                                      temp_array[which(self$data$pavement_type$vals>0, arr.ind = T)]   <- 1
+                                      #temp_array2       <- temp_array
+                                      #temp_array2[surfacefraction[,,4]==1] <- 1
+                                      #surfacefraction[,,4]  <- temp_array2
+                                      surfacefraction[,,2]  <- temp_array
+
+                                      temp_array        <- array(-9999.9, dim(self$data$vegetation_type$vals))
+                                      temp_array[which(self$data$water_type$vals>0, arr.ind = T)]   <- 1
+                                      # temp_array2       <- temp_array
+                                      # temp_array2[surfacefraction[,,4]==1] <- 1
+                                      # surfacefraction[,,4]  <- temp_array2
+                                      surfacefraction[,,3]  <- temp_array
+
+                                      surfacefraction[,,2][which(surfacefraction[,,1]==1)] <- 0
+                                      surfacefraction[,,3][which(surfacefraction[,,1]==1)] <- 0
+                                      surfacefraction[,,1][which(surfacefraction[,,2]==1)] <- 0
+                                      surfacefraction[,,3][which(surfacefraction[,,2]==1)] <- 0
+                                      surfacefraction[,,2][which(surfacefraction[,,3]==1)] <- 0
+                                      surfacefraction[,,1][which(surfacefraction[,,3]==1)] <- 0
+                                     # surfacefraction[,,4]  <-  surfacefraction[,,1] + surfacefraction[,,2]+ surfacefraction[,,3]
+                                     # surfacefraction[,,4][which(surfacefraction[,,4]<0)] <- -9999.9
+
+
+                                      adata      <- list("_FillValue" = -9999.9,
+                                                         "units" = "",
+                                                         "long_name" = "surface tile fraction",
+                                                         "vals" = surfacefraction[,,1:3],
+                                                         "type" = "float")
+
+
+                                      self$data$surface_fraction  <- adata
+                                      self$vardimensions$surface_fraction  <- c(1,2,which(names(self$dims)=="nsurface_fraction"))
+
                                     }
+
                                   ),
 
                                   private = list(
