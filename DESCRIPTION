@@ -1,7 +1,7 @@
 Package: rPALM
 Type: Package
 Title: Create static and dynamic drivers for the urban climate model PALM4U
-Version: 0.1.0
+Version: 0.1.2
 Author: Sebastian Stadler
 Maintainer: Sebastian Stadler <sebastian.stadler@ibp.fraunhofer.de>
 Description: Provides R6-classes to create and edit static drivers for the urban climate
@@ -33,6 +33,8 @@ VignetteBuilder: knitr
 Collate: 
     'zzz.R'
     'aaa-.R'
+    'f_calc_patch_tree.R'
+    'f_calc_single_tree.R'
     'palm_berlin.R'
     'palm_berlin_old.R'
     'palm_global.R'
@@ -42,7 +44,7 @@ Collate:
     'palm_ncdf_data_template.R'
     'palm_ncdf_dimension_template.R'
     'palm_shiny.R'
-    'pint_palm_ncdf_berlin.R'
     'plot_palm_ncdf_berlin.R'
+    'print_palm_ncdf_berlin.R'
     'shiny_static.R'
     'supplementary_functions.R'

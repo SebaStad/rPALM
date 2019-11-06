@@ -6,6 +6,7 @@
 #' @export
 #'
 #' @examples
+#' a <- 1
 plot.palm_ncdf_berlin <- function(obj){
   obj$plot_area()
 }

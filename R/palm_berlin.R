@@ -1694,7 +1694,7 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                         stop("Please provide the correct class")
                                       }
 
-                                      for(i in names(data_class$datalist)){
+                                      for(i in names(data_class$data_list)){
                                         self$data[[i]] <- data_class$data_list[[i]]
                                         self$vardimensions[[i]] <- data_class$data_dims[[i]]
                                       }
@@ -1768,6 +1768,202 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
 
                                       self$data$surface_fraction  <- adata
                                       self$vardimensions$surface_fraction  <- c(1,2,which(names(self$dims)=="nsurface_fraction"))
+
+                                    },
+                                    generate_lad_single_trees = function(ext_tree_type = NULL,
+                                                                         ext_tree_height = NULL,
+                                                                         ext_crown_diameter = NULL,
+                                                                         ext_tree_shape = NULL,
+                                                                         ext_lai = NULL,
+                                                                         overwrite = TRUE,
+                                                                         ...){
+                                      dx <- self$header$head$resolution
+                                      # Start with Checks
+                                      #
+                                      # Abort if no information about trees are present
+                                      if(!any(names(self$data)=="tree_id" ) && !any(names(self$data)=="tree_height" )){
+                                        stop("Neither tree id or tree height are in the dataset!\n Please provide at least one of them!")
+                                      }
+
+                                      if(any(names(self$data)=="tree_height")){
+                                        canopy_height <- self$data$tree_height$vals
+
+                                        tree_array    <- canopy_height
+                                        tree_array[tree_array>0] <- 1
+
+                                      } else if(any(names(self$data)=="tree_id")){
+
+                                        tree_array <- self$data$tree_id$vals
+                                        tree_array[canopy_heigt>0] <- 1
+
+                                        if(is.null(ext_tree_height)){
+                                          stop("No tree_height given.")
+                                        } else {
+                                          canopy_height <- tree_array * ext_tree_height
+                                        }
+
+                                      }
+
+                                      if(is.null(ext_tree_type)){
+                                        tree_type <- 1*tree_array
+                                      } else {
+                                        tree_type <- ext_tree_type*tree_array
+                                      }
+
+                                      if(is.null(ext_crown_diameter)){
+                                        crown_dia <- 10 * tree_array
+                                      } else {
+                                        crown_dia <- ext_crown_diameter * tree_array
+                                      }
+
+                                      if(is.null(ext_tree_shape)){
+                                        tree_shape <- 1
+                                      } else {
+                                        tree_shape <- ext_tree_shape
+                                      }
+
+                                      if(is.null(ext_lai)){
+                                        if(!any(names(self$data)=="vegetation_type")){
+                                          stop("No LAI information available!")
+                                        }
+                                        lai <- array(NA,dim(self$data$vegetation_type$vals))
+                                        lai[self$data$vegetation_type$vals==4] <- 5
+                                        lai[self$data$vegetation_type$vals==5] <- 5
+                                        lai[self$data$vegetation_type$vals==6] <- 5
+                                        lai[self$data$vegetation_type$vals==7] <- 6
+                                        lai[self$data$vegetation_type$vals==17] <- 5
+                                        lai[self$data$vegetation_type$vals==18] <- 2.5
+                                      } else {
+                                        lai <- ext_lai*tree_array
+                                      }
+
+                                      lad_temp <- array(0, c(dim(lai), 1+max(canopy_height)/dx))
+                                      bad_temp <- array(0, c(dim(lai), 1+max(canopy_height)/dx))
+
+                                      if(overwrite){
+                                        for(i in seq(dim(lai)[1])){
+                                          for(j in seq(dim(lai)[2])){
+
+                                            if(tree_type[i,j]<=0){
+
+                                            } else {
+
+                                            tmp_dat <- f.calc_single_tree(tree_type_b = tree_type[i,j],
+                                                                          tree_shape = tree_shape,
+                                                                          crown_ratio = tree_shape_parameters$ratio[tree_type[i,j]],
+                                                                          crown_diameter = crown_dia[i,j],
+                                                                          tree_height = canopy_height[i,j],
+                                                                          lai = lai[i,j],
+                                                                          dbh = tree_trunk_parameters$dbh[tree_type[i,j]],
+                                                                          dx = dx)
+
+                                            dat_range_x <- (i-as.integer(dim(tmp_dat$lad)[1]/2)):(i+as.integer(dim(tmp_dat$lad)[1]/2))
+                                            dat_range_y <- (j-as.integer(dim(tmp_dat$lad)[2]/2)):(j+as.integer(dim(tmp_dat$lad)[2]/2))
+
+                                            dat_range_x <- dat_range_x[dat_range_x>0]
+                                            dat_range_y <- dat_range_y[dat_range_y>0]
+
+                                            dat_range_x <- dat_range_x[dat_range_x<=dim(lai)[1]]
+                                            dat_range_y <- dat_range_y[dat_range_y<=dim(lai)[2]]
+
+                                            lad_temp[dat_range_x, dat_range_y,] <- tmp_dat$lad[dat_range_x-i+ ceiling(dim(tmp_dat$lad)[1]/2), dat_range_y-j+ ceiling(dim(tmp_dat$lad)[2]/2),]
+                                            bad_temp[dat_range_x, dat_range_y,] <- tmp_dat$bad[dat_range_x-i+ ceiling(dim(tmp_dat$lad)[1]/2), dat_range_y-j+ ceiling(dim(tmp_dat$lad)[2]/2),]
+
+                                            }
+                                          }
+                                        }
+                                      } else {
+                                        for(i in seq(dim(lai)[1])){
+                                          for(j in seq(dim(lai)[2])){
+
+                                            if(tree_type[i,j]<=0){
+
+                                            } else {
+                                            tmp_dat <- f.calc_single_tree(tree_type_b = tree_type[i,j],
+                                                                          tree_shape = tree_shape,
+                                                                          crown_ratio = tree_shape_parameters$ratio[tree_type[i,j]],
+                                                                          crown_diameter = crown_dia[i,j],
+                                                                          tree_height = canopy_height[i,j],
+                                                                          lai = lai[i,j],
+                                                                          dbh = tree_trunk_parameters$dbh[tree_type[i,j]],
+                                                                          dx = dx,
+                                                                          fillvalue = 0)
+
+                                            dat_range_x <- (i-as.integer(dim(tmp_dat$lad)[1]/2)):(i+as.integer(dim(tmp_dat$lad)[1]/2))
+                                            dat_range_y <- (j-as.integer(dim(tmp_dat$lad)[2]/2)):(j+as.integer(dim(tmp_dat$lad)[2]/2))
+
+                                            dat_range_x <- dat_range_x[dat_range_x>0]
+                                            dat_range_y <- dat_range_y[dat_range_y>0]
+
+                                            dat_range_x <- dat_range_x[dat_range_x<=dim(lai)[1]]
+                                            dat_range_y <- dat_range_y[dat_range_y<=dim(lai)[2]]
+
+                                            lad_temp[dat_range_x, dat_range_y,] <- lad_temp[dat_range_x, dat_range_y,] + tmp_dat$lad[dat_range_x-i+ ceiling(dim(tmp_dat$lad)[1]/2), dat_range_y-j+ ceiling(dim(tmp_dat$lad)[2]/2),]
+                                            bad_temp[dat_range_x, dat_range_y,] <- bad_temp[dat_range_x, dat_range_y,] + tmp_dat$bad[dat_range_x-i+ ceiling(dim(tmp_dat$lad)[1]/2), dat_range_y-j+ ceiling(dim(tmp_dat$lad)[2]/2),]
+
+                                            }
+                                          }
+                                        }
+                                        lad_temp[,,2:dim(lad_temp)[3]][lad_temp[,,2:dim(lad_temp)[3]]==0] <- -9999.9
+                                        bad_temp[,,2:dim(bad_temp)[3]][bad_temp[,,2:dim(bad_temp)[3]]==0] <- -9999.9
+                                      }
+
+                                      if(!any(names(self$data)=="lad")){
+                                        z <- seq(0, dim(lad_temp)[3],by=1) * dx
+                                        z <- z - (dx/2)
+                                        z[1] <- 0
+
+                                        adata        <- list("long_name" = "zlad",
+                                                             "standard_name" = "zlad",
+                                                             "units" = "m",
+                                                             "vals" = z)
+
+                                        self$dims[["zlad"]] <- adata
+
+                                        adata      <- list("_FillValue" = -9999.9,
+                                                           "units" = "m2/m3",
+                                                           "long_name" = "leaf area density",
+                                                           "source" = "According to ncl script by Bjoern Maronga",
+                                                           "vals" = lad_temp,
+                                                           "type" = "float")
+                                        self$data[["lad"]] <- adata
+                                        self$vardimensions[["lad"]]  <- c("x", "y", "zlad")
+
+                                        adata      <- list("_FillValue" = -9999.9,
+                                                           "units" = "m2/m3",
+                                                           "long_name" = "leaf area density",
+                                                           "source" = "According to ncl script by Bjoern Maronga",
+                                                           "vals" = bad_temp,
+                                                           "type" = "float")
+                                        self$data[["bad"]] <- adata
+                                        self$vardimensions[["bad"]]  <- c("x", "y", "zlad")
+
+                                      } else {
+                                        ifelse(dim(self$data$lad$vals)[3] >= dim(lad_temp)[3],
+                                               new_dat <- array(-9999.9, dim(self$data$lad$vals)),
+                                               new_dat <- array(-9999.9, dim(dim(lad_temp)[3])))
+                                        new_dat[,,1:dim(self$data$lad$vals)[3]] <- self$data$lad$vals
+                                        new_dat[,,1:dim(lad_temp)[3]][lad_temp>0] <- lad_temp[lad_temp>0]
+
+                                        z <- seq(0, dim(new_dat)[3],by=1) * dz
+                                        z <- z - (dz/2)
+                                        z[1] <- 0
+
+                                        self$dims$zlad$vals <- z
+                                        self$data$lad$vals  <- new_dat
+
+                                        adata      <- list("_FillValue" = -9999.9,
+                                                           "units" = "m2/m3",
+                                                           "long_name" = "leaf area density",
+                                                           "source" = "According to ncl script by Bjoern Maronga",
+                                                           "vals" = bad_temp,
+                                                           "type" = "float")
+                                        self$data[["bad"]] <- adata
+                                        self$vardimensions[["bad"]]  <- c("x", "y", "zlad")
+                                      }
+                                    },
+                                    generate_lad_patch = function(){
+                                      cat("Not yet implemented.")
 
                                     }
 

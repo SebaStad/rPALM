@@ -15,3 +15,6 @@ A ggplot
 \description{
 Title
 }
+\examples{
+a <- 1
+}
