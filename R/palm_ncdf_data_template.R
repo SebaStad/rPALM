@@ -33,13 +33,13 @@ palm_ncdf_data_template <- R6::R6Class(classname = "palm_ncdf_data_template",
                                            self$data_list[[dat_name]] <- list(
                                              "_FillValue" =  FillValue,
                                              "units" = d_units,
-                                             "long_name" = long_name,
+                                             "long_name" = longname,
                                              "source" = d_source,
                                              "lod" = lod,
                                              "vals" = data,
-                                             "type" = dtype
+                                             "type" = d_type
                                            )
-                                           self$data_dims[[dat_name]] <- dimension
+                                           self$data_dims[[dat_name]] <- dimensions
 
                                          },
                                          add_another_data = function(dat_name,
@@ -55,13 +55,13 @@ palm_ncdf_data_template <- R6::R6Class(classname = "palm_ncdf_data_template",
                                            self$data_list[[dat_name]] <- list(
                                              "_FillValue" =  FillValue,
                                              "units" = d_units,
-                                             "long_name" = long_name,
+                                             "long_name" = longname,
                                              "source" = d_source,
                                              "lod" = lod,
                                              "vals" = data,
-                                             "type" = dtype
+                                             "type" = d_type
                                            )
-                                           self$data_dims[[dat_name]] <- dimension
+                                           self$data_dims[[dat_name]] <- dimensions
 
                                          },
                                          print = function(){

@@ -1694,7 +1694,7 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                         stop("Please provide the correct class")
                                       }
 
-                                      for(i in names(data_class$datalist)){
+                                      for(i in names(data_class$data_list)){
                                         self$data[[i]] <- data_class$data_list[[i]]
                                         self$vardimensions[[i]] <- data_class$data_dims[[i]]
                                       }
@@ -1816,8 +1816,10 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                         crown_dia <- ext_crown_diameter * tree_array
                                       }
 
-                                      if(is.null(tree_shape)){
+                                      if(is.null(ext_tree_shape)){
                                         tree_shape <- 1
+                                      } else {
+                                        tree_shape <- ext_tree_shape
                                       }
 
                                       if(is.null(ext_lai)){
@@ -1841,13 +1843,18 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                       if(overwrite){
                                         for(i in seq(dim(lai)[1])){
                                           for(j in seq(dim(lai)[2])){
-                                            tmp_dat <- f.calc_single_tree(tree_type_b = tree_type,
+
+                                            if(tree_type[i,j]<=0){
+
+                                            } else {
+
+                                            tmp_dat <- f.calc_single_tree(tree_type_b = tree_type[i,j],
                                                                           tree_shape = tree_shape,
-                                                                          crown_ratio = tree_shape_parameters$ratio[tree_type],
+                                                                          crown_ratio = tree_shape_parameters$ratio[tree_type[i,j]],
                                                                           crown_diameter = crown_dia[i,j],
                                                                           tree_height = canopy_height[i,j],
                                                                           lai = lai[i,j],
-                                                                          dbh = tree_trunk_parameters$dbh[tree_type],
+                                                                          dbh = tree_trunk_parameters$dbh[tree_type[i,j]],
                                                                           dx = dx)
 
                                             dat_range_x <- (i-as.integer(dim(tmp_dat$lad)[1]/2)):(i+as.integer(dim(tmp_dat$lad)[1]/2))
@@ -1861,18 +1868,24 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
 
                                             lad_temp[dat_range_x, dat_range_y,] <- tmp_dat$lad[dat_range_x-i+ ceiling(dim(tmp_dat$lad)[1]/2), dat_range_y-j+ ceiling(dim(tmp_dat$lad)[2]/2),]
                                             bad_temp[dat_range_x, dat_range_y,] <- tmp_dat$bad[dat_range_x-i+ ceiling(dim(tmp_dat$lad)[1]/2), dat_range_y-j+ ceiling(dim(tmp_dat$lad)[2]/2),]
+
+                                            }
                                           }
                                         }
                                       } else {
                                         for(i in seq(dim(lai)[1])){
                                           for(j in seq(dim(lai)[2])){
-                                            tmp_dat <- f.calc_single_tree(tree_type_b = tree_type,
+
+                                            if(tree_type[i,j]<=0){
+
+                                            } else {
+                                            tmp_dat <- f.calc_single_tree(tree_type_b = tree_type[i,j],
                                                                           tree_shape = tree_shape,
-                                                                          crown_ratio = tree_shape_parameters$ratio[tree_type],
+                                                                          crown_ratio = tree_shape_parameters$ratio[tree_type[i,j]],
                                                                           crown_diameter = crown_dia[i,j],
                                                                           tree_height = canopy_height[i,j],
                                                                           lai = lai[i,j],
-                                                                          dbh = tree_trunk_parameters$dbh[tree_type],
+                                                                          dbh = tree_trunk_parameters$dbh[tree_type[i,j]],
                                                                           dx = dx,
                                                                           fillvalue = 0)
 
@@ -1887,6 +1900,8 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
 
                                             lad_temp[dat_range_x, dat_range_y,] <- lad_temp[dat_range_x, dat_range_y,] + tmp_dat$lad[dat_range_x-i+ ceiling(dim(tmp_dat$lad)[1]/2), dat_range_y-j+ ceiling(dim(tmp_dat$lad)[2]/2),]
                                             bad_temp[dat_range_x, dat_range_y,] <- bad_temp[dat_range_x, dat_range_y,] + tmp_dat$bad[dat_range_x-i+ ceiling(dim(tmp_dat$lad)[1]/2), dat_range_y-j+ ceiling(dim(tmp_dat$lad)[2]/2),]
+
+                                            }
                                           }
                                         }
                                         lad_temp[,,2:dim(lad_temp)[3]][lad_temp[,,2:dim(lad_temp)[3]]==0] <- -9999.9
@@ -1894,8 +1909,8 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                       }
 
                                       if(!any(names(self$data)=="lad")){
-                                        z <- seq(0, dim(lad_temp)[3],by=1) * dz
-                                        z <- z - (dz/2)
+                                        z <- seq(0, dim(lad_temp)[3],by=1) * dx
+                                        z <- z - (dx/2)
                                         z[1] <- 0
 
                                         adata        <- list("long_name" = "zlad",
@@ -1948,6 +1963,7 @@ palm_ncdf_berlin   <- R6::R6Class("palm_ncdf_berlin",
                                       }
                                     },
                                     generate_lad_patch = function(){
+                                      cat("Not yet implemented.")
 
                                     }
 
