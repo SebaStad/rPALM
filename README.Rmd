@@ -151,3 +151,5 @@ PIDS should be callable via
 # rPALM:::PIDS
 rPALM:::PIDS$soil$predefined_type
 ```
+
+Also contains building pars now!
