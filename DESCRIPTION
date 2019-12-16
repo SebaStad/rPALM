@@ -44,7 +44,7 @@ Collate:
     'palm_ncdf_data_template.R'
     'palm_ncdf_dimension_template.R'
     'palm_shiny.R'
-    'plod_2d_data.R'
+    'plot_2d_data.R'
     'plot_palm_ncdf_berlin.R'
     'print_palm_ncdf_berlin.R'
     'shiny_static.R'

@@ -1983,8 +1983,8 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
               dat_range_x <- dat_range_x[dat_range_x <= dim(lai)[1]]
               dat_range_y <- dat_range_y[dat_range_y <= dim(lai)[2]]
 
-              lad_temp[dat_range_x, dat_range_y, ] <- tmp_dat$lad[dat_range_x - i + ceiling(dim(tmp_dat$lad)[1] / 2), dat_range_y - j + ceiling(dim(tmp_dat$lad)[2] / 2), ]
-              bad_temp[dat_range_x, dat_range_y, ] <- tmp_dat$bad[dat_range_x - i + ceiling(dim(tmp_dat$lad)[1] / 2), dat_range_y - j + ceiling(dim(tmp_dat$lad)[2] / 2), ]
+              lad_temp[dat_range_x, dat_range_y, seq(dim(tmp_dat$lad)[3])] <- tmp_dat$lad[dat_range_x - i + ceiling(dim(tmp_dat$lad)[1] / 2), dat_range_y - j + ceiling(dim(tmp_dat$lad)[2] / 2), ]
+              bad_temp[dat_range_x, dat_range_y, seq(dim(tmp_dat$bad)[3])] <- tmp_dat$bad[dat_range_x - i + ceiling(dim(tmp_dat$lad)[1] / 2), dat_range_y - j + ceiling(dim(tmp_dat$lad)[2] / 2), ]
             }
           }
         }
@@ -2090,8 +2090,7 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
         self$vardimensions[["bad"]] <- c("x", "y", "zlad")
       }
 
-    },
-    generate_lad_patch = function() {
+    }, generate_lad_patch = function() {
       cat("Not yet implemented.")
     }
   ),
