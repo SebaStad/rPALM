@@ -51,13 +51,15 @@
                                                          "artificial turf (sports)",
                                                          "clay (sports)",
                                                          "building (dummy)"),
-                                              "Albedo type" = c(0,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33)
+                                              "Albedo type" = c(0,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33),
+                                              stringsAsFactors = F
   )
   PIDS$pavement$parameters  <- data.frame("ID_pos" = 0:3,
                                           "Name" = c("roughness length for momentum (m)",
                                                      "roughness length for heat (m)",
                                                      "albedo type",
-                                                     "emissivity (0-1)"))
+                                                     "emissivity (0-1)"),
+                                          stringsAsFactors = F)
 
 
   PIDS$vegetation <- list()
@@ -81,7 +83,8 @@
                                                            "deciduous shrubs",
                                                            "mixed forest / woodland",
                                                            "interrupted forest"),
-                                                "Albedo type" = c(0,17,2,5,6,8,9,8,3,11,13,2,11,0,4,4,4,7,8)
+                                                "Albedo type" = c(0,17,2,5,6,8,9,8,3,11,13,2,11,0,4,4,4,7,8),
+                                                stringsAsFactors = F
   )
   PIDS$vegetation$parameters <- data.frame("ID_pos" = c(0:11),
                                            "Name" = c("minimum canopy resistance (s/m)",
@@ -95,7 +98,8 @@
                                                       "fraction of incoming shortwave radiation transmitted directly to the soil",
                                                       "heat capacity of the surface / skin layer (J/m2/K)",
                                                       "albedoy type",
-                                                      "emissivity"))
+                                                      "emissivity"),
+                                           stringsAsFactors = F)
 
 
   PIDS$water <- list()
@@ -106,7 +110,8 @@
                                                       "ocean",
                                                       "pond",
                                                       "fountain"),
-                                           "Albedo type" = c(1,1,1,1,1,1)
+                                           "Albedo type" = c(1,1,1,1,1,1),
+                                           stringsAsFactors = F
   )
   PIDS$water$parameters <- data.frame( "ID_pos" = 0:6,
                                        "Name" = c("water temperature (fixed) (K)",
@@ -115,7 +120,8 @@
                                                   "heat conductivity between skin layer and water (stable conditions) (W/m2/K) (should not be changed)",
                                                   "heat conductivity between skin layer and water (unstable conditions) (W/m2/K) (should not be changed)",
                                                   "albedo type",
-                                                  "emissivity (0-1)"))
+                                                  "emissivity (0-1)"),
+                                       stringsAsFactors = F)
 
   PIDS$soil <- list()
   PIDS$soil$predefined_type <- data.frame("ID" = 0:6,
@@ -125,7 +131,8 @@
                                                      "medium-fine",
                                                      "fine",
                                                      "very fine",
-                                                     "organic"))
+                                                     "organic"),
+                                          stringsAsFactors = F)
   PIDS$soil$parameters <- data.frame( "ID_pos" = 0:7,
                                       "Name" = c("Van Genuchten parameter alpha",
                                                  "Van Genuchten parameter I",
@@ -134,7 +141,8 @@
                                                  "saturation soil moisture (m3/m3)",
                                                  "field capacity (m3/m3)",
                                                  "wilting point (m3/m3)",
-                                                 "residual moisture (m3/m3)"))
+                                                 "residual moisture (m3/m3)"),
+                                      stringsAsFactors = F)
 
   PIDS$building <- list()
   PIDS$building$predefined_type <- data.frame("ID" = 0:6,
@@ -146,7 +154,8 @@
                                                          "Office 1950 - 2000",
                                                          "Office >2000"
                                               ),
-                                              "Albedo type" = c(0,rep(33,6))
+                                              "Albedo type" = c(0,rep(33,6)),
+                                                                stringsAsFactors = F
   )
 
   PIDS$building$parameters <- data.frame( "ID_pos" = 0:44,
@@ -195,7 +204,8 @@
                                                      "wall thickness of layer 2 (m)",
                                                      "wall thickness of layer 3 (m)",
                                                      "wall thickness of layer 4 (m)"
-                                          )
+                                          ),
+                                          stringsAsFactors = F
   )
 
   PIDS$albedo <- list()
@@ -254,7 +264,8 @@
                                                                   0.90, 0.95, 0.08, 0.17, 0.17,
                                                                   0.30, 0.17, 0.17, 0.17, 0.17,
                                                                   0.17, 0.17, 0.17, 0.17, 0.17,
-                                                                  0.17, 0.17, 0.17, 0.17)
+                                                                  0.17, 0.17, 0.17, 0.17),
+                                            stringsAsFactors = F
   )
   assign("PIDS", PIDS, envir = parent.env(environment()))
 }

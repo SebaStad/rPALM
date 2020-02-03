@@ -5,7 +5,7 @@
 \alias{palm_ncdf_shiny}
 \title{R6 Class to create a static driver for the shiny app. The domain is defined via the topography file, other
 data arrays have to be defined later.}
-\format{An object of class \code{R6ClassGenerator} of length 24.}
+\format{An object of class \code{R6ClassGenerator} of length 25.}
 \usage{
 palm_ncdf_shiny
 }

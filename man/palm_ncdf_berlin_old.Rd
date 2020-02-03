@@ -5,7 +5,7 @@
 \alias{palm_ncdf_berlin_old}
 \title{Funktion die mit $new aufgerufen wird!
 Title}
-\format{An object of class \code{R6ClassGenerator} of length 24.}
+\format{An object of class \code{R6ClassGenerator} of length 25.}
 \usage{
 palm_ncdf_berlin_old
 }

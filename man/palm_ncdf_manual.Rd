@@ -5,7 +5,7 @@
 \alias{palm_ncdf_manual}
 \title{R6-Class to create a new static driver from scratch. Creates the most important data arrays depending on the
 grid definitions, given by the initialize/new function}
-\format{An object of class \code{R6ClassGenerator} of length 24.}
+\format{An object of class \code{R6ClassGenerator} of length 25.}
 \usage{
 palm_ncdf_manual
 }

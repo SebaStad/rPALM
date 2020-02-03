@@ -1,11 +1,11 @@
 # source("base_functions.R")
-# 
+#
 # Building   <- "Building"
 # Pavement   <- "Pavement"
 # Vegetation <- "Vegetation"
 # Water      <- "Water"
-# 
-# 
+#
+#
 # Buildtypes <- c("Wohn bis 1950", "Wohn 1950 bis 2000", "Wohn seit 2000",
 #                 "Buero bis 1950", "Buero 1950 bis 2000", "Buero seit 2000")
 # Pavetypes  <- c("Nutzerdefiniert", "Unbekannter Asphalt", "Asphalt",
@@ -18,7 +18,7 @@
 #                 "Suempfe und Marsche", "Immergrüne Straeucher", "Laubabwerfende Straeucher", "Mischwald",
 #                 "Unterbrochener Wald")
 # Wattypes  <-  c("Nutzerdefiniert", "See", "Fluss", "Ozean", "Teich", "Brunnen")
-# 
+#
 # library(shiny)
 # library(shinyTree)
 # library(DT)
@@ -28,10 +28,10 @@
 
 # Courtesy of:
 # https://stackoverflow.com/questions/20637248/shiny-4-small-textinput-boxes-side-by-side
-textInput3<-function (inputId, label, value = "",...) 
+textInput3<-function (inputId, label, value = "",...)
 {
   div(style="display:inline-block",
-      tags$label(label, `for` = inputId), 
+      tags$label(label, `for` = inputId),
       tags$input(id = inputId, type = "text", value = value,...))
 }
 
@@ -43,15 +43,16 @@ textInput3<-function (inputId, label, value = "",...)
 
 
 
+library(shiny)
+library(shinyTree)
 
 
-
-ui <- shinyUI(
+ui <- shiny::shinyUI(
   fluidPage(
 
   # Application title
   #titlePanel("PALM-4U: Static Driver Creator"),
-  
+
   navbarPage("PALM-4U: Static Driver Creator",
     tabPanel("File Upload", #icon = "upload",
              # Sidebar with a slider input for number of bins
@@ -65,7 +66,7 @@ ui <- shinyUI(
                  h4("Input:"),
                  shinyTree("tree", checkbox = FALSE)
                ),
-               
+
                mainPanel(
                  h3(htmlOutput("selTxt")),
                  br(),
@@ -75,14 +76,14 @@ ui <- shinyUI(
                     textInput("palmcreator", "Ersteller", placeholder = "Ersteller"),
                     textInput("palminstitute", "Institut", placeholder = "Institut"),
                     textInput("palmlocation", "Ort", placeholder = "Ort"),
-                   
+
                     textInput("palmlatitude", "Breitengrad des Projekts", placeholder = 52.50836),
                     textInput("palmlongitude", "Längengrad des Projekts", placeholder = 13.31343),
                     textInput("palmursprungx", "Koordinatensystem: Ursprung X", placeholder = 385536.4),
                     textInput("palmursprungy", "Koordinatensystem: Ursprung Y", placeholder = 5818919),
-                    #textInput("palmuEPSG", "Koordinatensystem: EPSG", 
+                    #textInput("palmuEPSG", "Koordinatensystem: EPSG",
                     #          value = "EPSG:25832"),
-                    selectInput("palmuEPSG", "Koordinatensystem: EPSG", 
+                    selectInput("palmuEPSG", "Koordinatensystem: EPSG",
                                 choices = c("EPSG:25831", "EPSG:25832", "EPSG:25833", "EPSG:31468"),
                                 selected = "EPSG:25832"),
                     selectInput("palmGIS", "Mit welcher Software wurden die Daten gerastert?",
@@ -90,19 +91,19 @@ ui <- shinyUI(
                                 selected = "QGIS"),
                     textInput("palmuHeightAMSL", "Hoehe uber NN [m]:", placeholder = 30.81),
                     numericInput("palmgrid", "Horizontale Gitterweite", value = 10, min = 1, step = 1),
-                    selectInput("palmTime", "Fragestellung der PALM-GUI", 
-                                choices = c("Thermischer Komfort" = "2018-07-21 21:00:00 +00", 
+                    selectInput("palmTime", "Fragestellung der PALM-GUI",
+                                choices = c("Thermischer Komfort" = "2018-07-21 21:00:00 +00",
                                             "Windkomfort" = "2018-07-21 12:00:00 +00")),
                     actionButton("palmglobal", "Import")
                    # ,
-                   #  
+                   #
                    #  actionButton("palmglobal_summary", "Summary"),
                    #  br(), br(), br()
                    # ,
                    # htmlOutput("palmglSummary")
-                     
-                   
-                   
+
+
+
                   ),
                  conditionalPanel(condition="output.treeselect == 'Topography'",
                                   fileInput("palmtopography", "Wählen Sie Ihre Topographie Datei",
@@ -110,7 +111,7 @@ ui <- shinyUI(
                                   actionButton("palmtopo_upload", "Import")
                  ),
                  # conditionalPanel(condition="output.treeselect == 'Terrain Height'",
-                 #                  plotOutput("palmplot_topo", height = "600px")       
+                 #                  plotOutput("palmplot_topo", height = "600px")
                  # ),
                #   conditionalPanel(condition="output.treeselect == 'Buildings'",
                #                    fileInput("palmbuildings2d", "Wählen Sie Ihre 2D-Gebäude Datei",
@@ -143,16 +144,16 @@ ui <- shinyUI(
                                 conditionalPanel(condition="input.palmbuildingtype_select == 2",
                                                  selectInput(
                                                    "buildingtype_select", "Building Type",
-                                                   c("Wohngebäude, bis 1950" = 1, 
-                                                     "Wohngebäude, 1950 - 2000" = 2, 
-                                                     "Wohngebäude, ab 2000" = 3, 
-                                                     "Bürogebäude, bis 1950" = 4, 
-                                                     "Bürogebäude, 1950-2000" = 5, 
+                                                   c("Wohngebäude, bis 1950" = 1,
+                                                     "Wohngebäude, 1950 - 2000" = 2,
+                                                     "Wohngebäude, ab 2000" = 3,
+                                                     "Bürogebäude, bis 1950" = 4,
+                                                     "Bürogebäude, 1950-2000" = 5,
                                                      "Bürogebäude, ab 2000" = 6)
                                                  )),
                                 actionButton("palmbuildingtype_upload", "Import")
                                 ),
-               
+
                conditionalPanel(condition="output.treeselect == 'Vegetation Type'",
                                 fileInput("palmvegetation", "Wählen Sie Ihre Vegetation Type Datei",
                                           multiple = FALSE, accept=c(".nc")),
@@ -195,7 +196,7 @@ ui <- shinyUI(
 
                                 )
               )
-              
+
             )
           ),
     tabPanel("Viewer/ Editor", #icon = "upload",
@@ -260,7 +261,7 @@ ui <- shinyUI(
                )
              )
              ),
-    tabPanel("Hilfe",  
+    tabPanel("Hilfe",
              h4("Hilfe"),
              a("Hilfe starten", target = "_blank", href = "UseUClim_BHB_StaticDriverTool.pdf")
              )

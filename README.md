@@ -3,6 +3,7 @@ rPALM
 
 <!-- badges: start -->
 <!-- badges: end -->
+
 rPALM provides R6 classes to create and edit static drivers for the
 urban climate model PALM-4U.
 
@@ -21,6 +22,14 @@ A simple example to create a static driver from scratch. Lots of
 information about what and why is yet missing!
 
     library(rPALM)
+
+    ## 
+    ## Attaching package: 'rPALM'
+
+    ## The following object is masked _by_ '.GlobalEnv':
+    ## 
+    ##     PIDS
+
     # First:
     # Define a headclass
     manual_headclass <- palm_global$new(title = "GIT Example",
@@ -226,3 +235,5 @@ PIDS should be callable via
     ## 5  4         fine
     ## 6  5    very fine
     ## 7  6      organic
+
+Also contains building pars now!

@@ -4,7 +4,7 @@
 \name{palm_ncdf_import}
 \alias{palm_ncdf_import}
 \title{R6-Class to import data from an already existing static driver}
-\format{An object of class \code{R6ClassGenerator} of length 24.}
+\format{An object of class \code{R6ClassGenerator} of length 25.}
 \usage{
 palm_ncdf_import
 }
