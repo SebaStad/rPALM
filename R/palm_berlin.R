@@ -1630,6 +1630,14 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
         vardim_dim <- seq(0, 46)
         longname <- "building parameters"
         dattype <- "float"
+      } else if( grepl("albedo", name)) {
+        varname <- "albedo_pars"
+        dimname <- "nalbedo_pars"
+
+        vardim_dim <- seq(0,6)
+        longname <- "albedo parameters"
+        dattype <- "float"
+
       }
       dimdata <- list(
         "long_name" = dimname,
@@ -1663,7 +1671,7 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
           "units" = "1",
           "long_name" = longname,
           # "long_name" = "building id",
-          "source" = "idk made it up",
+          "source" = "rscript",
           "vals" = valvec,
           "type" = dattype
         )
@@ -1673,7 +1681,7 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
           "units" = "1",
           "long_name" = longname,
           # "long_name" = "building id",
-          "source" = "idk made it up",
+          "source" = "rscript",
           "lod" = lod,
           "vals" = valvec,
           "type" = dattype
