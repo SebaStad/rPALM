@@ -4,10 +4,19 @@
 \alias{f.calc_single_tree}
 \title{Calculates the LAD and BAD of a single tree!}
 \usage{
-f.calc_single_tree(tree_type_b = NULL, tree_shape = NULL,
-  crown_ratio = NULL, crown_diameter = NULL, tree_height = NULL,
-  lai = NULL, dbh = NULL, extinktion_sphere = 0.6,
-  extinktion_cone = 0.2, fillvalue = -9999.9, dx)
+f.calc_single_tree(
+  tree_type_b = NULL,
+  tree_shape = NULL,
+  crown_ratio = NULL,
+  crown_diameter = NULL,
+  tree_height = NULL,
+  lai = NULL,
+  dbh = NULL,
+  extinktion_sphere = 0.6,
+  extinktion_cone = 0.2,
+  fillvalue = -9999.9,
+  dx
+)
 }
 \arguments{
 \item{tree_type_b}{Integer. TreeType according to a "database" so far, only fillvalues!}

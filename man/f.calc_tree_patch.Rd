@@ -4,8 +4,14 @@
 \alias{f.calc_tree_patch}
 \title{Calculate Patch LAD fpr PALM-4U}
 \usage{
-f.calc_tree_patch(lai = array(), canopy_height = array(), dz,
-  alpha = 5, beta = 3, fillvalue = -9999.9)
+f.calc_tree_patch(
+  lai = array(),
+  canopy_height = array(),
+  dz,
+  alpha = 5,
+  beta = 3,
+  fillvalue = -9999.9
+)
 }
 \arguments{
 \item{lai}{Array. Containts Leaf Area Index for respective patches.}

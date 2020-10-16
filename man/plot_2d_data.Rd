@@ -13,10 +13,6 @@ plot_2d_data(matrix)
 }
 \arguments{
 \item{matrix}{A 2D Matrix}
-
-\item{matrix}{A 2D Matrix}
-
-\item{matrix}{A 2D Matrix}
 }
 \value{
 Returns a ggplot

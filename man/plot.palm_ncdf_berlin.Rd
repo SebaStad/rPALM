@@ -4,7 +4,7 @@
 \alias{plot.palm_ncdf_berlin}
 \title{Title}
 \usage{
-plot.palm_ncdf_berlin(obj)
+\method{plot}{palm_ncdf_berlin}(obj)
 }
 \arguments{
 \item{obj}{A R6 plalm_ncdf Class}

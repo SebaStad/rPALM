@@ -16,18 +16,6 @@ substrRight(x, n)
 \item{x}{A string of characters}
 
 \item{n}{Amount of characters to be returned}
-
-\item{x}{A string of characters}
-
-\item{n}{Amount of characters to be returned}
-
-\item{x}{A string of characters}
-
-\item{n}{Amount of characters to be returned}
-
-\item{x}{A string of characters}
-
-\item{n}{Amount of characters to be returned}
 }
 \value{
 The cut off string.

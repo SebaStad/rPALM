@@ -13,10 +13,6 @@ arcgischeck(data, isarcgis)
 \item{data}{2D data as used in the PALM classes}
 
 \item{isarcgis}{Logical, if data was rastered with ArcGIS set to TRUE}
-
-\item{data}{2D data as used in the PALM classes}
-
-\item{isarcgis}{Logical, if data was rastered with ArcGIS set to TRUE}
 }
 \value{
 Returns 2D data, if isarcgis == TRUE, y-axis will be reversed

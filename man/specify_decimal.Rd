@@ -12,10 +12,6 @@ specify_decimal(x, k)
 \item{x}{Any numeric}
 
 \item{k}{Trailing positions of numeric}
-
-\item{x}{Any numeric}
-
-\item{k}{Trailing positions of numeric}
 }
 \value{
 A numeric with the chosen trailing positions
@@ -23,7 +19,7 @@ A numeric with the chosen trailing positions
 A numeric with the chosen trailing positions
 }
 \description{
-Helper function that specifies trailing positions of decimals
+
 }
 \examples{
 specify_decimal( 3.14159265359, 3)

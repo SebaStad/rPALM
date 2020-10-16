@@ -11,8 +11,6 @@
 }
 \arguments{
 \item{obj}{Call print function of R6 palm_ncdf class}
-
-\item{obj}{Call print function of R6 palm_ncdf class}
 }
 \value{
 Some Strings

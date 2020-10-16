@@ -12,7 +12,7 @@ Description: Provides R6-classes to create and edit static drivers for the urban
 License: CC0
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1
 Depends: 
     R6,
     ncdf4,
@@ -39,6 +39,7 @@ Collate:
     'hello.R'
     'palm_berlin.R'
     'palm_berlin_old.R'
+    'palm_dynamic.R'
     'palm_global.R'
     'palm_import_static.R'
     'palm_manual_grid.R'
