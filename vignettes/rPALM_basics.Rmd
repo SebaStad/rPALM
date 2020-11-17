@@ -85,7 +85,7 @@ This sets up an object, that contains the basic data for a 100x100 gridpoints ar
 
 #### `static_driver$data`
 As the `$` suggests, everything can be accessed as if it were a `list`. In fact, ``static_driver$data`` is just a list. And it contains the data and attributes for each variable for PALM.
-```{r manual II, echo = FALSE}
+```{r manual II}
 names(static_driver$data)
 ```
 So we have the basic variables for PALM here. Again, those are just `lists`, lets see, whats in the topography list (`zt`):
