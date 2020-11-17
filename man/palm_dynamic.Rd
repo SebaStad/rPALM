@@ -14,7 +14,6 @@ Title
 \item \href{#method-new}{\code{palm_dynamic$new()}}
 \item \href{#method-set_initial_profile_lod1}{\code{palm_dynamic$set_initial_profile_lod1()}}
 \item \href{#method-set_time}{\code{palm_dynamic$set_time()}}
-\item \href{#method-set_forcing_lateral}{\code{palm_dynamic$set_forcing_lateral()}}
 \item \href{#method-set_forcing}{\code{palm_dynamic$set_forcing()}}
 \item \href{#method-export_dynamic_driver}{\code{palm_dynamic$export_dynamic_driver()}}
 \item \href{#method-create_soil}{\code{palm_dynamic$create_soil()}}
@@ -57,15 +56,6 @@ Title
 \subsection{Method \code{set_time()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{palm_dynamic$set_time(duration, steps)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-set_forcing_lateral"></a>}}
-\if{latex}{\out{\hypertarget{method-set_forcing_lateral}{}}}
-\subsection{Method \code{set_forcing_lateral()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{palm_dynamic$set_forcing_lateral(variable, direction, data.vector)}\if{html}{\out{</div>}}
 }
 
 }

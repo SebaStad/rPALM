@@ -1,0 +1,302 @@
+---
+title: "rPALM basics"
+author: "Sebastian Stadler"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(rPALM)
+```
+
+The library `rPALM` offers functions and classes to create `static` and `dynamic` drivers for the CFD simulation software PALM. It is designed to store all available and necessary data in one `R`-Object and then export it into the correct `netCDF` format.
+
+In this approach it is more similar to regular `python` objects, then to regular `R` code. However, all data and functions to manipulate the data are at the same place and I think that has some merit. 
+
+This approach though has one (small) flaw: One runs into storage problems for very large domains (10000x10000 gridpoints), but that should not be a concern for now.
+
+## Basics 
+
+This chapter deals with the basic 4 objects, that I most commonly use:
+
+* `palm_global`
+* `palm_ncdf_manual`
+* `palm_ncdf_import`
+* `palm_ncdf_berlin`
+
+Each of those is a `R6-class` object. This means, that all the data is stored in one object and also functions to manipulate that data is contained in in object. The data and functions can be accessed just a named `list` object in R via `$`. This will be clear in the next sections.
+
+### `palm_global`
+
+A static driver has to have certain `global` attributes. A list of those can be found [here](https://palm.muk.uni-hannover.de/trac/wiki/doc/app/iofiles/pids/static), under `global attributes`.
+
+The first step in R is thus, to create an object with all this data:
+
+```{r global I}
+library(rPALM)
+r_global <- palm_global$new(
+  title = "Test Example",
+  author = "sest",
+  institute = "IBP",
+  location = "Holzkirchen",
+  x0 = 703838.96, # Lower left x coordinate in EPSG:25832, only needed for visualization on map later
+  y0 = 5305958.78, # Lower left y coordinate in EPSG:25832, only needed for visualization on map later
+  z0 = 0, # Lowest z-coordinate in DEM. In this example its just 0
+  t0 = "2020-11-17 00:00:00 +00", # Startpoint of simulation, in this very format!
+  # P3D file should have higher priority than this
+  lat = 47.874584, # Lat/Lon are needed for radiation calculation
+  lon = 11.726092, # Lat/Lon are needed for radiation calculation
+  dx = 5 # Vertical resolution
+)
+```
+
+This does set some of the attributes to standard values. These can be changed, as the object `r_global` behaves very similar to a `list`:
+```{r global II}
+# Print all attributes
+names(r_global$head)
+# Change a value
+print(r_global$head$origin_time)
+r_global$head$origin_time <- "2020-11-18 00:00:00 +00"
+print(r_global$head$origin_time)
+```
+
+**This object is ALWAYS needed, if you want to setup a new static driver!**
+
+### `palm_ncdf_manual`
+This is the easiest class to create a new static driver:
+```{r manual I}
+static_driver <- palm_ncdf_manual$new(
+  nx = 100, # amount of grid points in x direction
+  ny = 100, # amount of grid points in x direction
+  dx = 5, # resolution
+  headclass = r_global # the global class, we defined above
+)
+```
+
+This sets up an object, that contains the basic data for a 100x100 gridpoints area, with 5m resolution. The data relevant for the `static_driver` can be found in the lists `data`, `dims` and `vardimenions`. Lets look at those individually!
+
+#### `static_driver$data`
+As the `$` suggests, everything can be accessed as if it were a `list`. In fact, ``static_driver$data`` is just a list. And it contains the data and attributes for each variable for PALM.
+```{r manual II, echo = FALSE}
+names(static_driver$data)
+```
+So we have the basic variables for PALM here. Again, those are just `lists`, lets see, whats in the topography list (`zt`):
+```{r manual IV}
+names(static_driver$data$zt)
+```
+These are now all attributes that have to be set for the *variable* `zt`. You can check those again [here](https://palm.muk.uni-hannover.de/trac/wiki/doc/app/iofiles/pids/static).
+
+The 2D data for topography is stored under `vals`. That means, if one wants to manually change the topography, one just changed the array there:
+```{r manual V}
+# Just to show: here is an 100 by 100 array filled with 0
+dim(static_driver$data$zt$vals)
+table(static_driver$data$zt$vals)
+```
+Not lets change the topography
+```{r manual VI}
+static_driver$data$zt$vals[1:90, ] <- 10 # Set most to 10
+static_driver$data$zt$vals[5:90, 5:96] <- 5 # Set the inner area to 5
+```
+And have a quick look at the data
+```{r manual VII, fig.align="center"}
+# Function to quickly plot 2D data
+# that comes with the rPALM package
+plot_2d_data(static_driver$data$zt$vals)
+
+# $quickplot + the exact name of the variable:
+static_driver$quickplot("zt")
+```
+
+#### `static_driver$dims`
+This list works very similarly to `data`, it contains a `list` of all dimensions
+```{r dim I, fig.align="center"}
+names(static_driver$dims)
+```
+and their corresponding attributes and values
+```{r dim II, fig.align="center"}
+names(static_driver$dims$x)
+```
+**Usually, there is no need to adjust something here. It is very possible that if you make changes here, that something breaks!**
+
+#### `static_driver$vardimensions`
+This is another `list`, that links the dimensions and variables.
+
+**Usually, there is no need to adjust something here. It is very possible that if you make changes here, that something breaks!**
+
+#### Methods (Functions)
+I mentioned `static_driver` is similar to a list. Lets look at what elements are there:
+```{r methods I, fig.align="center"}
+names(static_driver)
+```
+
+There is a lot! Some of these are `lists` (such as `data` and `dims`), but most of them are `functions`, that can access the data stored in `data` and `dims`! 
+
+E.g. `quickplot` takes the variable name as input, and then plots the underlying data of that variable.
+
+Some of those functions are outdated, so in the following example the most important functions will be used.
+
+### `palm_ncdf_import`
+This class can import static drivers into the workspace of R:
+```{r import II, fig.align="center"}
+imported_driver <- palm_ncdf_import$new(
+  newfilename = "somefilename.nc",
+  pathtofiles = "C:\\DATEN\\08 MSc Work\\GISDaten", # Path to the static driver
+  oldfilename = "munich_static.nc", # Name of the static driver
+  oldversion = FALSE # Ignore this
+)
+
+imported_driver$read_static()
+imported_driver$plot_area()
+```
+
+### `palm_ncdf_berlin`
+Can read the data from the provided berlin netcdf files. 
+Example yet missing
+
+
+## Example
+Lets start again with a 100x100 grid:
+```{r example I}
+example_driver <- palm_ncdf_manual$new(
+  nx = 100, # amount of grid points in x direction
+  ny = 100, # amount of grid points in x direction
+  dx = 5, # resolution
+  headclass = r_global # the global class, we defined above
+)
+```
+
+### Import data
+There are two ways to get the data into the `example_driver` object:
+
+* Read some raw data into R, do some preprocession and then assign it to the correct place:
+```{r example II, eval=FALSE}
+# Pseudocode:
+raw_vegetation_data <- read_data("vegetation_data.file")
+preprocessed_vegetation_data <- f_process_dat(raw_vegetation_data)
+example_driver$data$vegetation_type$vals <- preprocessed_vegetation_data
+```
+
+* Collect the data in QGIS, export it in one `netCDF`-File per PALM-type and import that:
+```{r example III, eval=FALSE}
+# QGIS data is saved to vegetation.nc
+# Pseudocode:
+example_driver$import_data(
+  v.file = "vegetation.nc",
+  palmtype = "vegetation_type"
+)
+```
+
+In reality, both can and should be done. *If one does the QGIS approach, keep in mind that domain size, location and resolution must be the same as defined in the `example_driver` object!*
+
+For this example I will produce some random mockup data:
+```{r example IV, eval=TRUE}
+topography <- array(0, c(100, 100))
+topography[1:90, ] <- 10
+topography[5:90, 5:96] <- 5
+
+water <- array(example_driver$data$water_type$"_FillValue", c(100, 100))
+water[91:100, ] <- 2 # River
+
+pavement <- array(example_driver$data$pavement_type$"_FillValue", c(100, 100))
+pavement[45:54, ] <- 2 # asphalt
+pavement[1:44, 47:52] <- 9 # gravel
+
+vegetation <- array(round(runif(n = 100 * 100, min = 2, max = 8)), c(100, 100)) # Random values for vegetation
+
+
+buildings_height <- array(example_driver$data$buildings_2d$"_FillValue", c(100, 100))
+buildings_id <- array(example_driver$data$building_id$"_FillValue", c(100, 100))
+buildings_type <- array(example_driver$data$building_type$"_FillValue", c(100, 100))
+
+buildings_height[38:43, 38:43] <- 20
+buildings_id[38:43, 38:43] <- 1
+buildings_type[38:43, 38:43] <- 3
+
+buildings_height[55:61, 55:61] <- 40
+buildings_id[55:61, 55:61] <- 2
+buildings_type[55:61, 55:61] <- 3
+
+buildings_height[38:43, 55:61] <- 60
+buildings_id[38:43, 55:61] <- 3
+buildings_type[38:43, 55:61] <- 3
+
+buildings_height[55:61, 38:43] <- 80
+buildings_id[55:61, 38:43] <- 4
+buildings_type[55:61, 38:43] <- 3
+
+# Single trees should only be added for resolutions < 2m
+
+example_driver$data$zt$vals <- topography
+
+example_driver$data$water_type$vals <- water
+example_driver$data$pavement_type$vals <- pavement
+example_driver$data$vegetation_type$vals <- vegetation
+
+example_driver$data$buildings_2d$vals <- buildings_height
+example_driver$data$building_id$vals <- buildings_id
+example_driver$data$building_type$vals <- buildings_type
+```
+This is all input for now!
+
+### Data processing
+In this example we have overlapping data, because `vegetation_type` is defined everywhere. We can overwrite this with a priority system. In this case, we want to always keep buildings, then water surfaces, then pavement, then vegetation:
+
+```{r example V, eval=TRUE}
+example_driver$SortOverlayingdata("BWPV")
+example_driver$plot_area()
+```
+
+We can adjust some parameters of the predefined parameter sets of PALM. One thing to always think about, is water temperature!
+
+```{r example VI, eval=TRUE}
+example_driver$add_lod2_variable(name = "water")
+names(example_driver$data)
+```
+This added the variable `water_pars`. Lets see where water temperature is defined:
+```{r example VII, eval=TRUE}
+knitr::kable(PIDS$water$parameters)
+```
+Water temperature is set at `ID_pos` 0. As fortran starts counting at 0 and R at 1, this is the first dimensions of `water_pars`
+```{r example VIII, eval=TRUE}
+water_temperature <- array(example_driver$data$water_pars$"_FillValue", c(100, 100))
+water_temperature[91:100, ] <- 290
+
+example_driver$data$water_pars$vals[, , 1] <- water_temperature
+```
+
+If we want to have 3D-Vegetation, we can create that too from the definitions of the `vegetation_type`
+```{r example IX, eval=TRUE}
+example_driver$generate_lai_array(
+  dz = 5,
+  fixed_tree_height = 10
+)
+```
+In reality, this process will be more complicated. Please contact me, if you need any help!
+
+Finally, we add a `soil_type` where we need it. Usually that data is not available, so we use a default one. We also add something called `surface_fraction`, which has no impact on the simulation, but is needed by PALM. The last step is to create a 3D-Building array. Its also not necessary, if you dont have bridges or tunnels, but can be used for nice 3D Visualizations.
+
+```{r example X, eval=TRUE}
+example_driver$add_soil(type_soil = 1)
+example_driver$add_simple_surfacefraction()
+example_driver$createbuilding3D(TRUE, FALSE)
+```
+
+Mind, that we now have way more `data` and `dims` entries then we had at the start!
+```{r example XI, eval=TRUE}
+names(example_driver$data)
+names(example_driver$dims)
+```
+
+Now we can name our file and export it:
+```{r example XII, eval=TRUE}
+example_driver$exportname <- "example_driver.nc"
+example_driver$exportncdf(EPSGCode = "EPSG:25832")
+```

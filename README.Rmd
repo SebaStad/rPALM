@@ -14,7 +14,7 @@ rPALM provides R6 classes to create and edit static drivers for the urban climat
 
 Right now, rPALM is only available via [GitHub](https://github.com/):
 
-``` r
+```{r install, eval = FALSE}
 # install.packages("devtools")
 devtools::install_github("SebaStad/rPALM")
 ```
@@ -22,7 +22,7 @@ devtools::install_github("SebaStad/rPALM")
 
 A simple example to create a static driver from scratch. Lots of information about what and why is yet missing!
 
-```{r example}
+```{r example, message=FALSE}
 library(rPALM)
 # First:
 # Define a headclass
