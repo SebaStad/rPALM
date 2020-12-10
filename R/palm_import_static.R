@@ -98,6 +98,15 @@ palm_ncdf_import   <- R6::R6Class("palm_ncdf_import",
                                       self$vardimensions  <- whichdimensions
                                       self$header$head$rotation_angle <- as.numeric(self$header$head$rotation_angle)
                                       ncdf4::nc_close(ncfile)
+
+                                      for(i in names(self$data)){
+                                        if(is.null(self$data[[i]]$long_name)){
+                                          print(glue::glue("Fixing long_name for {i}"))
+                                          self$data[[i]]$long_name <- i
+                                        }
+
+                                      }
+
                                     }
 
                                   )
