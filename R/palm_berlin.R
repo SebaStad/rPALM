@@ -943,19 +943,29 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
           }
         )
 
-        adata <- list(
-          "long_name" = "z_oro",
-          "standard_name" = "z_oro",
-          "units" = "m",
-          "vals" = z
-        )
+        if(length(self$dims$z$vals) < length(z) ){
+          new_build_array <- array(-127, c(dim(self$data$buildings_2d$vals), length(z)))
+          new_build_array[,,length(self$dims$z$vals)] <- self$data$buildings_3d$vals
+
+          self$dims$z$vals <- z
+        }
+
+        # adata <- list(
+        #   "long_name" = "z_oro",
+        #   "standard_name" = "z_oro",
+        #   "units" = "m",
+        #   "vals" = z
+        # )
 
         self$dims$z_oro <- adata
 
-        self$vardimensions[["orography_3D"]] <- c(1, 2, which(names(self$dims) == "z_oro"))
+        self$vardimensions[["orography_3d"]] <- c(1, 2, which(names(self$dims) == "z"))
 
-
-        build3d <- array(0, dim = c(dim(build), zmax / dx + 1))
+        if(length(self$dims$z$vals) >= length(z) ){
+          build3d <- array(0, dim = dim(self$data$buildings_2d$vals))
+        } else {
+          build3d <- array(0, dim = c(dim(build), zmax / dx + 1))
+        }
         for (i in seq(dim(build3d)[1])) {
           for (j in seq(dim(build3d)[2])) {
             if (build[i, j] > 0) {
@@ -976,7 +986,7 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
           "type" = "byte"
         )
 
-        self$data$orography_3D <- adata
+        self$data$orography_3d <- adata
       }
     },
     quickplot = function(variable) {
