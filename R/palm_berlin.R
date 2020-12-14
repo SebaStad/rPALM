@@ -962,7 +962,7 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
         self$vardimensions[["orography_3d"]] <- c(1, 2, which(names(self$dims) == "z"))
 
         if(length(self$dims$z$vals) >= length(z) ){
-          build3d <- array(0, dim = dim(self$data$buildings_2d$vals))
+          build3d <- array(0, dim = dim(self$data$buildings_3d$vals))
         } else {
           build3d <- array(0, dim = c(dim(build), zmax / dx + 1))
         }
