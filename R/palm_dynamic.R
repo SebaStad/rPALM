@@ -197,7 +197,7 @@ palm_dynamic <- R6Class("palm_dynamic", public= list(
       unit <- "K"
       loopvar <- c("pt")
 
-      selection_dims <-!grepl(not_used_axis, self$palmgrid[[variable]])
+      selection_dims <- !grepl(not_used_axis, self$palmgrid[[variable]])
       used_dims <- self$palmgrid[[variable]][selection_dims]
 
 
@@ -223,21 +223,29 @@ palm_dynamic <- R6Class("palm_dynamic", public= list(
       length(self$dims[[x]]$vals)
     }))
 
+
     if(is.null(dim_of_data)){
-
       data_vector <- array(data, dim_dims)
 
-    } else if(!any(dim_dims%in%dim(as.array(data)))){
-      print(" [ ] Uncomptabile data length!")
+    } else if(dim_of_data=="z" & namevar =="top"){
+      data_vector <- array(tail(data,1), dim_dims)
 
-    } else {
+    } else if(dim_of_data =="z"){
+      dim_pos <- which(grepl(dim_of_data, used_dims))
+      non_pos <- which(!grepl(dim_of_data, used_dims))
 
-      data_vector <- array(data, dim_dims)
+      if(dim_pos==1){
+        print(paste("Variable:", loopvar))
+        print(paste("Boundary:", namevar))
+        print("dim_pos == 1, check data!")
+        data_vector <- array(data, dim_dims)
+      } else {
+
+        data_vector <- array(rep(data, each = dim_dims[non_pos[1]]), dim_dims)
+      }
     }
 
-
-    for(i in seq(loopvar)){
-      variable <- loopvar[i]
+      variable <- loopvar
       adata <- list("long_name" = paste0("large scale forcing for ", variable),
                     "source" = "Synthethic data from calculated profile",
                     "units" = unit,
@@ -253,7 +261,6 @@ palm_dynamic <- R6Class("palm_dynamic", public= list(
 
       self$data[[data.name]]  <- adata
       self$vardimensions[[data.name]]  <- whichdimensions
-    }
   },
   export_dynamic_driver = function(filename){
     nc_dim_list  <- list()
@@ -458,13 +465,22 @@ palm_dynamic <- R6Class("palm_dynamic", public= list(
 
 
         self$set_forcing(variable = vars, boundary_side = sides,
-                       data = tmp)
+                       data = tmp, dim_of_data = NULL)
 
 
 
 
     }
 
+  },
+  set_vertical_profile = function(var, data, dim_of_data = "z"){
+    for(sides in c("left", "right", "south", "north", "top")){
+
+      self$set_forcing(variable = var, boundary_side = sides,
+                       data = data, dim_of_data = dim_of_data)
   }
-)
+
+  }
+  )
+
 )

@@ -1,14 +1,14 @@
 Package: rPALM
 Type: Package
 Title: Create static and dynamic drivers for the urban climate model PALM4U
-Version: 0.1.3
+Version: 0.1.4
 Author: Sebastian Stadler
 Maintainer: Sebastian Stadler <sebastian.stadler@ibp.fraunhofer.de>
 Description: Provides R6-classes to create and edit static drivers for the urban climate
     model PALM4U. Multiple functions are provided to build a domain from scratch 
     or import rastered files from QGIS or ArcGIS. Simple plot functions are available as 
     well as LOD2 variables.
-    There is also a prototype class to create a synthethic dynamic driver. Or not.
+    There is also a prototype class to create a synthethic dynamic driver. 
 License: CC0
 Encoding: UTF-8
 LazyData: true

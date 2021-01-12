@@ -945,7 +945,9 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
 
         if(length(self$dims$z$vals) < length(z) ){
           new_build_array <- array(-127, c(dim(self$data$buildings_2d$vals), length(z)))
-          new_build_array[,,length(self$dims$z$vals)] <- self$data$buildings_3d$vals
+          new_build_array[,,seq(self$dims$z$vals)] <- self$data$buildings_3d$vals
+
+          self$data$buildings_3d$vals <-  new_build_array
 
           self$dims$z$vals <- z
         }
@@ -961,11 +963,9 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
 
         self$vardimensions[["orography_3d"]] <- c(1, 2, which(names(self$dims) == "z"))
 
-        if(length(self$dims$z$vals) >= length(z) ){
-          build3d <- array(0, dim = dim(self$data$buildings_3d$vals))
-        } else {
-          build3d <- array(0, dim = c(dim(build), zmax / dx + 1))
-        }
+
+        build3d <- array(0, dim = c(dim(build), length(self$dims$z$vals)))
+
         for (i in seq(dim(build3d)[1])) {
           for (j in seq(dim(build3d)[2])) {
             if (build[i, j] > 0) {
