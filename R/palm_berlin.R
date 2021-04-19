@@ -1930,7 +1930,7 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
         tree_array[tree_array > 0] <- 1
       } else if (any(names(self$data) == "tree_id")) {
         tree_array <- self$data$tree_id$vals
-        tree_array[canopy_heigt > 0] <- 1
+        tree_array[tree_array > 0] <- 1
 
         if (is.null(ext_tree_height)) {
           stop("No tree_height given.")
