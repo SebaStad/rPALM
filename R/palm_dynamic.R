@@ -489,54 +489,61 @@ palm_dynamic <- R6Class("palm_dynamic", public = list(
       )
     }
   },
-  shift_wind_by_topography <- function(zt_array = NULL, static_path = NULL) {
-    boundaries <- c("left", "right", "north", "south")
-    array_pos <- list(
-      left_l = 1:nrow(topografy),
-      right_l = 1:nrow(topografy),
-      north_l = nrow(topografy),
-      south_l = 1,
-      left_r = 1,
-      right_r = ncol(topografy),
-      north_r = 1:ncol(topografy),
-      south_r = 1:ncol(topografy)
-    )
-
-    if (!is.null(zt_array)) {
+  shift_wind_by_topography <- function(zt_array = NULL, static_path = NULL){
+    if(!is.null(zt_array)){
       topografy <- zt_array
-    } else if (!is.null(static_path)) {
+    } else if(!is.null(static_path)){
       nc <- ncdf4::nc_open(static_path)
       topografy <- ncdf4::ncvar_get(nc, "zt")
       ncdf4::nc_close(nc)
     }
 
-    for (i in boundaries) {
+    topografy <- topografy - min(topografy)
+
+
+    boundaries <- c("left", "right", "north", "south")
+    array_pos <- list(
+      left_l = 1,
+      right_l = nrow(topografy),
+      north_l = 1:nrow(topografy),  #ncol(topografy),
+      south_l = 1:nrow(topografy),
+      left_r = 1:ncol(topografy),
+      right_r = 1:ncol(topografy),
+      north_r = ncol(topografy) ,#1:nrow(topografy),
+      south_r = 1
+    )
+
+    for( i in boundaries){
       name_pos <- intersect(
-        grep(paste("forcing_", i, sep = ""), names(self$data)),
-        c(grep("_u", names(self$data)), grep("_v", names(self$data)), grep("_w", names(self$data)))
+        grep( paste("forcing_", i, sep = ""), names(self$data)),
+        c(grep("_u", names(self$data)) , grep("_v", names(self$data)) , grep("_w", names(self$data)))
       )
 
       boundary_names <- names(self$data)[name_pos]
       topo_sclice <- topografy[array_pos[[paste0(i, "_l")]], array_pos[[paste0(i, "_r")]]]
       resolution <- self$dims$x$vals[2] - self$dims$x$vals[1]
-      starting_points <- round(topo_sclice / resolution) + 1
+      starting_points <- round(topo_sclice/resolution) + 1
 
-      for (j in boundary_names) {
+      for( j in boundary_names){
+
         tmp_array <- self$data[[j]]$vals
         dim_positions <- self$vardimensions[[j]]
 
         where_z <- grep("z", dim_positions)
-        if (where_z == 2) {
-          for (k in seq(dim(tmp_array)[1])) {
-            tmp_array[k, starting_points[k]:dim(tmp_array)[2], ] <- tmp_array[k, 1:(dim(tmp_array)[2] - starting_points[k] + 1), ]
+        if(where_z==2){
+          for(k in seq(dim(tmp_array)[1])){
+            tmp_array[k,starting_points[k]:dim(tmp_array)[2],] <- tmp_array[k,1:(dim(tmp_array)[2]-starting_points[k]+1),]
           }
-        } else if (where_z == 1) {
-          for (k in seq(dim(tmp_array)[2])) {
-            tmp_array[starting_points[k]:dim(tmp_array)[1], k, ] <- tmp_array[1:(dim(tmp_array)[1] - starting_points[k] + 1), k, ]
+        } else if(where_z==1){
+          for(k in seq(dim(tmp_array)[2])){
+            tmp_array[starting_points[k]:dim(tmp_array)[1],k,] <- tmp_array[1:(dim(tmp_array)[1]-starting_points[k]+1),k,]
           }
         }
         self$data[[j]]$vals <- tmp_array
       }
+
+
     }
+    return(self)
   }
 ))
