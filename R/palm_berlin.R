@@ -2130,6 +2130,7 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
       #
       # Rueckgabewert: lad_array[x,y,z]
       dz <- self$header$head$resolution
+      dx <- dz
       if(any(grepl("tree_height", names(self$data)))){
         tree_array <- self$data$tree_height$vals
       } else if (!is.null(tree_array)){
@@ -2142,11 +2143,9 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
       tree_mask[tree_array>0] <- 1
 
       alpha <- tree_mask*alpha
-      lai_array <- tree_mask*lai_array
+      lai <- tree_mask*lai
 
       canopy_height <- round(tree_array / dz) * dz
-
-      lai <- lai_array
 
       nx <- dim(canopy_height)[1]
       ny <- dim(canopy_height)[2]
@@ -2237,9 +2236,9 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
         lad_temp <- lad_array
 
         if (!any(names(self$data) == "lad")) {
-          z <- seq(0, dim(lad_temp)[3], by = 1) * dx
-          z <- z - (dx / 2)
-          z[1] <- 0
+          # z <- seq(0, dim(lad_temp)[3]-1, by = 1) * dx
+          # z <- z - (dx / 2)
+          # z[1] <- 0
 
           adata <- list(
             "long_name" = "zlad",
