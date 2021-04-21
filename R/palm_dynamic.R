@@ -489,7 +489,7 @@ palm_dynamic <- R6Class("palm_dynamic", public = list(
       )
     }
   },
-  shift_wind_by_topography <- function(zt_array = NULL, static_path = NULL){
+  shift_wind_by_topography = function(zt_array = NULL, static_path = NULL){
     if(!is.null(zt_array)){
       topografy <- zt_array
     } else if(!is.null(static_path)){

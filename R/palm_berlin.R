@@ -1906,7 +1906,8 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
                                          ext_crown_diameter = NULL,
                                          ext_tree_shape = NULL,
                                          ext_lai = NULL,
-                                         overwrite = TRUE,
+                                         overwrite_single_trees = TRUE,
+                                         overwrite_existing_lad = FALSE,
                                          ...) {
       #
       # Future idea:
@@ -1954,7 +1955,7 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
       if (is.null(ext_tree_shape)) {
         tree_shape <- 1
       } else {
-        tree_shape <- ext_tree_shape
+        tree_shape <- ext_tree_shape * tree_array
       }
 
       if (is.null(ext_lai)) {
@@ -1975,7 +1976,7 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
       lad_temp <- array(0, c(dim(lai), 1 + max(canopy_height, na.rm=T) / dx))
       bad_temp <- array(0, c(dim(lai), 1 + max(canopy_height, na.rm=T) / dx))
 
-      if (overwrite) {
+      if (overwrite_single_trees) {
         for (i in seq(dim(lai)[1])) {
           for (j in seq(dim(lai)[2])) {
             if (tree_type[i, j] <= 0) {
@@ -2070,7 +2071,7 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
         adata <- list(
           "_FillValue" = -9999.9,
           "units" = "m2/m3",
-          "long_name" = "leaf area density",
+          "long_name" = "basal area density",
           "source" = "According to ncl script by Bjoern Maronga",
           "vals" = bad_temp,
           "type" = "float"
@@ -2079,19 +2080,26 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
         self$vardimensions[["bad"]] <- c("x", "y", "zlad")
       } else {
         ifelse(dim(self$data$lad$vals)[3] >= dim(lad_temp)[3],
-               new_dat <- array(-9999.9, dim(self$data$lad$vals)),
-               new_dat <- array(-9999.9, dim(lad_temp))
+               new_dat <- array(0, dim(self$data$lad$vals)),
+               new_dat <- array(0, dim(lad_temp))
         )
         new_dat[, , 1:dim(self$data$lad$vals)[3]] <- self$data$lad$vals
-        new_dat[, , 1:dim(lad_temp)[3]][lad_temp > 0] <- lad_temp[lad_temp > 0]
+        new_dat[new_dat<0] <- 0
+        lad_temp[, , 2:dim(lad_temp)[3]][lad_temp[, , 2:dim(lad_temp)[3]] < 0] <- 0
+
+        if(overwrite_existing_lad){
+          new_dat[, , 1:dim(lad_temp)[3]][lad_temp > 0] <- lad_temp[lad_temp > 0]
+        } else {
+          new_dat[, , 1:dim(lad_temp)[3]][lad_temp > 0] <- new_dat[, , 1:dim(lad_temp)[3]][lad_temp > 0] + lad_temp[lad_temp > 0]
+        }
+
+        new_dat[new_dat==0] <- -9999.9
 
         if(dim(self$data$lad$vals)[3] < dim(lad_temp)[3]){
           z <- seq(0, dim(new_dat)[3]-1, by = 1) * dx
           z <- z - (dx / 2)
           z[1] <- 0
         }
-
-
 
         self$dims$zlad$vals <- z
         self$data$lad$vals <- new_dat
@@ -2108,8 +2116,175 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
         self$vardimensions[["bad"]] <- c("x", "y", "zlad")
       }
 
-    }, generate_lad_patch = function() {
-      cat("Not yet implemented.")
+    }, generate_patches_beta = function(tree_array = NULL, lai_array, alpha = 5, beta = 3, overwrite_existing_lad = FALSE) {
+
+      # Erstellung eines 3D-arrays der leaf area density fuer 'Baumgruppen'.
+      #
+      # lai           - Leaf Area Index (Matrix)
+      # canopy_height - Vegetationshoehe (Matrix)
+      # dz 			- raeumliche Aufloesung in der Hoehe
+      # alpha, beta   - empirische Parameter nach
+      #                 Markkanen et al. (2003): Footprints and Fetches for Fluxes
+      # 				  over Forest Canopies with varying Structure and Density.
+      # 				  Boundary-Layer Meteorology 106: 437-459
+      #
+      # Rueckgabewert: lad_array[x,y,z]
+      dz <- self$header$head$resolution
+      if(any(grepl("tree_height", names(self$data)))){
+        tree_array <- self$data$tree_height$vals
+      } else if (!is.null(tree_array)){
+        tree_array <- tree_array
+      } else {
+        stop("No Tree data provided")
+      }
+
+      tree_mask <- array(0, dim(tree_array))
+      tree_mask[tree_array>0] <- 1
+      alpha <- tree_mask*alpha
+      canopy_height <- round(tree_array / dz) * dz
+
+      lai <- lai_array
+
+      nx <- dim(canopy_height)[1]
+      ny <- dim(canopy_height)[2]
+
+      pch_index <- matrix(as.integer(canopy_height / dz), nrow = dim(canopy_height)[1], ncol = dim(canopy_height)[2])
+      pch_index[pch_index == 0] <- NA # Wenn canopy_height < dz, dann NA setzen
+
+      #############
+      # Fix for no trees in vegetation file
+      #############
+      if (all(is.na(pch_index))) {
+        stop("No heigh enough vegetation found!")
+        # z <- c(0, dz * 0.5)
+        # lad_array <- array(-9999.9, c(dim(pch_index)[1:2], 2))
+        #
+        # adata <- list(
+        #   "long_name" = "zlad",
+        #   "standard_name" = "zlad",
+        #   "units" = "m",
+        #   "vals" = z
+        # )
+        #
+        # self$dims[["zlad"]] <- adata
+        #
+        # adata <- list(
+        #   "_FillValue" = -9999.9,
+        #   "units" = "m2/m3",
+        #   "long_name" = "leaf area density",
+        #   "source" = "Script by Dirk Pavlik after ncl script by Bjoern Maronga",
+        #   "vals" = lad_array,
+        #   "type" = "float"
+        # )
+        # self$data[["lad"]] <- adata
+        # self$vardimensions[["lad"]] <- c("x", "y", "zlad")
+      } else {
+        z <- tryCatch(
+          {
+            seq(0, max(pch_index, na.rm = TRUE), by = 1) * dz
+          },
+          warning = function(w) {
+            print("Warning in seq line 1557")
+          },
+          error = function(e) {
+            print("Error in seq line 1557")
+          }
+        )
+        z <- z - (dz / 2)
+        z[1] <- 0
+
+        pre_lad <- rep(NA, length(z))
+
+        lad_array <- array(NA, c(dim(canopy_height)[1], dim(canopy_height)[2], length(z)))
+
+        for (i in 1:nx) {
+          for (j in 1:ny) {
+
+            # DEBUG ###########
+            # i <-2
+            # j <- 3
+            ###################
+
+            # cat("i =",i,"j =",j, "\n")
+
+            int_bpdf <- 0
+            ch <- canopy_height[i, j]
+            if (!is.na(pch_index[i, j]) & ch >= dz) { # if(!is.na(ch) & ch >= 0.5*dz) <- dies war die originale Abfrage, funktioniert jedoch nicht bei canopy_height < dz !!!
+              for (k in 1:(pch_index[i, j] + 1)) {
+                int_bpdf <- int_bpdf + (((z[k] / canopy_height[i, j])^(alpha[i,j] - 1)) * ((1.0 - (z[k] / canopy_height[i, j]))^(beta - 1)) * (dz / canopy_height[i, j]))
+                # cat("int_bpdf =",int_bpdf,"\n")
+              }
+
+              for (k in 1:(pch_index[i, j] + 1)) {
+                pre_lad[k] <- lai[i, j] * (((dz * (k - 1) / canopy_height[i, j])^(alpha[i,j] - 1)) * ((1.0 - (dz * (k - 1) / canopy_height[i, j]))^(beta - 1)) / int_bpdf) / canopy_height[i, j]
+                # cat("pre_lad[",k,"] =",pre_lad[k],"\n")
+              }
+
+              lad_array[i, j, 1] <- pre_lad[1]
+              for (k in 2:(pch_index[i, j] + 1)) {
+                lad_array[i, j, k] <- 0.5 * (pre_lad[k - 1] + pre_lad[k])
+                # cat("lad_array[",i,",",j,", ] =",lad_array[i,j,],"\n")
+              }
+            }
+          }
+        }
+
+
+        lad_array[is.na(lad_array)] <- -9999.9
+        lad_temp <- lad_array
+
+        if (!any(names(self$data) == "lad")) {
+          z <- seq(0, dim(lad_temp)[3], by = 1) * dx
+          z <- z - (dx / 2)
+          z[1] <- 0
+
+          adata <- list(
+            "long_name" = "zlad",
+            "standard_name" = "zlad",
+            "units" = "m",
+            "vals" = z
+          )
+
+          self$dims[["zlad"]] <- adata
+
+          adata <- list(
+            "_FillValue" = -9999.9,
+            "units" = "m2/m3",
+            "long_name" = "leaf area density",
+            "source" = "According to ncl script by Bjoern Maronga",
+            "vals" = lad_temp,
+            "type" = "float"
+          )
+          self$data[["lad"]] <- adata
+          self$vardimensions[["lad"]] <- c("x", "y", "zlad")
+        } else {
+          ifelse(dim(self$data$lad$vals)[3] >= dim(lad_temp)[3],
+                 new_dat <- array(0, dim(self$data$lad$vals)),
+                 new_dat <- array(0, dim(lad_temp))
+          )
+          new_dat[, , 1:dim(self$data$lad$vals)[3]] <- self$data$lad$vals
+          new_dat[new_dat<0] <- 0
+          lad_temp[, , 2:dim(lad_temp)[3]][lad_temp[, , 2:dim(lad_temp)[3]] < 0] <- 0
+
+          if(overwrite_existing_lad){
+            new_dat[, , 1:dim(lad_temp)[3]][lad_temp > 0] <- lad_temp[lad_temp > 0]
+          } else {
+            new_dat[, , 1:dim(lad_temp)[3]][lad_temp > 0] <- new_dat[, , 1:dim(lad_temp)[3]][lad_temp > 0] + lad_temp[lad_temp > 0]
+          }
+
+          new_dat[new_dat==0] <- -9999.9
+
+          if(dim(self$data$lad$vals)[3] < dim(lad_temp)[3]){
+            z <- seq(0, dim(new_dat)[3]-1, by = 1) * dx
+            z <- z - (dx / 2)
+            z[1] <- 0
+          }
+
+          self$dims$zlad$vals <- z
+          self$data$lad$vals <- new_dat
+
+        }
+      }
     }
   ),
 
