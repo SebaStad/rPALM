@@ -1475,6 +1475,7 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
 
       self$data[[palmtype]] <- adata
       self$vardimensions[[palmtype]] <- whichdims
+      ncdf4::nc_close(ncfile)
     },
     SortOverlayingdata = function(inorderof = "BPWV") {
       if (self$oldversion) {
