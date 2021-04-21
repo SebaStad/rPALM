@@ -2116,7 +2116,7 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
         self$vardimensions[["bad"]] <- c("x", "y", "zlad")
       }
 
-    }, generate_patches_beta = function(tree_array = NULL, lai_array, alpha = 5, beta = 3, overwrite_existing_lad = FALSE) {
+    }, generate_patches_beta = function(tree_array = NULL, lai, alpha = 5, beta = 3, overwrite_existing_lad = FALSE) {
 
       # Erstellung eines 3D-arrays der leaf area density fuer 'Baumgruppen'.
       #
@@ -2140,7 +2140,10 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
 
       tree_mask <- array(0, dim(tree_array))
       tree_mask[tree_array>0] <- 1
+
       alpha <- tree_mask*alpha
+      lai_array <- tree_mask*lai_array
+
       canopy_height <- round(tree_array / dz) * dz
 
       lai <- lai_array
