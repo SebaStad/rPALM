@@ -93,7 +93,7 @@ berlin_example$plot_area(1,1,200,200)
 \item \href{#method-add_soil}{\code{palm_ncdf_berlin$add_soil()}}
 \item \href{#method-add_simple_surfacefraction}{\code{palm_ncdf_berlin$add_simple_surfacefraction()}}
 \item \href{#method-generate_lad_single_trees}{\code{palm_ncdf_berlin$generate_lad_single_trees()}}
-\item \href{#method-generate_lad_patch}{\code{palm_ncdf_berlin$generate_lad_patch()}}
+\item \href{#method-generate_patches_beta}{\code{palm_ncdf_berlin$generate_patches_beta()}}
 \item \href{#method-clone}{\code{palm_ncdf_berlin$clone()}}
 }
 }
@@ -449,18 +449,25 @@ Simple visualization of the simulation domain
   ext_crown_diameter = NULL,
   ext_tree_shape = NULL,
   ext_lai = NULL,
-  overwrite = TRUE,
+  overwrite_single_trees = TRUE,
+  overwrite_existing_lad = FALSE,
   ...
 )}\if{html}{\out{</div>}}
 }
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-generate_lad_patch"></a>}}
-\if{latex}{\out{\hypertarget{method-generate_lad_patch}{}}}
-\subsection{Method \code{generate_lad_patch()}}{
+\if{html}{\out{<a id="method-generate_patches_beta"></a>}}
+\if{latex}{\out{\hypertarget{method-generate_patches_beta}{}}}
+\subsection{Method \code{generate_patches_beta()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{palm_ncdf_berlin$generate_lad_patch()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{palm_ncdf_berlin$generate_patches_beta(
+  tree_array = NULL,
+  lai_array,
+  alpha = 5,
+  beta = 3,
+  overwrite_existing_lad = FALSE
+)}\if{html}{\out{</div>}}
 }
 
 }

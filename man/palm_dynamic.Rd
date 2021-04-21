@@ -19,6 +19,8 @@ Title
 \item \href{#method-create_soil}{\code{palm_dynamic$create_soil()}}
 \item \href{#method-create_dummy_vars}{\code{palm_dynamic$create_dummy_vars()}}
 \item \href{#method-prepopoulate_boundaries}{\code{palm_dynamic$prepopoulate_boundaries()}}
+\item \href{#method-set_vertical_profile}{\code{palm_dynamic$set_vertical_profile()}}
+\item \href{#method-shift_wind_by_topography}{\code{palm_dynamic$shift_wind_by_topography()}}
 \item \href{#method-clone}{\code{palm_dynamic$clone()}}
 }
 }
@@ -105,6 +107,24 @@ Title
 \subsection{Method \code{prepopoulate_boundaries()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{palm_dynamic$prepopoulate_boundaries(pt = 300, qv = 0.001, u = 0, v = 0, w = 0)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-set_vertical_profile"></a>}}
+\if{latex}{\out{\hypertarget{method-set_vertical_profile}{}}}
+\subsection{Method \code{set_vertical_profile()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{palm_dynamic$set_vertical_profile(var, data, dim_of_data = "z")}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-shift_wind_by_topography"></a>}}
+\if{latex}{\out{\hypertarget{method-shift_wind_by_topography}{}}}
+\subsection{Method \code{shift_wind_by_topography()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{palm_dynamic$shift_wind_by_topography(zt_array = NULL, static_path = NULL)}\if{html}{\out{</div>}}
 }
 
 }
