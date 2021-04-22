@@ -195,7 +195,7 @@ palm_ncdf_manual   <- R6::R6Class("palm_ncdf_manual",
                                       #### Fix für Gebäude < Raster!
                                       build[build<dx & build>0]  <- dx
                                       #
-                                      build  <- floor(build/dx)*dx
+                                      build  <- round(build/dx)*dx
                                       build[which(is.na(build),arr.ind = T)]  <- -9999.9
                                       build[build==0]   <- -9999.9
 
