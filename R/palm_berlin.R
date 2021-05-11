@@ -1831,7 +1831,7 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
       }
     },
     add_R6_dim = function(dim_class) {
-      if (!any(class(data_class) == "palm_ncdf_dimension_template")) {
+      if (!any(class(dim_class) == "palm_ncdf_dimension_template")) {
         stop("Please provide the correct class")
       }
 
