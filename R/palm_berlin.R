@@ -1835,8 +1835,8 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
         stop("Please provide the correct class")
       }
 
-      for (i in names(dim_class$datalist)) {
-        self$dim[[i]] <- dim_class$dim_list[[i]]
+      for (i in names(dim_class$dim_list)) {
+        self$dims[[i]] <- dim_class$dim_list[[i]]
       }
     },
     add_soil = function(type_soil = 1) {
@@ -2288,6 +2288,117 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
 
         }
       }
+    },
+    create_paraview_buildings = function(){
+      res          <- self$header$head$resolution
+      current_topo <- self$data$zt$vals
+      rel_topo     <- self$data$zt$vals - min(self$data$zt$vals)
+      ids          <- self$data$building_id$vals
+
+      self$data$zt$vals <- rel_topo
+
+
+      u_ids <- as.numeric(names(table(ids)))
+      u_ids_pos <- u_ids[u_ids > 0]
+      print("All building ids must be greater then zero!")
+
+      for(i in u_ids_pos){
+        id_pos <- which(ids==i)
+        self$data$zt$vals[id_pos] <- round(self$data$buildings_2d$vals[id_pos]/res)*res + round(max(self$data$zt$vals[id_pos])/res)*res
+      }
+      self$createbuilding3D(TRUE, TRUE)
+
+      self$data$zt$vals <- current_topo
+
+      build3d <- self$data$orography_3d$vals
+      for (i in seq(dim(build3d)[1])) {
+        for (j in seq(dim(build3d)[2])) {
+          if (rel_topo[i, j] > 0) {
+            bheight <- rel_topo[i, j] / res
+            build3d[i, j, 1:(bheight + 1)] <- 0
+          }
+        }
+      }
+
+      z_shift_b <- rPALM::palm_ncdf_dimension_template$new(
+        longname = "z_shift_b",
+        standardname = "z_shift_b",
+        units = "m",
+        vals = seq(0, dim(build3d)[3] - 1, by = 1)*res
+      )
+      self$add_R6_dim(dim_class = z_shift_b)
+
+
+      warped_buildings <- rPALM::palm_ncdf_data_template$new(
+        dat_name = "warped_buildings",
+        FillValue = -127,
+        d_units = " ",
+        longname = "warped buildings",
+        d_source = "rPALM script",
+        lod = "2",
+        data = build3d,
+        d_type = "byte",
+        dimensions = c(1,2,"z_shift_b")
+      )
+
+      self$add_R6_data(data_class = warped_buildings)
+      self$data$orography_3d <- NULL
+
+    },
+    create_paraview_lad = function(){
+      res          <- self$header$head$resolution
+      current_topo <- self$data$zt$vals
+      rel_topo     <- round(self$data$zt$vals - min(self$data$zt$vals)/res)*res
+
+      self$data$zt$vals <- rel_topo
+
+      lad_array <- self$data$lad$vals
+      lad_array[lad_array<=0] <- 0
+      lad_array[lad_array>0] <- 1
+
+      lad_height <- (apply(lad_array, c(1,2), sum) ) * res
+
+      self$data$zt$vals <- self$data$zt$vals + lad_height
+
+      self$createbuilding3D(TRUE, TRUE)
+
+      self$data$zt$vals <- current_topo
+
+      build3d <- self$data$orography_3d$vals
+      for (i in seq(dim(build3d)[1])) {
+        for (j in seq(dim(build3d)[2])) {
+          if (rel_topo[i, j] > 0) {
+            bheight <- rel_topo[i, j] / res
+            build3d[i, j, 1:(bheight + 1)] <- 0
+          }
+        }
+      }
+
+      z_shift_t <- rPALM::palm_ncdf_dimension_template$new(
+        longname = "z_shift_t",
+        standardname = "z_shift_t",
+        units = "m",
+        vals = seq(0, dim(build3d)[3] - 1, by = 1)*res
+      )
+      self$add_R6_dim(dim_class = z_shift_t)
+
+      warped_lad <- rPALM::palm_ncdf_data_template$new(
+        dat_name = "wapred_lad",
+        FillValue = -127,
+        d_units = " ",
+        longname = "warped lad",
+        d_source = "rPALM script",
+        lod = "2",
+        data = build3d,
+        d_type = "byte",
+        dimensions = c(1,2,"z_shift_t")
+      )
+
+      self$add_R6_data(data_class = warped_lad)
+      self$data$orography_3d <- NULL
+
+
+
     }
   ),
 
