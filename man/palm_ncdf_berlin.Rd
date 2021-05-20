@@ -94,6 +94,8 @@ berlin_example$plot_area(1,1,200,200)
 \item \href{#method-add_simple_surfacefraction}{\code{palm_ncdf_berlin$add_simple_surfacefraction()}}
 \item \href{#method-generate_lad_single_trees}{\code{palm_ncdf_berlin$generate_lad_single_trees()}}
 \item \href{#method-generate_patches_beta}{\code{palm_ncdf_berlin$generate_patches_beta()}}
+\item \href{#method-create_paraview_buildings}{\code{palm_ncdf_berlin$create_paraview_buildings()}}
+\item \href{#method-create_paraview_lad}{\code{palm_ncdf_berlin$create_paraview_lad()}}
 \item \href{#method-clone}{\code{palm_ncdf_berlin$clone()}}
 }
 }
@@ -463,11 +465,29 @@ Simple visualization of the simulation domain
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{palm_ncdf_berlin$generate_patches_beta(
   tree_array = NULL,
-  lai_array,
+  lai,
   alpha = 5,
   beta = 3,
   overwrite_existing_lad = FALSE
 )}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-create_paraview_buildings"></a>}}
+\if{latex}{\out{\hypertarget{method-create_paraview_buildings}{}}}
+\subsection{Method \code{create_paraview_buildings()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{palm_ncdf_berlin$create_paraview_buildings()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-create_paraview_lad"></a>}}
+\if{latex}{\out{\hypertarget{method-create_paraview_lad}{}}}
+\subsection{Method \code{create_paraview_lad()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{palm_ncdf_berlin$create_paraview_lad()}\if{html}{\out{</div>}}
 }
 
 }
