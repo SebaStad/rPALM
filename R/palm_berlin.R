@@ -1636,9 +1636,10 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
         dattype <- "float"
         lod <- 2
       } else if (grepl("building", name)) {
+        print("Building_pars used to be first 46 pars, now is 136")
         varname <- "building_pars"
         dimname <- "nbuilding_pars"
-        vardim_dim <- seq(0, 46)
+        vardim_dim <- seq(0, 136)
         longname <- "building parameters"
         dattype <- "float"
       } else if( grepl("albedo", name)) {
