@@ -19,7 +19,7 @@ palm_ncdf_import   <- R6::R6Class("palm_ncdf_import",
 #' import_static <- palm_ncdf_import$new("new_static_driver.nc",
 #'                                       "Path/to/files", "old_static_driver.nc", F)
 #' import_static$read_static()
-                                    initialize = function(newfilename, pathtofiles, oldfilename, oldversion = TRUE){
+                                    initialize = function(newfilename, pathtofiles, oldfilename, oldversion = FALSE){
                                       if(substrRight(newfilename,3)!=".nc"){
                                         newfilename <- paste(newfilename,".nc",sep="")
                                       }
