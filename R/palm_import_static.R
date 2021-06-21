@@ -97,6 +97,7 @@ palm_ncdf_import   <- R6::R6Class("palm_ncdf_import",
                                       self$data  <- dat
                                       self$vardimensions  <- whichdimensions
                                       self$header$head$rotation_angle <- as.numeric(self$header$head$rotation_angle)
+                                      self$header$head$resolution <- abs(self$dims$x$vals[1] - self$dims$x$vals[2])
                                       ncdf4::nc_close(ncfile)
 
                                       for(i in names(self$data)){
