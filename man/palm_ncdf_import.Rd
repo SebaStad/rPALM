@@ -65,7 +65,7 @@ import_static$read_static()
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{palm_ncdf_import$new(newfilename, pathtofiles, oldfilename, oldversion = TRUE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{palm_ncdf_import$new(newfilename, pathtofiles, oldfilename, oldversion = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
