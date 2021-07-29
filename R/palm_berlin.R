@@ -2101,9 +2101,9 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
           z <- seq(0, dim(new_dat)[3]-1, by = 1) * dx
           z <- z - (dx / 2)
           z[1] <- 0
-        }
 
-        self$dims$zlad$vals <- z
+          self$dims$zlad$vals <- z
+        }
         self$data$lad$vals <- new_dat
 
         adata <- list(
