@@ -2106,16 +2106,44 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
         }
         self$data$lad$vals <- new_dat
 
-        adata <- list(
-          "_FillValue" = -9999.9,
-          "units" = "m2/m3",
-          "long_name" = "leaf area density",
-          "source" = "According to ncl script by Bjoern Maronga",
-          "vals" = bad_temp,
-          "type" = "float"
-        )
-        self$data[["bad"]] <- adata
-        self$vardimensions[["bad"]] <- c("x", "y", "zlad")
+        if(any(grepl("bad", names(self$data)))){
+          ifelse(dim(self$data$bad$vals)[3] >= dim(bad_temp)[3],
+                 new_dat_bad <- array(0, dim(self$data$bad$vals)),
+                 new_dat_bad <- array(0, dim(bad_temp))
+          )
+
+          new_dat_bad[, , 1:dim(self$data$lad$vals)[3]] <- self$data$lad$vals
+          new_dat_bad[new_dat_bad<0] <- 0
+          bad_temp[, , 2:dim(lad_temp)[3]][bad_temp[, , 2:dim(bad_temp)[3]] < 0] <- 0
+
+          if(overwrite_existing_lad){
+            new_dat_bad[, , 1:dim(bad_temp)[3]][lad_temp > 0] <- bad_temp[bad_temp > 0]
+          } else {
+            new_dat_bad[, , 1:dim(bad_temp)[3]][lad_temp > 0] <- new_dat_bad[, , 1:dim(bad_temp)[3]][bad_temp > 0] + bad_temp[bad_temp > 0]
+          }
+
+          new_dat_bad[new_dat_bad==0] <- -9999.9
+          self$data$bad$vals <- bad_temp
+
+        } else {
+
+          new_dat_bad <- array(-9999.9, dim(new_dat))
+          new_dat_bad[, , 1:dim(bad_temp)[3]] <- bad_temp
+
+          adata <- list(
+            "_FillValue" = -9999.9,
+            "units" = "m2/m3",
+            "long_name" = "basal area density",
+            "source" = "According to ncl script by Bjoern Maronga",
+            "vals" = new_dat_bad,
+            "type" = "float"
+          )
+          self$data[["bad"]] <- adata
+          self$vardimensions[["bad"]] <- c("x", "y", "zlad")
+
+        }
+
+
       }
 
     }, generate_patches_beta = function(tree_array = NULL, lai, alpha = 5, beta = 3, overwrite_existing_lad = FALSE) {
