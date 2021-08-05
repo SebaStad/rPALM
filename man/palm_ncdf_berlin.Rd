@@ -66,6 +66,169 @@ Missing Data is displayed as white and will be marked by the legend.
 ## ------------------------------------------------
 
 berlin_example$plot_area(1,1,200,200)
+Title
+
+
+## ------------------------------------------------
+## Method `palm_ncdf_berlin$createbuilding3D`
+## ------------------------------------------------
+
+Title
+
+
+## ------------------------------------------------
+## Method `palm_ncdf_berlin$quickplot`
+## ------------------------------------------------
+
+Title
+
+
+## ------------------------------------------------
+## Method `palm_ncdf_berlin$correct_surface_fraction`
+## ------------------------------------------------
+
+Title
+
+
+## ------------------------------------------------
+## Method `palm_ncdf_berlin$fill_areal`
+## ------------------------------------------------
+
+Title
+
+
+## ------------------------------------------------
+## Method `palm_ncdf_berlin$generate_lai_array`
+## ------------------------------------------------
+
+Title
+
+
+## ------------------------------------------------
+## Method `palm_ncdf_berlin$import_data`
+## ------------------------------------------------
+
+Title
+
+
+## ------------------------------------------------
+## Method `palm_ncdf_berlin$SortOverlayingdata`
+## ------------------------------------------------
+
+Title
+
+
+## ------------------------------------------------
+## Method `palm_ncdf_berlin$countemptyfields`
+## ------------------------------------------------
+
+Title
+
+
+## ------------------------------------------------
+## Method `palm_ncdf_berlin$addsoilandsurfacefraction`
+## ------------------------------------------------
+
+Title
+
+
+## ------------------------------------------------
+## Method `palm_ncdf_berlin$add_lod2_variable`
+## ------------------------------------------------
+
+Title
+
+
+## ------------------------------------------------
+## Method `palm_ncdf_berlin$print`
+## ------------------------------------------------
+
+Title
+
+
+## ------------------------------------------------
+## Method `palm_ncdf_berlin$downscale_resolution`
+## ------------------------------------------------
+
+Title
+
+
+## ------------------------------------------------
+## Method `palm_ncdf_berlin$cutout_static`
+## ------------------------------------------------
+
+Title
+
+
+## ------------------------------------------------
+## Method `palm_ncdf_berlin$add_any2D_variable`
+## ------------------------------------------------
+
+Title
+
+
+## ------------------------------------------------
+## Method `palm_ncdf_berlin$add_R6_data`
+## ------------------------------------------------
+
+Title
+
+
+## ------------------------------------------------
+## Method `palm_ncdf_berlin$add_R6_dim`
+## ------------------------------------------------
+
+Title
+
+
+## ------------------------------------------------
+## Method `palm_ncdf_berlin$add_soil`
+## ------------------------------------------------
+
+Title
+
+
+## ------------------------------------------------
+## Method `palm_ncdf_berlin$add_simple_surfacefraction`
+## ------------------------------------------------
+
+Title
+
+
+## ------------------------------------------------
+## Method `palm_ncdf_berlin$generate_lad_single_trees`
+## ------------------------------------------------
+
+Title
+
+
+## ------------------------------------------------
+## Method `palm_ncdf_berlin$generate_patches_beta`
+## ------------------------------------------------
+
+Title
+
+
+## ------------------------------------------------
+## Method `palm_ncdf_berlin$create_paraview_buildings`
+## ------------------------------------------------
+
+Title
+
+
+## ------------------------------------------------
+## Method `palm_ncdf_berlin$create_paraview_lad`
+## ------------------------------------------------
+
+Title
+
+
+## ------------------------------------------------
+## Method `palm_ncdf_berlin$set_crs_from_epsg`
+## ------------------------------------------------
+
+Title
+
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -96,6 +259,8 @@ berlin_example$plot_area(1,1,200,200)
 \item \href{#method-generate_patches_beta}{\code{palm_ncdf_berlin$generate_patches_beta()}}
 \item \href{#method-create_paraview_buildings}{\code{palm_ncdf_berlin$create_paraview_buildings()}}
 \item \href{#method-create_paraview_lad}{\code{palm_ncdf_berlin$create_paraview_lad()}}
+\item \href{#method-set_crs_from_epsg}{\code{palm_ncdf_berlin$set_crs_from_epsg()}}
+\item \href{#method-dim}{\code{palm_ncdf_berlin$dim()}}
 \item \href{#method-clone}{\code{palm_ncdf_berlin$clone()}}
 }
 }
@@ -250,6 +415,8 @@ Simple visualization of the simulation domain
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{berlin_example$plot_area(1,1,200,200)
+Title
+
 }
 \if{html}{\out{</div>}}
 
@@ -264,6 +431,25 @@ Simple visualization of the simulation domain
 \if{html}{\out{<div class="r">}}\preformatted{palm_ncdf_berlin$createbuilding3D(force = FALSE, orogrphy3d = FALSE)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{orogrphy3d}}{}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{Title
+
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-quickplot"></a>}}
@@ -273,6 +459,25 @@ Simple visualization of the simulation domain
 \if{html}{\out{<div class="r">}}\preformatted{palm_ncdf_berlin$quickplot(variable)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{variable}}{}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{Title
+
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-correct_surface_fraction"></a>}}
@@ -280,6 +485,18 @@ Simple visualization of the simulation domain
 \subsection{Method \code{correct_surface_fraction()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{palm_ncdf_berlin$correct_surface_fraction()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{Title
+
+}
+\if{html}{\out{</div>}}
+
 }
 
 }
@@ -297,6 +514,25 @@ Simple visualization of the simulation domain
   boundaryarea = NULL,
   overwrite = TRUE
 )}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{overwrite}}{}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{Title
+
+}
+\if{html}{\out{</div>}}
+
 }
 
 }
@@ -318,6 +554,25 @@ Simple visualization of the simulation domain
 )}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{additional_array}}{}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{Title
+
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-import_data"></a>}}
@@ -325,6 +580,25 @@ Simple visualization of the simulation domain
 \subsection{Method \code{import_data()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{palm_ncdf_berlin$import_data(v.file, palmtype, typeid, street = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{street}}{}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{Title
+
+}
+\if{html}{\out{</div>}}
+
 }
 
 }
@@ -336,6 +610,25 @@ Simple visualization of the simulation domain
 \if{html}{\out{<div class="r">}}\preformatted{palm_ncdf_berlin$SortOverlayingdata(inorderof = "BPWV")}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{inorderof}}{}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{Title
+
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-countemptyfields"></a>}}
@@ -343,6 +636,18 @@ Simple visualization of the simulation domain
 \subsection{Method \code{countemptyfields()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{palm_ncdf_berlin$countemptyfields()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{Title
+
+}
+\if{html}{\out{</div>}}
+
 }
 
 }
@@ -354,6 +659,25 @@ Simple visualization of the simulation domain
 \if{html}{\out{<div class="r">}}\preformatted{palm_ncdf_berlin$addsoilandsurfacefraction(type_soil = 1)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{type_soil}}{}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{Title
+
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-add_lod2_variable"></a>}}
@@ -361,6 +685,25 @@ Simple visualization of the simulation domain
 \subsection{Method \code{add_lod2_variable()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{palm_ncdf_berlin$add_lod2_variable(name, v.data = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{v.data}}{}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{Title
+
+}
+\if{html}{\out{</div>}}
+
 }
 
 }
@@ -372,6 +715,25 @@ Simple visualization of the simulation domain
 \if{html}{\out{<div class="r">}}\preformatted{palm_ncdf_berlin$print(...)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{Title
+
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-downscale_resolution"></a>}}
@@ -381,6 +743,25 @@ Simple visualization of the simulation domain
 \if{html}{\out{<div class="r">}}\preformatted{palm_ncdf_berlin$downscale_resolution(factor)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{factor}}{}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{Title
+
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-cutout_static"></a>}}
@@ -388,6 +769,25 @@ Simple visualization of the simulation domain
 \subsection{Method \code{cutout_static()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{palm_ncdf_berlin$cutout_static(startp, endp, sure = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{sure}}{}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{Title
+
+}
+\if{html}{\out{</div>}}
+
 }
 
 }
@@ -403,6 +803,25 @@ Simple visualization of the simulation domain
 )}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{print_template}}{}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{Title
+
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-add_R6_data"></a>}}
@@ -410,6 +829,25 @@ Simple visualization of the simulation domain
 \subsection{Method \code{add_R6_data()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{palm_ncdf_berlin$add_R6_data(data_class)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{data_class}}{}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{Title
+
+}
+\if{html}{\out{</div>}}
+
 }
 
 }
@@ -421,6 +859,25 @@ Simple visualization of the simulation domain
 \if{html}{\out{<div class="r">}}\preformatted{palm_ncdf_berlin$add_R6_dim(dim_class)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{dim_class}}{}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{Title
+
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-add_soil"></a>}}
@@ -430,6 +887,25 @@ Simple visualization of the simulation domain
 \if{html}{\out{<div class="r">}}\preformatted{palm_ncdf_berlin$add_soil(type_soil = 1)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{type_soil}}{}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{Title
+
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-add_simple_surfacefraction"></a>}}
@@ -437,6 +913,18 @@ Simple visualization of the simulation domain
 \subsection{Method \code{add_simple_surfacefraction()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{palm_ncdf_berlin$add_simple_surfacefraction()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{Title
+
+}
+\if{html}{\out{</div>}}
+
 }
 
 }
@@ -457,6 +945,25 @@ Simple visualization of the simulation domain
 )}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{Title
+
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-generate_patches_beta"></a>}}
@@ -472,6 +979,25 @@ Simple visualization of the simulation domain
 )}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{overwrite_existing_lad}}{}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{Title
+
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-create_paraview_buildings"></a>}}
@@ -479,6 +1005,18 @@ Simple visualization of the simulation domain
 \subsection{Method \code{create_paraview_buildings()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{palm_ncdf_berlin$create_paraview_buildings()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{Title
+
+}
+\if{html}{\out{</div>}}
+
 }
 
 }
@@ -490,6 +1028,65 @@ Simple visualization of the simulation domain
 \if{html}{\out{<div class="r">}}\preformatted{palm_ncdf_berlin$create_paraview_lad()}\if{html}{\out{</div>}}
 }
 
+\subsection{Returns}{
+
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{Title
+
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-set_crs_from_epsg"></a>}}
+\if{latex}{\out{\hypertarget{method-set_crs_from_epsg}{}}}
+\subsection{Method \code{set_crs_from_epsg()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{palm_ncdf_berlin$set_crs_from_epsg(epsg_code)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{epsg_code}}{}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{Title
+
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-dim"></a>}}
+\if{latex}{\out{\hypertarget{method-dim}{}}}
+\subsection{Method \code{dim()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{palm_ncdf_berlin$dim(...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}

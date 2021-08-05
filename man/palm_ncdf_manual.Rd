@@ -49,6 +49,7 @@ manual_static <- palm_ncdf_manual$new(200,200,10, palm_headclass, FALSE, FALSE)
 \item \out{<span class="pkg-link" data-pkg="rPALM" data-topic="palm_ncdf_berlin" data-id="create_paraview_lad">}\href{../../rPALM/html/palm_ncdf_berlin.html#method-create_paraview_lad}{\code{rPALM::palm_ncdf_berlin$create_paraview_lad()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="rPALM" data-topic="palm_ncdf_berlin" data-id="createbuilding3D">}\href{../../rPALM/html/palm_ncdf_berlin.html#method-createbuilding3D}{\code{rPALM::palm_ncdf_berlin$createbuilding3D()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="rPALM" data-topic="palm_ncdf_berlin" data-id="cutout_static">}\href{../../rPALM/html/palm_ncdf_berlin.html#method-cutout_static}{\code{rPALM::palm_ncdf_berlin$cutout_static()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="rPALM" data-topic="palm_ncdf_berlin" data-id="dim">}\href{../../rPALM/html/palm_ncdf_berlin.html#method-dim}{\code{rPALM::palm_ncdf_berlin$dim()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="rPALM" data-topic="palm_ncdf_berlin" data-id="downscale_resolution">}\href{../../rPALM/html/palm_ncdf_berlin.html#method-downscale_resolution}{\code{rPALM::palm_ncdf_berlin$downscale_resolution()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="rPALM" data-topic="palm_ncdf_berlin" data-id="exportncdf">}\href{../../rPALM/html/palm_ncdf_berlin.html#method-exportncdf}{\code{rPALM::palm_ncdf_berlin$exportncdf()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="rPALM" data-topic="palm_ncdf_berlin" data-id="fill_areal">}\href{../../rPALM/html/palm_ncdf_berlin.html#method-fill_areal}{\code{rPALM::palm_ncdf_berlin$fill_areal()}}\out{</span>}
@@ -59,6 +60,7 @@ manual_static <- palm_ncdf_manual$new(200,200,10, palm_headclass, FALSE, FALSE)
 \item \out{<span class="pkg-link" data-pkg="rPALM" data-topic="palm_ncdf_berlin" data-id="plot_area">}\href{../../rPALM/html/palm_ncdf_berlin.html#method-plot_area}{\code{rPALM::palm_ncdf_berlin$plot_area()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="rPALM" data-topic="palm_ncdf_berlin" data-id="print">}\href{../../rPALM/html/palm_ncdf_berlin.html#method-print}{\code{rPALM::palm_ncdf_berlin$print()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="rPALM" data-topic="palm_ncdf_berlin" data-id="quickplot">}\href{../../rPALM/html/palm_ncdf_berlin.html#method-quickplot}{\code{rPALM::palm_ncdf_berlin$quickplot()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="rPALM" data-topic="palm_ncdf_berlin" data-id="set_crs_from_epsg">}\href{../../rPALM/html/palm_ncdf_berlin.html#method-set_crs_from_epsg}{\code{rPALM::palm_ncdf_berlin$set_crs_from_epsg()}}\out{</span>}
 }
 \out{</details>}
 }

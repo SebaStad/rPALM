@@ -465,119 +465,10 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
     #' berlin_example$exportncdf(Path = "Path/to/be/saved"
     #'                           EPSGCode = "EPSG:25833")
     exportncdf = function(Path = self$path, EPSGCode = "EPSG:25833") {
-      ###########
-      # GUI ANPASSUNG FueR EPSG
-      ###########
-      # HARDCODED!
-      #
-      if (EPSGCode == "EPSG:25831") {
-        centralmeridian <- 3.0
-      } else if (EPSGCode == "EPSG:25832") {
-        centralmeridian <- 9.0
-      } else if (EPSGCode == "EPSG:25833") {
-        centralmeridian <- 15.0
-      } else if (EPSGCode == "EPSG:31468") {
-        centralmeridian <- 12.0
-      } else {
-        centralmeridian <- 15.0
-      }
-
-
-
-      ###########
-      # PIDS 1.9
-      ###########
-      # CRS Zeugs
-      ###########
-      if (any(names(self$data) == "crs")) {
-        self$data$crs <- NULL
-      }
-      adata <- list(
-        "long_name" = "coordinate reference system",
-        "grid_mapping_name" = "transverse_mercator",
-        "longitude_of_prime_meridian" = 0.0,
-        "longitude_of_central_meridian" = centralmeridian,
-        "scale_factor_at_central_meridian" = 0.9996,
-        "latitude_of_projection_origin" = 0.0,
-        "false_easting" = 500000.0,
-        "false_northing" = 0.0,
-        "semi_major_axis" = 6378137.0,
-        "inverse_flattening" = 298.25722,
-        "units" = "m",
-        "epsg_code" = EPSGCode,
-        "vals" = 0,
-        "type" = "integer"
-      )
-      self$data[["crs"]] <- adata
-      self$vardimensions[["crs"]] <- c()
-
-      eastval <- seq(
-        self$header$head$origin_x,
-        self$header$head$origin_x +
-          self$header$head$resolution * (length(self$dims$x$vals) - 1),
-        self$header$head$resolution
-      )
-      adata <- list(
-        "long_name" = "easting",
-        "standard_name" = "projection_x_coordinate",
-        "units" = "m",
-        "vals" = eastval,
-        "type" = "float"
-      )
-      self$data[["E_UTM"]] <- adata
-      self$vardimensions[["E_UTM"]] <- c("x")
-
-      westval <- seq(
-        self$header$head$origin_y,
-        self$header$head$origin_y +
-          self$header$head$resolution * (length(self$dims$y$vals) - 1),
-        self$header$head$resolution
-      )
-      adata <- list(
-        "long_name" = "northing",
-        "standard_name" = "projection_y_coordinate",
-        "units" = "m",
-        "vals" = westval,
-        "type" = "float"
-      )
-      self$data[["N_UTM"]] <- adata
-      self$vardimensions[["N_UTM"]] <- c("y")
-
-      e_utm <- eastval
-      n_utm <- westval
-
-      df <- as.data.frame(expand.grid(e_utm, n_utm))
-
-      sputm <- sp::SpatialPoints(df, proj4string = CRS("+proj=utm +zone=33 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")) # Defining Gauss Krueger)
-      spgeo <- sp::spTransform(sputm, CRS("+proj=longlat +datum=WGS84 +no_defs"))
-
-      thedata <- round(as.data.frame(spgeo), 6)
-
-      longitude_mat <- array(thedata[, 1], c(length(e_utm), length(n_utm)))
-      latitude_mat <- array(thedata[, 2], c(length(e_utm), length(n_utm)))
-
-      adata <- list(
-        "long_name" = "latitude",
-        "standard_name" = "latitude",
-        "units" = "degrees_north",
-        "vals" = latitude_mat,
-        "type" = "float"
-      )
-      self$data[["lat"]] <- adata
-      self$vardimensions[["lat"]] <- c("x", "y")
-
-      adata <- list(
-        "long_name" = "longitude",
-        "standard_name" = "longitude",
-        "units" = "degrees_east",
-        "vals" = longitude_mat,
-        "type" = "float"
-      )
-      self$data[["lon"]] <- adata
-      self$vardimensions[["lon"]] <- c("x", "y")
-
-
-      #
+      print("CRS CREATION HAS BEEN MOVED TO SEPARATE FUNCTION")
+      print("For now it will be called with EPSG:25832")
+      print("Please call function set_crs_from_epsg again with the real CRS!")
+      self$set_crs_from_epsg(25832)
 
       # Path = Pfad in dem die Datei abgespeichert wird. Frei waehlbar, standardmaessig im
       #        gleichen Ordner wie Quelldateien
@@ -849,6 +740,15 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
         coord_fixed(ratio = 1) + xlab("X") + ylab("Y")
       self$savedplots[[self$plotcntr]]
     },
+#' Title
+#'
+#' @param force
+#' @param orogrphy3d
+#'
+#' @return
+#' @export
+#'
+#' @examples
     createbuilding3D = function(force = FALSE, orogrphy3d = FALSE) {
       if (self$oldversion) {
         checkvar <- "buildings_3D"
@@ -989,6 +889,14 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
         self$data$orography_3d <- adata
       }
     },
+#' Title
+#'
+#' @param variable
+#'
+#' @return
+#' @export
+#'
+#' @examples
     quickplot = function(variable) {
       if (any(self$data[[variable]]$vals < 0)) {
         plotmatrix <- self$data[[variable]]$vals
@@ -1008,6 +916,12 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
           scale_y_continuous(expand = c(0, 0), limits = c(0, max(plt.data[, 2])))
       }
     },
+#' Title
+#'
+#' @return
+#' @export
+#'
+#' @examples
     correct_surface_fraction = function() {
       self$data$surface_fraction$vals[, , 4] <- NA
       lopv <- dim(self$data$surface_fraction$vals)
@@ -1021,6 +935,20 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
         }
       }
     },
+#' Title
+#'
+#' @param variabletofill
+#' @param startx
+#' @param starty
+#' @param fillvalue
+#' @param valuetobefilled
+#' @param boundaryarea
+#' @param overwrite
+#'
+#' @return
+#' @export
+#'
+#' @examples
     fill_areal = function(variabletofill, startx, starty, fillvalue,
                           valuetobefilled = NULL, boundaryarea = NULL,
                           overwrite = TRUE) {
@@ -1092,6 +1020,22 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
 
       self$data[[variabletofill]]$vals <- areatofill2
     },
+#' Title
+#'
+#' @param dz
+#' @param fixed_tree_height
+#' @param alpha
+#' @param beta
+#' @param startx
+#' @param starty
+#' @param lengthx
+#' @param lengthy
+#' @param additional_array
+#'
+#' @return
+#' @export
+#'
+#' @examples
     generate_lai_array = function(dz, fixed_tree_height = NULL, alpha = 5, beta = 3,
                                   startx = NULL, starty = NULL, lengthx = NULL,
                                   lengthy = NULL, additional_array = NULL) {
@@ -1353,6 +1297,17 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
         }
       }
     },
+#' Title
+#'
+#' @param v.file
+#' @param palmtype
+#' @param typeid
+#' @param street
+#'
+#' @return
+#' @export
+#'
+#' @examples
     import_data = function(v.file, palmtype, typeid, street = FALSE) {
       # if(palmtype!=listofvariablesforpalm
       if (self$oldversion) {
@@ -1477,6 +1432,14 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
       self$vardimensions[[palmtype]] <- whichdims
       ncdf4::nc_close(ncfile)
     },
+#' Title
+#'
+#' @param inorderof
+#'
+#' @return
+#' @export
+#'
+#' @examples
     SortOverlayingdata = function(inorderof = "BPWV") {
       if (self$oldversion) {
         checkvar <- "buildings_2D"
@@ -1528,6 +1491,12 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
         self$data[[checkvar]]$vals[self$data[[checkvar]]$vals <= dx / 2] <- -9999.9
       }
     },
+#' Title
+#'
+#' @return
+#' @export
+#'
+#' @examples
     countemptyfields = function() {
       if (self$oldversion) {
         checkvar <- "buildings_2D"
@@ -1541,6 +1510,14 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
       NAarray[self$data$vegetation_type$vals > 0] <- self$data$vegetation_type$vals[self$data$vegetation_type$vals > 0]
       print(table(NAarray)[1])
     },
+#' Title
+#'
+#' @param type_soil
+#'
+#' @return
+#' @export
+#'
+#' @examples
     addsoilandsurfacefraction = function(type_soil = 1) {
       soiltype <- self$data$vegetation_type$vals
       soiltype[which(self$data$pavement_type$vals > 0, arr.ind = T)] <- 1
@@ -1608,6 +1585,15 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
       self$data$surface_fraction <- adata
       self$vardimensions$surface_fraction <- c(1, 2, which(names(self$dims) == "nsurface_fraction"))
     },
+#' Title
+#'
+#' @param name
+#' @param v.data
+#'
+#' @return
+#' @export
+#'
+#' @examples
     add_lod2_variable = function(name, v.data = NULL) {
       lod <- NULL
       if (grepl("water", name)) {
@@ -1701,6 +1687,14 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
       }
       self$data[[varname]] <- adata
     },
+#' Title
+#'
+#' @param ...
+#'
+#' @return
+#' @export
+#'
+#' @examples
     print = function(...) {
       catch <- character()
       tryCatch(catch <- length(self$dims$x$vals),
@@ -1719,6 +1713,14 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
         invisible(self)
       }
     },
+#' Title
+#'
+#' @param factor
+#'
+#' @return
+#' @export
+#'
+#' @examples
     downscale_resolution = function(factor) {
       dimx <- length(self$dims$x$vals)
       dimy <- length(self$dims$y$vals)
@@ -1768,6 +1770,16 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
 
       self$dims$y$vals <- newy
     },
+#' Title
+#'
+#' @param startp
+#' @param endp
+#' @param sure
+#'
+#' @return
+#' @export
+#'
+#' @examples
     cutout_static = function(startp, endp, sure = FALSE) {
       if (!sure) {
         cat("This may loose some data!\n")
@@ -1792,6 +1804,16 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
         }
       }
     },
+#' Title
+#'
+#' @param variablename
+#' @param variable_list
+#' @param print_template
+#'
+#' @return
+#' @export
+#'
+#' @examples
     add_any2D_variable = function(variablename, variable_list,
                                   print_template = FALSE) {
       if (print_template) {
@@ -1821,6 +1843,14 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
         self$vardimensions[[variablename]] <- c("x", "y")
       }
     },
+#' Title
+#'
+#' @param data_class
+#'
+#' @return
+#' @export
+#'
+#' @examples
     add_R6_data = function(data_class) {
       if (!any(class(data_class) == "palm_ncdf_data_template")) {
         stop("Please provide the correct class")
@@ -1831,6 +1861,14 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
         self$vardimensions[[i]] <- data_class$data_dims[[i]]
       }
     },
+#' Title
+#'
+#' @param dim_class
+#'
+#' @return
+#' @export
+#'
+#' @examples
     add_R6_dim = function(dim_class) {
       if (!any(class(dim_class) == "palm_ncdf_dimension_template")) {
         stop("Please provide the correct class")
@@ -1840,6 +1878,14 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
         self$dims[[i]] <- dim_class$dim_list[[i]]
       }
     },
+#' Title
+#'
+#' @param type_soil
+#'
+#' @return
+#' @export
+#'
+#' @examples
     add_soil = function(type_soil = 1) {
       soiltype <- self$data$vegetation_type$vals
       soiltype[which(self$data$pavement_type$vals > 0, arr.ind = T)] <- 1
@@ -1855,6 +1901,12 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
       self$data$soil_type <- adata
       self$vardimensions$soil_type <- c(1, 2)
     },
+#' Title
+#'
+#' @return
+#' @export
+#'
+#' @examples
     add_simple_surfacefraction = function() {
       xvec <- c(0, 1, 2)
       adata <- list("vals" = xvec)
@@ -1903,6 +1955,21 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
       self$data$surface_fraction <- adata
       self$vardimensions$surface_fraction <- c(1, 2, which(names(self$dims) == "nsurface_fraction"))
     },
+#' Title
+#'
+#' @param ext_tree_type
+#' @param ext_tree_height
+#' @param ext_crown_diameter
+#' @param ext_tree_shape
+#' @param ext_lai
+#' @param overwrite_single_trees
+#' @param overwrite_existing_lad
+#' @param ...
+#'
+#' @return
+#' @export
+#'
+#' @examples
     generate_lad_single_trees = function(ext_tree_type = NULL,
                                          ext_tree_height = NULL,
                                          ext_crown_diameter = NULL,
@@ -2146,7 +2213,20 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
 
       }
 
+#' Title
+#'
+#' @param tree_array
+#' @param lai
+#' @param alpha
+#' @param beta
+#' @param overwrite_existing_lad
+#'
+#' @return
+#' @export
+#'
+#' @examples
     }, generate_patches_beta = function(tree_array = NULL, lai, alpha = 5, beta = 3, overwrite_existing_lad = FALSE) {
+
 
       # Erstellung eines 3D-arrays der leaf area density fuer 'Baumgruppen'.
       #
@@ -2318,6 +2398,12 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
         }
       }
     },
+#' Title
+#'
+#' @return
+#' @export
+#'
+#' @examples
     create_paraview_buildings = function(){
       res          <- self$header$head$resolution
       current_topo <- self$data$zt$vals
@@ -2374,6 +2460,12 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
       self$data$orography_3d <- NULL
 
     },
+#' Title
+#'
+#' @return
+#' @export
+#'
+#' @examples
     create_paraview_lad = function(){
       res          <- self$header$head$resolution
       current_topo <- self$data$zt$vals
@@ -2428,7 +2520,126 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
 
 
 
-    }
+    },
+#' Title
+#'
+#' @param epsg_code
+#'
+#' @return
+#' @export
+#'
+#' @examples
+    set_crs_from_epsg = function(epsg_code){
+
+      crs_data <- st_crs(epsg_code)
+
+      if (any(names(self$data) == "crs")) {
+        print("Crs available. OVerwriting!")
+        self$data$crs <- NULL
+      }
+
+      ellipsoid_def <- get_variable_from_wtk("ELLIPSOID\\[", crs_data$wkt, FALSE, FALSE)
+
+      adata <- list(
+        "long_name" = "coordinate reference system",
+        "grid_mapping_name" = "transverse_mercator",
+        "longitude_of_prime_meridian" = 0.0,
+        "longitude_of_central_meridian" = get_variable_from_wtk("Longitude of natural origin", crs_data$wkt),
+        "scale_factor_at_central_meridian" = get_variable_from_wtk("Scale factor at natural origin", crs_data$wkt),
+        "latitude_of_projection_origin" = get_variable_from_wtk("Latitude of natural origin", crs_data$wkt),
+        "false_easting" = get_variable_from_wtk("False easting", crs_data$wkt),
+        "false_northing" = get_variable_from_wtk("False northing", crs_data$wkt),
+        "semi_major_axis" = get_variable_from_wtk(ellipsoid_def, crs_data$wkt),
+        "inverse_flattening" = get_variable_from_wtk(get_variable_from_wtk(ellipsoid_def, crs_data$wkt), crs_data$wkt),
+        "units" = "m",
+        "epsg_code" = paste0("EPSG:", epsg_code),
+        "vals" = 0,
+        "type" = "integer"
+      )
+      self$data[["crs"]] <- adata
+      self$vardimensions[["crs"]] <- c()
+
+      eastval <- seq(
+        self$header$head$origin_x,
+        self$header$head$origin_x +
+          self$header$head$resolution * (length(self$dims$x$vals) - 1),
+        self$header$head$resolution
+      )
+      adata <- list(
+        "long_name" = "easting",
+        "standard_name" = "projection_x_coordinate",
+        "units" = "m",
+        "vals" = eastval,
+        "type" = "float"
+      )
+      self$data[["E_UTM"]] <- adata
+      self$vardimensions[["E_UTM"]] <- c("x")
+
+      westval <- seq(
+        self$header$head$origin_y,
+        self$header$head$origin_y +
+          self$header$head$resolution * (length(self$dims$y$vals) - 1),
+        self$header$head$resolution
+      )
+      adata <- list(
+        "long_name" = "northing",
+        "standard_name" = "projection_y_coordinate",
+        "units" = "m",
+        "vals" = westval,
+        "type" = "float"
+      )
+      self$data[["N_UTM"]] <- adata
+      self$vardimensions[["N_UTM"]] <- c("y")
+
+      e_utm <- eastval
+      n_utm <- westval
+
+      grid_df <- expand.grid(e_utm, n_utm)
+
+      latlon_df <- sf::st_as_sf(grid_df, coords = c("Var1", "Var2")) %>%
+        sf::st_set_crs(epsg_code) %>%
+        sf::st_transform(4326) %>%
+        sf::st_coordinates()
+
+      #sputm <- sp::SpatialPoints(df, proj4string = CRS(crs_data$proj4string)) # Defining Gauss Krueger)
+      #spgeo <- sp::spTransform(sputm, CRS("+proj=longlat +datum=WGS84 +no_defs"))
+
+      thedata <- round(as.data.frame(spgeo), 6)
+
+      longitude_mat <- array(round(latlon_df$X, 6), c(length(e_utm), length(n_utm)))
+      latitude_mat <- array(round(latlon_df$Y, 6), c(length(e_utm), length(n_utm)))
+
+      adata <- list(
+        "long_name" = "latitude",
+        "standard_name" = "latitude",
+        "units" = "degrees_north",
+        "vals" = latitude_mat,
+        "type" = "float"
+      )
+      self$data[["lat"]] <- adata
+      self$vardimensions[["lat"]] <- c("x", "y")
+
+      adata <- list(
+        "long_name" = "longitude",
+        "standard_name" = "longitude",
+        "units" = "degrees_east",
+        "vals" = longitude_mat,
+        "type" = "float"
+      )
+      self$data[["lon"]] <- adata
+      self$vardimensions[["lon"]] <- c("x", "y")
+    },
+#' Title
+#'
+#' @param ...
+#'
+#' @return
+#' @export
+#'
+#' @examples
+      dim = function(...){
+        print(dim(self$data$zt$vals))
+      }
   ),
 
   private = list()

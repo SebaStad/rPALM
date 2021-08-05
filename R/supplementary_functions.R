@@ -175,3 +175,45 @@ substrRight <- function(x, n){
 }
 
 
+#' Title
+#'
+#' @param search_string Character. Which parameter to search in wkt string
+#' @param wkt_text Character. Wkt string
+#' @param numeric Boolean. Whether value is numeric or not
+#'
+#' @return
+#' @export
+#'
+#' @examples
+get_variable_from_wtk <- function(search_string, wkt_text, numeric = TRUE, trailing_comma = TRUE){
+  trail = ""
+  if(trailing_comma){
+    trail = ","
+  }
+
+  pattern2 <-  paste0(".*", search_string, trail)
+
+  wkt_value <- wkt_text %>%
+    gsub(
+      pattern = "\\\"",
+      replacement = "",
+      x = .
+    ) %>%
+    gsub(
+      pattern = pattern2,
+      replacement = "",
+      x = .
+    ) %>%
+    gsub(
+      pattern = ",.*",
+      replacement = "",
+      x = .
+    )
+
+  if(numeric){
+    wkt_value <- as.numeric(wkt_value)
+  }
+
+  return(wkt_value)
+}
+
