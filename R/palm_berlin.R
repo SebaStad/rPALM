@@ -2601,10 +2601,10 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
         sf::st_transform(4326) %>%
         sf::st_coordinates()
 
-      #sputm <- sp::SpatialPoints(df, proj4string = CRS(crs_data$proj4string)) # Defining Gauss Krueger)
-      #spgeo <- sp::spTransform(sputm, CRS("+proj=longlat +datum=WGS84 +no_defs"))
+      # sputm <- sp::SpatialPoints(df, proj4string = CRS(crs_data$proj4string)) # Defining Gauss Krueger)
+      # spgeo <- sp::spTransform(sputm, CRS("+proj=longlat +datum=WGS84 +no_defs"))
 
-      thedata <- round(as.data.frame(spgeo), 6)
+      # thedata <- round(as.data.frame(spgeo), 6)
 
       longitude_mat <- array(round(latlon_df$X, 6), c(length(e_utm), length(n_utm)))
       latitude_mat <- array(round(latlon_df$Y, 6), c(length(e_utm), length(n_utm)))
