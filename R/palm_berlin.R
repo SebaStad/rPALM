@@ -2599,7 +2599,8 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
       latlon_df <- sf::st_as_sf(grid_df, coords = c("Var1", "Var2")) %>%
         sf::st_set_crs(epsg_code) %>%
         sf::st_transform(4326) %>%
-        sf::st_coordinates()
+        sf::st_coordinates() %>%
+        data.frame(.)
 
       # sputm <- sp::SpatialPoints(df, proj4string = CRS(crs_data$proj4string)) # Defining Gauss Krueger)
       # spgeo <- sp::spTransform(sputm, CRS("+proj=longlat +datum=WGS84 +no_defs"))
