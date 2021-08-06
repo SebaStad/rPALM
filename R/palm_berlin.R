@@ -466,9 +466,6 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
     #'                           EPSGCode = "EPSG:25833")
     exportncdf = function(Path = self$path, EPSGCode = "EPSG:25833") {
       print("CRS CREATION HAS BEEN MOVED TO SEPARATE FUNCTION")
-      print("For now it will be called with EPSG:25832")
-      print("Please call function set_crs_from_epsg again with the real CRS!")
-      self$set_crs_from_epsg(25832)
 
       # Path = Pfad in dem die Datei abgespeichert wird. Frei waehlbar, standardmaessig im
       #        gleichen Ordner wie Quelldateien
