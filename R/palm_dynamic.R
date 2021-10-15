@@ -147,7 +147,11 @@ palm_dynamic <- R6Class("palm_dynamic", public = list(
         "vals" = data.vector
       )
 
-      whichdimensions[[variable]] <- "z"
+      if(variable == "w"){
+        whichdimensions[[variable]] <- "zw"
+      } else {
+        whichdimensions[[variable]] <- "z"
+      }
 
       data.name <- paste("init_atmosphere_", variable, sep = "")
 
