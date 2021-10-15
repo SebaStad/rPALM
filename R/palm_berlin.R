@@ -2009,19 +2009,34 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
       if (is.null(ext_tree_type)) {
         tree_type <- 1 * tree_array
       } else {
-        tree_type <- ext_tree_type * tree_array
+        tree_type <- 1 * tree_array
+        if(is.null(dim(ext_tree_type))){
+          tree_type[tree_array>0] <- ext_tree_type * tree_array[tree_array>0]
+        } else {
+          tree_type[ext_tree_type>0] <- ext_tree_type[ext_tree_type>0] * tree_array[ext_tree_type>0]
+        }
       }
 
       if (is.null(ext_crown_diameter)) {
         crown_dia <- 10 * tree_array
       } else {
-        crown_dia <- ext_crown_diameter * tree_array
+        crown_dia <- 10 * tree_array
+        if(is.null(dim(ext_crown_diameter))){
+          crown_dia[tree_array>0] <- ext_crown_diameter * tree_array[tree_array>0]
+        } else {
+          crown_dia[ext_crown_diameter>0] <- ext_crown_diameter[ext_crown_diameter>0] * tree_array[ext_crown_diameter>0]
+        }
       }
 
       if (is.null(ext_tree_shape)) {
         tree_shape <- 1
       } else {
-        tree_shape <- ext_tree_shape * tree_array
+        tree_shape <- 1 * tree_array
+        if(is.null(dim(ext_tree_shape))){
+          tree_shape[tree_array>0] <- ext_tree_shape * tree_array[tree_array>0]
+        } else {
+          tree_shape[ext_tree_shape>0] <- ext_tree_shape[ext_tree_shape>0] * tree_array[ext_tree_shape>0]
+        }
       }
 
       if (is.null(ext_lai)) {
@@ -2036,6 +2051,7 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
         lai[self$data$vegetation_type$vals == 17] <- 5
         lai[self$data$vegetation_type$vals == 18] <- 2.5
       } else {
+        lai <- 3 * tree_array
         lai <- ext_lai * tree_array
       }
 
@@ -2068,8 +2084,16 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
               dat_range_x <- dat_range_x[dat_range_x <= dim(lai)[1]]
               dat_range_y <- dat_range_y[dat_range_y <= dim(lai)[2]]
 
-              lad_temp[dat_range_x, dat_range_y, seq(dim(tmp_dat$lad)[3])] <- tmp_dat$lad[dat_range_x - i + ceiling(dim(tmp_dat$lad)[1] / 2), dat_range_y - j + ceiling(dim(tmp_dat$lad)[2] / 2), ]
-              bad_temp[dat_range_x, dat_range_y, seq(dim(tmp_dat$bad)[3])] <- tmp_dat$bad[dat_range_x - i + ceiling(dim(tmp_dat$lad)[1] / 2), dat_range_y - j + ceiling(dim(tmp_dat$lad)[2] / 2), ]
+              dat_range_tmp_x <- dat_range_x - i + ceiling(dim(tmp_dat$lad)[1] / 2)
+              dat_range_x <- dat_range_x[-which(dat_range_tmp_x==0)]
+              dat_range_tmp_x <- dat_range_tmp_x[-which(dat_range_tmp_x==0)]
+
+              dat_range_tmp_y <- dat_range_y - j + ceiling(dim(tmp_dat$lad)[2] / 2)
+              dat_range_y <- dat_range_y[-which(dat_range_tmp_y==0)]
+              dat_range_tmp_y <- dat_range_tmp_y[-which(dat_range_tmp_y==0)]
+
+              lad_temp[dat_range_x, dat_range_y, seq(dim(tmp_dat$lad)[3])] <- tmp_dat$lad[dat_range_tmp_x, dat_range_tmp_y, ]
+              bad_temp[dat_range_x, dat_range_y, seq(dim(tmp_dat$bad)[3])] <- tmp_dat$bad[dat_range_tmp_x, dat_range_tmp_y, ]
             }
           }
         }
@@ -2100,8 +2124,16 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
               dat_range_x <- dat_range_x[dat_range_x <= dim(lai)[1]]
               dat_range_y <- dat_range_y[dat_range_y <= dim(lai)[2]]
 
-              lad_temp[dat_range_x, dat_range_y, seq(dim(tmp_dat$lad)[3])] <- lad_temp[dat_range_x, dat_range_y, seq(dim(tmp_dat$lad)[3])] + tmp_dat$lad[dat_range_x - i + ceiling(dim(tmp_dat$lad)[1] / 2), dat_range_y - j + ceiling(dim(tmp_dat$lad)[2] / 2), ]
-              bad_temp[dat_range_x, dat_range_y, seq(dim(tmp_dat$bad)[3])] <- bad_temp[dat_range_x, dat_range_y, seq(dim(tmp_dat$bad)[3])] + tmp_dat$bad[dat_range_x - i + ceiling(dim(tmp_dat$lad)[1] / 2), dat_range_y - j + ceiling(dim(tmp_dat$lad)[2] / 2), ]
+              dat_range_tmp_x <- dat_range_x - i + ceiling(dim(tmp_dat$lad)[1] / 2)
+              dat_range_x <- dat_range_x[-which(dat_range_tmp_x==0)]
+              dat_range_tmp_x <- dat_range_tmp_x[-which(dat_range_tmp_x==0)]
+
+              dat_range_tmp_y <- dat_range_y - j + ceiling(dim(tmp_dat$lad)[2] / 2)
+              dat_range_y <- dat_range_y[-which(dat_range_tmp_y==0)]
+              dat_range_tmp_y <- dat_range_tmp_y[-which(dat_range_tmp_y==0)]
+
+              lad_temp[dat_range_x, dat_range_y, seq(dim(tmp_dat$lad)[3])] <- lad_temp[dat_range_x, dat_range_y, seq(dim(tmp_dat$lad)[3])] + tmp_dat$lad[dat_range_tmp_x, dat_range_tmp_y, ]
+              bad_temp[dat_range_x, dat_range_y, seq(dim(tmp_dat$bad)[3])] <- bad_temp[dat_range_x, dat_range_y, seq(dim(tmp_dat$bad)[3])] + tmp_dat$bad[dat_range_tmp_x, dat_range_tmp_y, ]
             }
           }
         }
