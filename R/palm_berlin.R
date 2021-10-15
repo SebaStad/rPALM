@@ -2085,12 +2085,16 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
               dat_range_y <- dat_range_y[dat_range_y <= dim(lai)[2]]
 
               dat_range_tmp_x <- dat_range_x - i + ceiling(dim(tmp_dat$lad)[1] / 2)
-              dat_range_x <- dat_range_x[-which(dat_range_tmp_x==0)]
-              dat_range_tmp_x <- dat_range_tmp_x[-which(dat_range_tmp_x==0)]
+              if(any(dat_range_tmp_x==0)){
+                dat_range_x <- dat_range_x[-which(dat_range_tmp_x==0)]
+                dat_range_tmp_x <- dat_range_tmp_x[-which(dat_range_tmp_x==0)]
+              }
 
               dat_range_tmp_y <- dat_range_y - j + ceiling(dim(tmp_dat$lad)[2] / 2)
-              dat_range_y <- dat_range_y[-which(dat_range_tmp_y==0)]
-              dat_range_tmp_y <- dat_range_tmp_y[-which(dat_range_tmp_y==0)]
+              if(any(dat_range_tmp_y==0)){
+                dat_range_y <- dat_range_y[-which(dat_range_tmp_y==0)]
+                dat_range_tmp_y <- dat_range_tmp_y[-which(dat_range_tmp_y==0)]
+              }
 
               lad_temp[dat_range_x, dat_range_y, seq(dim(tmp_dat$lad)[3])] <- tmp_dat$lad[dat_range_tmp_x, dat_range_tmp_y, ]
               bad_temp[dat_range_x, dat_range_y, seq(dim(tmp_dat$bad)[3])] <- tmp_dat$bad[dat_range_tmp_x, dat_range_tmp_y, ]
@@ -2125,12 +2129,16 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
               dat_range_y <- dat_range_y[dat_range_y <= dim(lai)[2]]
 
               dat_range_tmp_x <- dat_range_x - i + ceiling(dim(tmp_dat$lad)[1] / 2)
-              dat_range_x <- dat_range_x[-which(dat_range_tmp_x==0)]
-              dat_range_tmp_x <- dat_range_tmp_x[-which(dat_range_tmp_x==0)]
+              if(any(dat_range_tmp_x==0)){
+                dat_range_x <- dat_range_x[-which(dat_range_tmp_x==0)]
+                dat_range_tmp_x <- dat_range_tmp_x[-which(dat_range_tmp_x==0)]
+              }
 
               dat_range_tmp_y <- dat_range_y - j + ceiling(dim(tmp_dat$lad)[2] / 2)
-              dat_range_y <- dat_range_y[-which(dat_range_tmp_y==0)]
-              dat_range_tmp_y <- dat_range_tmp_y[-which(dat_range_tmp_y==0)]
+              if(any(dat_range_tmp_y==0)){
+                dat_range_y <- dat_range_y[-which(dat_range_tmp_y==0)]
+                dat_range_tmp_y <- dat_range_tmp_y[-which(dat_range_tmp_y==0)]
+              }
 
               lad_temp[dat_range_x, dat_range_y, seq(dim(tmp_dat$lad)[3])] <- lad_temp[dat_range_x, dat_range_y, seq(dim(tmp_dat$lad)[3])] + tmp_dat$lad[dat_range_tmp_x, dat_range_tmp_y, ]
               bad_temp[dat_range_x, dat_range_y, seq(dim(tmp_dat$bad)[3])] <- bad_temp[dat_range_x, dat_range_y, seq(dim(tmp_dat$bad)[3])] + tmp_dat$bad[dat_range_tmp_x, dat_range_tmp_y, ]
