@@ -298,10 +298,12 @@ palm_dynamic <- R6Class("palm_dynamic", public = list(
 
     for (t in seq(self$data)) {
       dimlist <- list()
-      for (ii in seq(self$vardimensions[[t]])) {
-        dimlist[[self$vardimensions[[t]][ii]]] <- nc_dim_list[[self$vardimensions[[t]][ii]]]
+      which_vardim <- which(names(self$data)[t] == names(self$vardimensions))
 
-        nameslist <- nameslist[-which(nameslist == self$vardimensions[[t]][ii])]
+      for (ii in seq(self$vardimensions[[which_vardim]])) {
+        dimlist[[self$vardimensions[[which_vardim]][ii]]] <- nc_dim_list[[self$vardimensions[[which_vardim]][ii]]]
+
+        nameslist <- nameslist[-which(nameslist == self$vardimensions[[which_vardim]][ii])]
       }
 
       tmp <- ncvar_def(
