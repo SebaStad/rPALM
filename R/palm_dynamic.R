@@ -176,7 +176,7 @@ palm_dynamic <- R6Class("palm_dynamic", public = list(
     adata <- list(
       "long_name" = "time",
       "standard_name" = "time",
-      "units" = "seconds since 2013-07-21 +00",
+      "units" = "seconds",
       "axis" = "T",
       "vals" = tvec
     )

@@ -192,7 +192,7 @@ f.calc_single_tree <- function(tree_type_b = NULL,
             lad_3d[i,j,k] <- fillvalue
           }
         }
-        if( !(all(lad[i,j,] == 0 ))){
+        if( !(all(lad_3d[i,j,] == 0 ))){
           lad_3d[i,j,1] <- 0
         }
       }
@@ -215,7 +215,7 @@ f.calc_single_tree <- function(tree_type_b = NULL,
             lad_3d[i,j,k] <- fillvalue
           }
         }
-        if( !(all(lad[i,j,] == 0 ))){
+        if( !(all(lad_3d[i,j,] == 0 ))){
           lad_3d[i,j,1] <- 0
         }
       }
@@ -237,7 +237,7 @@ f.calc_single_tree <- function(tree_type_b = NULL,
             lad_3d[i,j,k] <- fillvalue
           }
         }
-        if( !(all(lad[i,j,] == 0 ))){
+        if( !(all(lad_3d[i,j,] == 0 ))){
           lad_3d[i,j,1] <- 0
         }
       }
@@ -259,7 +259,7 @@ f.calc_single_tree <- function(tree_type_b = NULL,
             lad_3d[i,j,k] <- fillvalue
           }
         }
-        if( !(all(lad[i,j,] == 0 ))){
+        if( !(all(lad_3d[i,j,] == 0 ))){
           lad_3d[i,j,1] <- 0
         }
       }

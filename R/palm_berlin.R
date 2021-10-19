@@ -2029,7 +2029,7 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
       }
 
       if (is.null(ext_tree_shape)) {
-        tree_shape <- 1
+        tree_shape <- 1 * tree_array
       } else {
         tree_shape <- 1 * tree_array
         if(is.null(dim(ext_tree_shape))){
@@ -2066,7 +2066,7 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
             } else {
               tmp_dat <- f.calc_single_tree(
                 tree_type_b = tree_type[i, j],
-                tree_shape = tree_shape,
+                tree_shape = tree_shape[i,j],
                 crown_ratio = tree_shape_parameters$ratio[tree_type[i, j]],
                 crown_diameter = crown_dia[i, j],
                 tree_height = canopy_height[i, j],
@@ -2109,7 +2109,7 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
             } else {
               tmp_dat <- f.calc_single_tree(
                 tree_type_b = tree_type[i, j],
-                tree_shape = tree_shape,
+                tree_shape = tree_shape[i, j],
                 crown_ratio = tree_shape_parameters$ratio[tree_type[i, j]],
                 crown_diameter = crown_dia[i, j],
                 tree_height = canopy_height[i, j],
