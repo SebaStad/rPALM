@@ -206,7 +206,7 @@ f.calc_single_tree <- function(tree_type_b = NULL,
     for(i in seq(nx+1)){
       for(j in seq(ny+1)){
         for(k in k_min:k_max){
-          k_rel  <- k_max - k
+          k_rel  <- k_max - k + 1
           r_test <- (x[i] - tree_location_x)^2 + (y[j] - tree_location_y)^2 - ( (crown_diameter * 0.5)^2 / crown_height^2 ) * ( z[k_rel] - crown_height)^2
           if(r_test <= 0){
             r_test3       <- sqrt( (x[i] - tree_location_x)^2/(crown_diameter * 0.5)^2 + (y[j] - tree_location_y)^2/(crown_diameter * 0.5)^2)
@@ -229,7 +229,7 @@ f.calc_single_tree <- function(tree_type_b = NULL,
     for(i in seq(nx+1)){
       for(j in seq(ny+1)){
         for(k in k_min:k_max){
-          k_rel  <- k - k_min
+          k_rel  <- k - k_min + 1
           r_test <- ((x[i] - tree_location_x)^2 + (y[j] - tree_location_y)^2) * crown_height / (crown_diameter * 0.5)^2 - z[k_rel]
           if(r_test <= 0){
             lad_3d[i,j,k] <- lad_max * exp ( - extinktion_cone * (- r_test) )
@@ -251,7 +251,7 @@ f.calc_single_tree <- function(tree_type_b = NULL,
     for(i in seq(nx+1)){
       for(j in seq(ny+1)){
         for(k in k_min:k_max){
-          k_rel <- k_max - k
+          k_rel <- k_max - k + 1
           r_test <- ((x[i] - tree_location_x)^2 + (y[j] - tree_location_y)^2) * crown_height / (crown_diameter * 0.5)^2 - z[k_rel]
           if(r_test <= 0){
             lad_3d[i,j,k] <- lad_max * exp ( - extinktion_cone * (- r_test) )

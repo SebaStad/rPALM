@@ -2072,6 +2072,8 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
                 tree_height = canopy_height[i, j],
                 lai = lai[i, j],
                 dbh = tree_trunk_parameters$dbh[tree_type[i, j]],
+                extinktion_sphere = 0.6,
+                extinktion_cone = 0.2,
                 dx = dx
               )
 
@@ -2115,6 +2117,8 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
                 tree_height = canopy_height[i, j],
                 lai = lai[i, j],
                 dbh = tree_trunk_parameters$dbh[tree_type[i, j]],
+                extinktion_sphere = 0.6,
+                extinktion_cone = 0.2,
                 dx = dx,
                 fillvalue = 0
               )
@@ -2148,6 +2152,9 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
         lad_temp[, , 2:dim(lad_temp)[3]][lad_temp[, , 2:dim(lad_temp)[3]] == 0] <- -9999.9
         bad_temp[, , 2:dim(bad_temp)[3]][bad_temp[, , 2:dim(bad_temp)[3]] == 0] <- -9999.9
       }
+
+      lad_temp[is.na(lad_temp)] <- -9999.9
+      bad_temp[is.na(bad_temp)] <- -9999.9
 
       if (!any(names(self$data) == "lad")) {
         z <- seq(0, dim(lad_temp)[3], by = 1) * dx
