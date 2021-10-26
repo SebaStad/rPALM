@@ -2043,15 +2043,14 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
         if (!any(names(self$data) == "vegetation_type")) {
           stop("No LAI information available!")
         }
-        lai <- array(NA, dim(self$data$vegetation_type$vals))
-        lai[self$data$vegetation_type$vals == 4] <- 5
-        lai[self$data$vegetation_type$vals == 5] <- 5
-        lai[self$data$vegetation_type$vals == 6] <- 5
-        lai[self$data$vegetation_type$vals == 7] <- 6
-        lai[self$data$vegetation_type$vals == 17] <- 5
-        lai[self$data$vegetation_type$vals == 18] <- 2.5
+        # lai <- array(NA, dim(self$data$vegetation_type$vals))
+        # lai[self$data$vegetation_type$vals == 4] <- 5
+        # lai[self$data$vegetation_type$vals == 5] <- 5
+        # lai[self$data$vegetation_type$vals == 6] <- 5
+        # lai[self$data$vegetation_type$vals == 7] <- 6
+        # lai[self$data$vegetation_type$vals == 17] <- 5
+        # lai[self$data$vegetation_type$vals == 18] <- 2.5
       } else {
-        lai <- 3 * tree_array
         lai <- ext_lai * tree_array
       }
 
