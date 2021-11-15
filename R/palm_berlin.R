@@ -2512,7 +2512,7 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
     create_paraview_lad = function(){
       res          <- self$header$head$resolution
       current_topo <- self$data$zt$vals
-      rel_topo     <- round(self$data$zt$vals - min(self$data$zt$vals)/res)*res
+      rel_topo     <- round((self$data$zt$vals - min(self$data$zt$vals))/res)*res
 
       self$data$zt$vals <- rel_topo
 
@@ -2560,8 +2560,6 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
 
       self$add_R6_data(data_class = warped_lad)
       self$data$orography_3d <- NULL
-
-
 
     },
 #' Title
