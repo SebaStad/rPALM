@@ -2063,7 +2063,10 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
             if (tree_type[i, j] <= 0) {
 
             } else {
-              if(self$)
+              if( dx > canopy_height[i, j]){
+                print("Single Tree is smaller then resolution and will be skipped")
+                next
+              }
               tmp_dat <- f.calc_single_tree(
                 tree_type_b = tree_type[i, j],
                 tree_shape = tree_shape[i,j],
