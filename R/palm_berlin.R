@@ -2063,6 +2063,7 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
             if (tree_type[i, j] <= 0) {
 
             } else {
+              if(self$)
               tmp_dat <- f.calc_single_tree(
                 tree_type_b = tree_type[i, j],
                 tree_shape = tree_shape[i,j],
@@ -2108,6 +2109,10 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
             if (tree_type[i, j] <= 0) {
 
             } else {
+              if( dx > canopy_height[i, j]){
+                print("Single Tree is smaller then resolution and will be skipped")
+                next
+              }
               tmp_dat <- f.calc_single_tree(
                 tree_type_b = tree_type[i, j],
                 tree_shape = tree_shape[i, j],
@@ -2310,7 +2315,7 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
       # Fix for no trees in vegetation file
       #############
       if (all(is.na(pch_index))) {
-        stop("No heigh enough vegetation found!")
+        stop("No high enough vegetation found!")
         # z <- c(0, dz * 0.5)
         # lad_array <- array(-9999.9, c(dim(pch_index)[1:2], 2))
         #
