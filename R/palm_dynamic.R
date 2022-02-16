@@ -495,7 +495,7 @@ palm_dynamic <- R6Class("palm_dynamic", public = list(
       )
     }
   },
-  shift_wind_by_topography = function(zt_array = NULL, static_path = NULL){
+  shift_wind_by_topography = function(zt_array = NULL, static_path = NULL, replace_with_0 = TRUE){
     if(!is.null(zt_array)){
       topografy <- zt_array
     } else if(!is.null(static_path)){
@@ -538,10 +538,16 @@ palm_dynamic <- R6Class("palm_dynamic", public = list(
         where_z <- grep("z", dim_positions)
         if(where_z==2){
           for(k in seq(dim(tmp_array)[1])){
+            if(replace_with_0){
+              tmp_array[k,1:(starting_points[k]-1),] <- 0
+            }
             tmp_array[k,starting_points[k]:dim(tmp_array)[2],] <- tmp_array[k,1:(dim(tmp_array)[2]-starting_points[k]+1),]
           }
         } else if(where_z==1){
           for(k in seq(dim(tmp_array)[2])){
+            if(replace_with_0){
+              tmp_array[1:(starting_points[k]-1),k,] <- 0
+            }
             tmp_array[starting_points[k]:dim(tmp_array)[1],k,] <- tmp_array[1:(dim(tmp_array)[1]-starting_points[k]+1),k,]
           }
         }
