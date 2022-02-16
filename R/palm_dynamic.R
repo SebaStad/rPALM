@@ -149,6 +149,7 @@ palm_dynamic <- R6Class("palm_dynamic", public = list(
 
       if(variable == "w"){
         whichdimensions[[variable]] <- "zw"
+        adata$vals <- adata$vals[1:length(self$dims$zw$vals)]
       } else {
         whichdimensions[[variable]] <- "z"
       }
