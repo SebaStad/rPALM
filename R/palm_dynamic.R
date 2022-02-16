@@ -529,7 +529,7 @@ palm_dynamic <- R6Class("palm_dynamic", public = list(
       boundary_names <- names(self$data)[name_pos]
       topo_sclice <- topografy[array_pos[[paste0(i, "_l")]], array_pos[[paste0(i, "_r")]]]
       resolution <- self$dims$x$vals[2] - self$dims$x$vals[1]
-      starting_points <- round(topo_sclice/resolution) + 1
+      starting_points <- floor(topo_sclice/resolution) + 1
 
       for( j in boundary_names){
 
