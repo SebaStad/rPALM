@@ -15,7 +15,6 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
     oldversion = NULL,
 
     #' Funktion die mit $new aufgerufen wird!
-    #' Title
     #'
     #' @param filename Filename
     #' @param headclass Variable of the global Class
@@ -63,7 +62,6 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
       self$plotcntr <- 0
     },
     # Import der vorhanden Berlin Daten
-    #' Title
     #'
     #' @param lengthx Gridpoints in x direction
     #' @param lengthy Gridpoints in y direction
@@ -73,9 +71,6 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
     #' @export
     #'
     #' @examples
-    #' berlin_example$importfiles(lengthx = 100,
-    #'                            lengthy = 100,
-    #'                            dx = 10)
     importfiles = function(lengthx, lengthy, dx, clear_overlap = FALSE) {
 
       # lengthx:  LÃ¤nge der Domain in x-Richtung
@@ -450,8 +445,6 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
       self$data <- dat
     },
     # Export der netCDF Datei
-    #' Title
-    #'
     #' Exports a static driver with the data present in the class
     #'
     #' @param Path Path where the driver is to be saved
@@ -462,8 +455,6 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
     #' @export
     #'
     #' @examples
-    #' berlin_example$exportncdf(Path = "Path/to/be/saved"
-    #'                           EPSGCode = "EPSG:25833")
     exportncdf = function(Path = self$path, EPSGCode = "EPSG:25833") {
       print("CRS CREATION HAS BEEN MOVED TO SEPARATE FUNCTION")
 
@@ -611,7 +602,6 @@ palm_ncdf_berlin <- R6::R6Class("palm_ncdf_berlin",
     #' @export
     #'
     #' @examples
-    #' berlin_example$plot_area(1,1,200,200)
     plot_area = function(xleft = NULL, yleft = NULL,
                          xl = NULL, yl = NULL) {
 

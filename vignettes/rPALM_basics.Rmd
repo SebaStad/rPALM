@@ -148,7 +148,7 @@ This class can import static drivers into the workspace of R:
 ```{r import II, fig.align="center"}
 imported_driver <- palm_ncdf_import$new(
   newfilename = "somefilename.nc",
-  pathtofiles = "C:\\DATEN\\08 MSc Work\\GISDaten", # Path to the static driver
+  pathtofiles = "E:/08 MSc Work/GISDaten", # Path to the static driver
   oldfilename = "munich_static.nc", # Name of the static driver
   oldversion = FALSE # Ignore this
 )
