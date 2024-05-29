@@ -29,6 +29,8 @@ f.calc_single_tree <- function(tree_type_b = NULL,
                          dx){
   dy <- dx
   dz <- dx
+  ml_n_low <- 0.5
+  ml_n_high <- 6.0
   if ( is.null(tree_type_b)) {
     tree_type <- 1
   } else {
@@ -60,7 +62,7 @@ f.calc_single_tree <- function(tree_type_b = NULL,
   }
 
   # Some values are always taken from lookup table
-  lad_max            <- tree_leaf_parameters$lad.max[tree_type]
+  # lad_max            <- tree_leaf_parameters$lad.max[tree_type]
   lad_max_scale      <- tree_leaf_parameters$height.scale.max[tree_type]
   bad_scaling_factor <- tree_trunk_parameters$scale[tree_type]
 
@@ -72,6 +74,28 @@ f.calc_single_tree <- function(tree_type_b = NULL,
   # Calculate the height where LAD is maximum
   z_lad_max    <- lad_max_scale * tree_height
 
+  lad_max_part_1 <- integrate(
+    function(z) {
+      ((tree_height - z_lad_max) / (tree_height - z))^ml_n_high *
+        exp(ml_n_high * (1.0 - (tree_height - z_lad_max) / (tree_height - z)))
+    },
+    lower = 0.0,
+    upper = z_lad_max
+  )
+
+  lad_max_part_2 <- integrate(
+    function(z) {
+      ((tree_height - z_lad_max) / (tree_height - z))^ml_n_low *
+        exp(ml_n_low * (1.0 - (tree_height - z_lad_max) / (tree_height - z)))
+    },
+    lower = z_lad_max,
+    upper = tree_height
+  )
+
+
+  lad_max <- lai / (
+    round(lad_max_part_1$value, 2) + round(lad_max_part_2$value, 2)
+  )
 
   # Define tree position and output domain
   nx <- as.integer(crown_diameter / dx)
@@ -103,38 +127,45 @@ f.calc_single_tree <- function(tree_type_b = NULL,
 
 
   # Calculate LAD profile after Lalic and Mihailovic (2004)
-  lad_profile     <-  array(0,nz+1)
+  lad_profile     <-  array(0, nz+1)
   lad_profile[1]  <- 0.0
   lad_profile[nz+1] <- 0.0
 
   for(k in 2:(nz)){
     if ( z[k] >= 0.0 && z[k] < z_lad_max ){
-      n <- 6.0
+      n <- ml_n_high
     } else {
-      n <- 0.5
+      n <- ml_n_low
     }
-    lad_profile[k] <- lad_max * ( ( tree_height - z_lad_max ) / ( tree_height - z[k] ) )^n * exp( n * (1.0 - ( tree_height - z_lad_max ) / ( tree_height - z[k] ) ) )
+    lad_profile[k] <- lad_max * (
+      ( tree_height - z_lad_max ) / ( tree_height - z[k])
+    )**n * exp(
+      n * (1.0 - ( tree_height - z_lad_max ) / ( tree_height - z[k] ) )
+    )
   }
-
-
 
   # Create and populate 3D LAD array
   lad_3d <- array(0, c(nx+1, ny+1, nz+1))
 
   # Branch for spheres and ellipsoids
-  if( tree_shape == 1 ){
-    for(i in seq(nx+1)){
-      for(j in seq(ny+1)){
-        for(k in seq(nz+1)){
-          r_test <- sqrt( (x[i] - tree_location_x)^2/(crown_diameter * 0.5)^2 + (y[j] - tree_location_y)^2/(crown_diameter * 0.5)^2 + (z[k] - crown_center)^2/(crown_height * 0.5)^2)
-          if ( r_test <= 1.0 ){
-                     # lad_3d(k,j,i) = lad_profile(k) * exp ( - extinktion_sphere * (1.0 - r_test) )
-            lad_3d[i,j,k] <- lad_max * exp( - extinktion_sphere * (1.0 - r_test) )
+  if (tree_shape == 1 ) {
+    for (i in seq(nx+1)) {
+      for (j in seq(ny+1)) {
+        for (k in seq(nz+1)) {
+          r_test <- sqrt(
+            (x[i] - tree_location_x)^2/(crown_diameter * 0.5)^2 +
+            (y[j] - tree_location_y)^2/(crown_diameter * 0.5)^2 +
+            (z[k] - crown_center)^2/(crown_height * 0.5)^2
+          )
+          if (r_test <= 1.0 ) {
+            lad_3d[i,j,k] <- lad_max * exp(
+              -extinktion_sphere * (1.0 - r_test)
+            )
           } else {
             lad_3d[i,j,k] <- fillvalue
           }
         }
-        if ( !(all(lad_3d[i,j,]==0)) ){
+        if (!(all(lad_3d[i,j,]==0))) {
           lad_3d[i,j,1] <- 0.0
         }
       }

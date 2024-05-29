@@ -2,14 +2,11 @@
 % Please edit documentation in R/palm_berlin.R
 \name{palm_ncdf_berlin}
 \alias{palm_ncdf_berlin}
-\title{Funktion die mit $new aufgerufen wird!
-Title}
+\title{Funktion die mit $new aufgerufen wird!}
 \description{
 Funktion die mit $new aufgerufen wird!
-Title
 
 Funktion die mit $new aufgerufen wird!
-Title
 }
 \examples{
 
@@ -34,17 +31,12 @@ berlin_example <- palm_ncdf_berlin$new(filename = "berlin_static.nc",
                    headclass = "berlin_head",
                    pathtofiles = "Path/to/Berlin/data",
                    oldversion = FALSE)
-Title
 
 
 ## ------------------------------------------------
 ## Method `palm_ncdf_berlin$importfiles`
 ## ------------------------------------------------
 
-berlin_example$importfiles(lengthx = 100,
-                           lengthy = 100,
-                           dx = 10)
-Title
 
 Exports a static driver with the data present in the class
 
@@ -53,8 +45,6 @@ Exports a static driver with the data present in the class
 ## Method `palm_ncdf_berlin$exportncdf`
 ## ------------------------------------------------
 
-berlin_example$exportncdf(Path = "Path/to/be/saved"
-                          EPSGCode = "EPSG:25833")
 Calls ggplot to plot available data in a 2D plot. Contains simple color
 coding for pavement, water, buildings and a distinction for small vegetation
 and trees. Can display the whole domain or small subareas.
@@ -65,7 +55,6 @@ Missing Data is displayed as white and will be marked by the legend.
 ## Method `palm_ncdf_berlin$plot_area`
 ## ------------------------------------------------
 
-berlin_example$plot_area(1,1,200,200)
 Title
 
 
@@ -307,7 +296,6 @@ berlin_example <- palm_ncdf_berlin$new(filename = "berlin_static.nc",
                    headclass = "berlin_head",
                    pathtofiles = "Path/to/Berlin/data",
                    oldversion = FALSE)
-Title
 
 }
 \if{html}{\out{</div>}}
@@ -339,11 +327,7 @@ Imports data into PALM class for relevant PALM-4U data.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{berlin_example$importfiles(lengthx = 100,
-                           lengthy = 100,
-                           dx = 10)
-Title
-
+\preformatted{
 Exports a static driver with the data present in the class
 
 }
@@ -375,9 +359,7 @@ Exports a static driver
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{berlin_example$exportncdf(Path = "Path/to/be/saved"
-                          EPSGCode = "EPSG:25833")
-Calls ggplot to plot available data in a 2D plot. Contains simple color
+\preformatted{Calls ggplot to plot available data in a 2D plot. Contains simple color
 coding for pavement, water, buildings and a distinction for small vegetation
 and trees. Can display the whole domain or small subareas.
 Missing Data is displayed as white and will be marked by the legend.
@@ -414,8 +396,7 @@ Simple visualization of the simulation domain
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{berlin_example$plot_area(1,1,200,200)
-Title
+\preformatted{Title
 
 }
 \if{html}{\out{</div>}}

@@ -271,7 +271,7 @@ palm_dynamic <- R6Class("palm_dynamic", public = list(
     self$data[[data.name]] <- adata
     self$vardimensions[[data.name]] <- whichdimensions
   },
-  export_dynamic_driver = function(filename) {
+  export_dynamic_driver = function(filename, global_pars = NULL) {
     nc_dim_list <- list()
 
     for (zz in seq(self$dims)) {
@@ -335,10 +335,11 @@ palm_dynamic <- R6Class("palm_dynamic", public = list(
     ncfile <- nc_create(filename, vars = ncvariables, force_v4 = TRUE)
 
     # EinfÃ¼gen aller Attribute aus der Headerdatei palm_global als globale Attribute
-    for (j in seq(self$header$head)) {
-      ncatt_put(ncfile, 0, names(self$header$head)[j], self$header$head[[j]])
+    if(!is.null(global_pars)){
+      for (j in seq(global_pars)) {
+        ncatt_put(ncfile, 0, names(global_pars)[j], global_pars[[j]])
+      }
     }
-
 
     # EinfÃ¼gen der ZusÃ¤tzlichen Attribute (ch in loopnum)
     # Sowie der eigentlichen Daten (ncvar_put(..., vals = self$data$XXX$vals))
@@ -558,5 +559,11 @@ palm_dynamic <- R6Class("palm_dynamic", public = list(
 
     }
     return(self)
+  },
+  add_global_pars_from_named_list = function(
+    self,
+    named_list
+  ){
+
   }
 ))
