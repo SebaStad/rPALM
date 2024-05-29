@@ -124,7 +124,11 @@ Title
 \if{latex}{\out{\hypertarget{method-shift_wind_by_topography}{}}}
 \subsection{Method \code{shift_wind_by_topography()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{palm_dynamic$shift_wind_by_topography(zt_array = NULL, static_path = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{palm_dynamic$shift_wind_by_topography(
+  zt_array = NULL,
+  static_path = NULL,
+  replace_with_0 = TRUE
+)}\if{html}{\out{</div>}}
 }
 
 }
